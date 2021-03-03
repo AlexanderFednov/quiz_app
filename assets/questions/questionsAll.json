@@ -1,0 +1,21 @@
+
+
+ 
+    [{
+      "questionText": "Фамилия певца - Иван ...",
+      "answers": [
+        {"text": "Борн", "result": false, "code": "A"},
+        {"text": "Горн", "result": false, "code": "B"},
+        {"text": "Дорн", "result": true, "code": "C"},
+        {"text": "Порн", "result": false, "code": "D"}
+      ]
+    },
+    {
+      "questionText": "Воинское звание маршала Рыбалко",
+      "answers": [
+        {"text": "Борн", "result": false, "code": "A"},
+        {"text": "Горн", "result": false, "code": "B"},
+        {"text": "Дорн", "result": true, "code": "C"},
+        {"text": "Порн", "result": false, "code": "D"}
+      ]
+    }]

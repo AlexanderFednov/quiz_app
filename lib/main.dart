@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/questionsdecode.dart';
 import './quiz.dart';
 import './questions.dart';
 import './main_page.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+  loadList();
+}
 
 class MyApp extends StatefulWidget {
   @override
