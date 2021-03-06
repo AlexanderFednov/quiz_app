@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/questionsdecode.dart';
 import './quiz.dart';
 import './questions.dart';
 import './main_page.dart';
+//import './questionsdecode.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 
 void main() {
   runApp(MyApp());
-  loadList();
 }
 
 class MyApp extends StatefulWidget {
@@ -17,6 +18,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  List<Map<String, Object>> jsonQuestAll = List<Map<String, Object>>();
   int _questionIndex = 0;
   int _totalScore = 0;
 
@@ -42,7 +44,23 @@ class MyAppState extends State<MyApp> {
     }
   }
 
-  List<Map<String, Object>> mainQuestionsAll = Questions().questionsAll;
+  loadList() async {
+    String jsonQuestion =
+        await rootBundle.loadString('assets/questions/questionsAll.json');
+    List decoded = jsonDecode(jsonQuestion);
+    List<Map<String, Object>> listFun = List<Map<String, Object>>();
+
+    for (Map<String, Object> i in decoded) {
+      listFun.add(i);
+    }
+    //print(listFun);
+
+    setState(() {
+      jsonQuestAll = listFun;
+    });
+    print(jsonQuestAll[0]['answers']);
+  }
+
   List<Map<String, Object>> mainQuestionsFilms = Questions().questionsFilms;
   List<Map<String, Object>> mainQuestionsSpace = Questions().questionsSpace;
 
@@ -78,6 +96,12 @@ class MyAppState extends State<MyApp> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    loadList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -101,7 +125,7 @@ class MyAppState extends State<MyApp> {
             Quiz(
               answerQuestions: _answerQuestion,
               questionIndex: _questionIndex,
-              questions: mainQuestionsAll,
+              questions: jsonQuestAll,
               resetQuiz: _resetQuiz,
               totalScore: _totalScore,
               onMainPage: onMainPage,
