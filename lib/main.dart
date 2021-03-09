@@ -5,6 +5,7 @@ import './main_page.dart';
 //import './questionsdecode.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  List<Map<String, Object>> jsonQuestAll = List<Map<String, Object>>();
+  List<Map<String, Object>> jsonQuestAll = [];
   int _questionIndex = 0;
   int _totalScore = 0;
 
