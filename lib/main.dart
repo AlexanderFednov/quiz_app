@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import './quiz.dart';
 import './questions.dart';
 import './main_page.dart';
-//import './questionsdecode.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'generated/l10n.dart';
 
 void main() {
   runApp(MyApp());
@@ -62,6 +64,7 @@ class MyAppState extends State<MyApp> {
     print(jsonQuestAll[0]['answers']);
   }
 
+  List<Map<String, Object>> mainQuestionsAll = Questions().questionsAll;
   List<Map<String, Object>> mainQuestionsFilms = Questions().questionsFilms;
   List<Map<String, Object>> mainQuestionsSpace = Questions().questionsSpace;
 
@@ -99,12 +102,33 @@ class MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    loadList();
+    //loadList();
+
+    S.load(Locale('ru', 'RU'));
+  }
+
+  void localeRu() {
+    setState(() {
+      S.load(Locale('ru', 'RU'));
+    });
+  }
+
+  void localeEn() {
+    setState(() {
+      S.load(Locale('en', 'EN'));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
       home: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -122,11 +146,13 @@ class MyAppState extends State<MyApp> {
               swap1: swap1,
               swap2: swap2,
               swap3: swap3,
+              localeRu: localeRu,
+              localeEn: localeEn,
             ),
             Quiz(
               answerQuestions: _answerQuestion,
               questionIndex: _questionIndex,
-              questions: jsonQuestAll,
+              questions: mainQuestionsAll,
               resetQuiz: _resetQuiz,
               totalScore: _totalScore,
               onMainPage: onMainPage,
