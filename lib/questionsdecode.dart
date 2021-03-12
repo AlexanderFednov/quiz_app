@@ -23,7 +23,7 @@ Future loadQuestion() async {
 QuestionJson _parseJsonForQuestion(String jsonQuestion) {
   List decoded = jsonDecode(jsonQuestion);
 
-  List<Map<String, Object>> listMap = List();
+  List<Map<String, Object>> listMap = [];
 
   for (Map<String, Object> i in decoded) {
     listMap.add(i);
@@ -37,7 +37,7 @@ loadList() async {
   String jsonQuestion =
       await rootBundle.loadString('assets/questions/questionsAll.json');
   List decoded = jsonDecode(jsonQuestion);
-  List<Map<String, Object>> listFun = List();
+  List<Map<String, Object>> listFun = [];
 
   for (Map<String, Object> i in decoded) {
     listFun.add(i);

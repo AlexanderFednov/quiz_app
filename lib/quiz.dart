@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'generated/l10n.dart';
 
 import './answer.dart';
 import './question.dart';
@@ -45,8 +46,9 @@ class Quiz extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.grey),
                       color: Colors.white),
-                  child: FlatButton(
-                    child: Text('На главную страницу(результат будет сброшен)'),
+                  child: TextButton(
+                    child: Text(S.of(context).reset,
+                        style: TextStyle(color: Colors.black)),
                     onPressed: onMainPage,
                   ),
                 ),

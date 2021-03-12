@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "questionsAll" : MessageLookupByLibrary.simpleMessage("General questions"),
     "questionsFilms" : MessageLookupByLibrary.simpleMessage("Movies of the USSR"),
     "questionsSpace" : MessageLookupByLibrary.simpleMessage("Space"),
+    "reset" : MessageLookupByLibrary.simpleMessage("To the main page (the result will be reset)"),
     "title" : MessageLookupByLibrary.simpleMessage("Funny Quiz"),
     "titleAppbar" : MessageLookupByLibrary.simpleMessage("Quiz without cash prizes ")
   };

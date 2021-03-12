@@ -17,7 +17,7 @@ class Quiz extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(pageText),
-            FlatButton(
+            TextButton(
               child: Text('Сменить страницу'),
               onPressed: swap,
             ),

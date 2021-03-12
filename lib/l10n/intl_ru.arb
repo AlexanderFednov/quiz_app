@@ -4,5 +4,6 @@
 "categotyChoice" : "Выберите категорию",
 "questionsAll" : "Общие вопросы",
 "questionsFilms" : "Кинофильмы СССР",
-"questionsSpace" : "Космос"
+"questionsSpace" : "Космос",
+"reset" : "На главную страницу(результат будет сброшен)"
 }

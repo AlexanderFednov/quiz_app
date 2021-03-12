@@ -4,9 +4,9 @@ import './questions.dart';
 import './main_page.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import 'package:json_annotation/json_annotation.dart';
+//import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 import 'generated/l10n.dart';
 
 void main() {
@@ -51,7 +51,7 @@ class MyAppState extends State<MyApp> {
     String jsonQuestion =
         await rootBundle.loadString('assets/questions/questionsAll.json');
     List decoded = jsonDecode(jsonQuestion);
-    List<Map<String, Object>> listFun = List<Map<String, Object>>();
+    List<Map<String, Object>> listFun = [];
 
     for (Map<String, Object> i in decoded) {
       listFun.add(i);

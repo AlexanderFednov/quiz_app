@@ -29,7 +29,7 @@ class Result extends StatelessWidget {
                 'Правильных ответов - $score из ${questions.length}',
                 style: TextStyle(fontSize: 30, color: Colors.black),
               ),
-              FlatButton(
+              TextButton(
                 child: Text('На главную страницу',
                     style: TextStyle(fontSize: 30, color: Colors.black)),
                 onPressed: resetHandler,

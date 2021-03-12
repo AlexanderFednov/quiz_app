@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
+import 'package:animated_button/animated_button.dart';
+//import 'package:json_annotation/json_annotation.dart';
+//import 'package:flutter_localizations/flutter_localizations.dart';
+//import 'package:intl/intl.dart';
 import 'generated/l10n.dart';
 
 class MainPage extends StatelessWidget {
@@ -70,17 +71,26 @@ class MainPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
+              AnimatedButton(
                 child: Text('Русский',
                     style: TextStyle(color: Colors.black, fontSize: 20)),
                 onPressed: localeRu,
+                width: 110,
+                height: 30,
+                color: Colors.cyan,
               ),
-              TextButton(
+              SizedBox(
+                width: 10,
+              ),
+              AnimatedButton(
                 child: Text(
                   'English',
                   style: TextStyle(color: Colors.black, fontSize: 20),
                 ),
                 onPressed: localeEn,
+                width: 110,
+                height: 30,
+                color: Colors.pink[100],
               )
             ],
           ),
@@ -108,10 +118,11 @@ class CategoryButton extends StatelessWidget {
     return Container(
       width: 300,
       decoration: BoxDecoration(color: categoryColor),
-      child: FlatButton(
+      child: TextButton(
         child: Text(
           category,
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         onPressed: swap,
       ),

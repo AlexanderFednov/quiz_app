@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "questionsAll" : MessageLookupByLibrary.simpleMessage("Общие вопросы"),
     "questionsFilms" : MessageLookupByLibrary.simpleMessage("Кинофильмы СССР"),
     "questionsSpace" : MessageLookupByLibrary.simpleMessage("Космос"),
+    "reset" : MessageLookupByLibrary.simpleMessage("На главную страницу(результат будет сброшен)"),
     "title" : MessageLookupByLibrary.simpleMessage("Весёлая викторина"),
     "titleAppbar" : MessageLookupByLibrary.simpleMessage("Викторина без денежных призов")
   };

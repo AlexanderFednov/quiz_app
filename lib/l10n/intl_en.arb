@@ -4,5 +4,6 @@
 "categotyChoice" : "Select a category",
 "questionsAll" : "General questions",
 "questionsFilms" : "Movies of the USSR",
-"questionsSpace" : "Space"
+"questionsSpace" : "Space",
+"reset" : "To the main page (the result will be reset)"
 }

@@ -94,6 +94,16 @@ class S {
       args: [],
     );
   }
+
+  /// `To the main page (the result will be reset)`
+  String get reset {
+    return Intl.message(
+      'To the main page (the result will be reset)',
+      name: 'reset',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
