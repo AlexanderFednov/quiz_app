@@ -10,7 +10,26 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(QuizApp());
+}
+
+class QuizApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return QuizAppState();
+  }
+}
+
+class QuizAppState extends State<QuizApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(localizationsDelegates: [
+      S.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ], supportedLocales: S.delegate.supportedLocales, home: MyApp());
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -102,7 +121,7 @@ class MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    //loadList();
+    loadList();
 
     S.load(Locale('ru', 'RU'));
   }
@@ -121,66 +140,57 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: S.delegate.supportedLocales,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Викторина без денежных призов',
-            style: TextStyle(fontWeight: FontWeight.bold),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          S.of(context).titleAppbar,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.amber,
+      ),
+      body: PageView(
+        physics: NeverScrollableScrollPhysics(),
+        controller: cont,
+        children: <Widget>[
+          MainPage(
+            swap1: swap1,
+            swap2: swap2,
+            swap3: swap3,
+            localeRu: localeRu,
+            localeEn: localeEn,
           ),
-          centerTitle: true,
-          backgroundColor: Colors.amber,
-        ),
-        body: PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: cont,
-          children: <Widget>[
-            MainPage(
-              swap1: swap1,
-              swap2: swap2,
-              swap3: swap3,
-              localeRu: localeRu,
-              localeEn: localeEn,
-            ),
-            Quiz(
-              answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: mainQuestionsAll,
-              resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
-              onMainPage: onMainPage,
-              imageUrl:
-                  'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
-            ),
-            Quiz(
-              answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: mainQuestionsFilms,
-              resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
-              onMainPage: onMainPage,
-              imageUrl:
-                  'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
-            ),
-            Quiz(
-              answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: mainQuestionsSpace,
-              resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
-              onMainPage: onMainPage,
-              imageUrl:
-                  'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
-            )
-          ],
-        ),
+          Quiz(
+            answerQuestions: _answerQuestion,
+            questionIndex: _questionIndex,
+            questions: mainQuestionsAll,
+            resetQuiz: _resetQuiz,
+            totalScore: _totalScore,
+            onMainPage: onMainPage,
+            imageUrl:
+                'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
+          ),
+          Quiz(
+            answerQuestions: _answerQuestion,
+            questionIndex: _questionIndex,
+            questions: mainQuestionsFilms,
+            resetQuiz: _resetQuiz,
+            totalScore: _totalScore,
+            onMainPage: onMainPage,
+            imageUrl:
+                'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
+          ),
+          Quiz(
+            answerQuestions: _answerQuestion,
+            questionIndex: _questionIndex,
+            questions: mainQuestionsSpace,
+            resetQuiz: _resetQuiz,
+            totalScore: _totalScore,
+            onMainPage: onMainPage,
+            imageUrl:
+                'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
+          )
+        ],
       ),
     );
   }
