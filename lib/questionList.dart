@@ -8,5 +8,13 @@ class QuestionList {
 
 class QuestionInside {
   String questionText;
-  List<Map<String, Object>> answers;
+  List<Answers> answers;
+}
+
+class Answers {
+  String questionText;
+  bool result;
+  String code;
+
+  Answers(this.questionText, this.result, this.code);
 }
