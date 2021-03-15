@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
+  build_runner:
   intl: ^0.17.0
   flutter:
     sdk: flutter
@@ -27,9 +28,11 @@ dependencies:
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
+  
   flutter_test:
     sdk: flutter
-  json_serializable: null
+  json_annotation: 3.1.1
+  json_serializable: 3.5.1
   flutter_localizations:
     sdk: flutter
 

@@ -83,7 +83,7 @@ class MyAppState extends State<MyApp> {
     print(jsonQuestAll[0]['answers']);
   }
 
-  List<Map<String, Object>> mainQuestionsAll = Questions().questionsAll;
+  //List<Map<String, Object>> mainQuestionsAll = Questions().questionsAll;
   List<Map<String, Object>> mainQuestionsFilms = Questions().questionsFilms;
   List<Map<String, Object>> mainQuestionsSpace = Questions().questionsSpace;
 
@@ -163,7 +163,7 @@ class MyAppState extends State<MyApp> {
           Quiz(
             answerQuestions: _answerQuestion,
             questionIndex: _questionIndex,
-            questions: mainQuestionsAll,
+            questions: jsonQuestAll,
             resetQuiz: _resetQuiz,
             totalScore: _totalScore,
             onMainPage: onMainPage,
