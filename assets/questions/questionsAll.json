@@ -1,7 +1,7 @@
 
 
  
-    [{
+   {"question" : [{
       "questionText": "Фамилия певца - Иван ...",
       "answers": [
         {"text": "Борн", "result": false, "code": "A"},
@@ -44,4 +44,4 @@
         {"text": "Влади", "result": false, "code": "C"},
         {"text": "Пугачёва", "result": false, "code": "D"}
       ]
-    }]
+    }]}
