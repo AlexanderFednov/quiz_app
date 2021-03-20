@@ -16,9 +16,15 @@ class Answer extends StatelessWidget {
       //color: Colors.blueGrey),
       margin: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
-      child: RaisedButton(
-        color: Colors.blueGrey,
-        textColor: Colors.white,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor:
+              MaterialStateColor.resolveWith((states) => Colors.blueGrey),
+          animationDuration: Duration(milliseconds: 1),
+          textStyle: MaterialStateProperty.all(
+            TextStyle(color: Colors.white),
+          ),
+        ),
         child: Row(
           children: <Widget>[
             Text(
@@ -27,11 +33,12 @@ class Answer extends StatelessWidget {
               style: TextStyle(
                   fontSize: 25,
                   fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             Text(
               answerText,
-              style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 25, color: Colors.white),
             )
           ],
         ),

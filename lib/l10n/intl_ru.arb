@@ -6,6 +6,7 @@
 "questionsFilms" : "Кинофильмы СССР",
 "questionsSpace" : "Космос",
 "reset" : "На главную страницу(результат будет сброшен)",
-"result" : "Правильных ответов - {score} из {questions.length}"
-
+"toMainPage" : "На главную страницу",
+"result" : "Правильных ответов - {score} из {questions}",
+"lastResult" : "{savedScore, plural, zero{Последний результат - {savedScore} баллов из {questionsLenght}} one{Последний результат - {savedScore} балл из {questionsLenght}} two{Последний результат - {savedScore} балла из {questionsLenght}}  few{Последний результат - {savedScore} балла из {questionsLenght}} many{Последний результат - {savedScore} баллов из {questionsLenght}} other{Последний результат - {savedScore} баллов из {questionsLenght}}} "
 }

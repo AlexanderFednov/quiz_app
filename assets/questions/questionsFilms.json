@@ -1,0 +1,48 @@
+{"question":[
+    {
+      "questionText":"Кто сыграл Шурика в комедии Л.Гайдая \"Кавказская пленница\"?",
+      "answers": [
+        {"text": "Ю.Никулин", "result": false, "code": "A"},
+        {"text": "С.Филипов", "result": false, "code": "B"},
+        {"text": "А.Демьяненко", "result": true, "code": "C"},
+        {"text": "А.Миронов", "result": false, "code": "D"}
+      ]
+    },
+    {
+      "questionText": "Режиссёр картины \"Джентльмены удачи\" 1971 г.",
+      "answers": [
+        {"text": "А.Серый", "result": true, "code": "A"},
+        {"text": "Г.Данелия", "result": false, "code": "B"},
+        {"text": "А. Хачатурян", "result": false, "code": "C"},
+        {"text": "М.Захаров", "result": false, "code": "D"}
+      ]
+    },
+    {
+      "questionText": "Фамилия главного героя картины \"Афоня\" 1975 г.",
+      "answers": [
+        {"text": "Трошкин", "result": false, "code": "A"},
+        {"text": "Суслин", "result": false, "code": "B"},
+        {"text": "Петренко", "result": false, "code": "C"},
+        {"text": "Борщёв", "result": true, "code": "D"}
+      ]
+    },
+    {
+      "questionText":
+          "Кто сыграл следователя Подберёзовикова в картине \"Берегись автомобиля\" 1966 г.",
+      "answers": [
+        {"text": "И. Смоктуновский", "result": false, "code": "A"},
+        {"text": "О. Ефремов", "result": true, "code": "B"},
+        {"text": "А. Папанов", "result": false, "code": "C"},
+        {"text": "Ю. Яковлев", "result": false, "code": "D"}
+      ]
+    },
+    {
+      "questionText": "Режиссёр картины \"Приходите завтра\" 1963 г.",
+      "answers": [
+        {"text": "Л. Гайдай", "result": false, "code": "A"},
+        {"text": "Э. Рязанов", "result": false, "code": "B"},
+        {"text": "Е. Ташков", "result": true, "code": "C"},
+        {"text": "И. Ильинский", "result": false, "code": "D"}
+      ]
+    }
+  ]}

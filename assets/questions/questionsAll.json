@@ -15,8 +15,8 @@
       "answers": [
         {"text": "Мастер", "result": false, "code": "A"},
         {"text": "Командир", "result": false, "code": "B"},
-        {"text": "Лейтенант", "result": true, "code": "C"},
-        {"text": "Маршал", "result": false, "code": "D"}
+        {"text": "Лейтенант", "result": false, "code": "C"},
+        {"text": "Маршал", "result": true, "code": "D"}
       ]
     },{
       "questionText": "Если внутрь кладут творог получается",

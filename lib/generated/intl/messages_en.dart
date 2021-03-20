@@ -19,14 +19,21 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static m0(savedScore, questionsLenght) => "${Intl.plural(savedScore, zero: 'Last result - ${savedScore} points of ${questionsLenght}', one: 'Last result - ${savedScore} point of ${questionsLenght}', two: 'Last result - ${savedScore} points of ${questionsLenght}', few: 'Last result - ${savedScore} points of ${questionsLenght}', many: 'Last result - ${savedScore} points of ${questionsLenght}', other: 'Last result - ${savedScore} points of ${questionsLenght}')}";
+
+  static m1(score, questions) => "Your score - ${score} of ${questions}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "categotyChoice" : MessageLookupByLibrary.simpleMessage("Select a category"),
+    "lastResult" : m0,
     "questionsAll" : MessageLookupByLibrary.simpleMessage("General questions"),
     "questionsFilms" : MessageLookupByLibrary.simpleMessage("Movies of the USSR"),
     "questionsSpace" : MessageLookupByLibrary.simpleMessage("Space"),
     "reset" : MessageLookupByLibrary.simpleMessage("To the main page (the result will be reset)"),
+    "result" : m1,
     "title" : MessageLookupByLibrary.simpleMessage("Funny Quiz"),
-    "titleAppbar" : MessageLookupByLibrary.simpleMessage("Quiz without cash prizes ")
+    "titleAppbar" : MessageLookupByLibrary.simpleMessage("Quiz without cash prizes "),
+    "toMainPage" : MessageLookupByLibrary.simpleMessage("To the main page")
   };
 }

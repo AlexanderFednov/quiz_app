@@ -105,7 +105,41 @@ class S {
     );
   }
 
-  // skipped getter for the 'result' key
+  /// `To the main page`
+  String get toMainPage {
+    return Intl.message(
+      'To the main page',
+      name: 'toMainPage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your score - {score} of {questions}`
+  String result(Object score, Object questions) {
+    return Intl.message(
+      'Your score - $score of $questions',
+      name: 'result',
+      desc: 'Quiz result',
+      args: [score, questions],
+    );
+  }
+
+  /// `{savedScore, plural, zero{Last result - {savedScore} points of {questionsLenght}} one{Last result - {savedScore} point of {questionsLenght}} two{Last result - {savedScore} points of {questionsLenght}} few{Last result - {savedScore} points of {questionsLenght}} many{Last result - {savedScore} points of {questionsLenght}} other{Last result - {savedScore} points of {questionsLenght}}}`
+  String lastResult(num savedScore, Object questionsLenght) {
+    return Intl.plural(
+      savedScore,
+      zero: 'Last result - $savedScore points of $questionsLenght',
+      one: 'Last result - $savedScore point of $questionsLenght',
+      two: 'Last result - $savedScore points of $questionsLenght',
+      few: 'Last result - $savedScore points of $questionsLenght',
+      many: 'Last result - $savedScore points of $questionsLenght',
+      other: 'Last result - $savedScore points of $questionsLenght',
+      name: 'lastResult',
+      desc: 'Last Result',
+      args: [savedScore, questionsLenght],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

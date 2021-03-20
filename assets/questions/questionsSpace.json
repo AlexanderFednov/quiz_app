@@ -1,0 +1,48 @@
+{"question" : [
+    {
+      "questionText": "Сколько планет в Солнечной системе?",
+      "answers": [
+        {"text": "7", "result": false, "code": "A"},
+        {"text": "8", "result": true, "code": "B"},
+        {"text": "9", "result": false, "code": "C"},
+        {"text": "10", "result": false, "code": "D"}
+      ]
+    },
+    {
+      "questionText": "Самая горячая планета в Солнечной системе?",
+      "answers": [
+        {"text": "Марс", "result": false, "code": "A"},
+        {"text": "Венера", "result": true, "code": "B"},
+        {"text": "Нептун", "result": false, "code": "C"},
+        {"text": "Сатурн", "result": false, "code": "D"}
+      ]
+    },
+    {
+      "questionText": "В каком году состоялась первая в мире высадка на Луну?",
+      "answers": [
+        {"text": "1962", "result": false, "code": "A"},
+        {"text": "1965", "result": false, "code": "B"},
+        {"text": "1969", "result": true, "code": "C"},
+        {"text": "1975", "result": false, "code": "D"}
+      ]
+    },
+    {
+      "questionText":
+          "Какое небесное тело в солнечной системе было лишено статуса классической планеты в 2006 г.?",
+      "answers": [
+        {"text": "Сириус", "result": false, "code": "A"},
+        {"text": "Большая медведица", "result": false, "code": "B"},
+        {"text": "Венера", "result": false, "code": "C"},
+        {"text": "Плутон", "result": true, "code": "D"}
+      ]
+    },
+    {
+      "questionText": "В каком году состоялся первый полёт человека в космос?",
+      "answers": [
+        {"text": "1960", "result": false, "code": "A"},
+        {"text": "1961", "result": true, "code": "B"},
+        {"text": "1962", "result": false, "code": "C"},
+        {"text": "1963", "result": false, "code": "D"}
+      ]
+    }
+  ]}

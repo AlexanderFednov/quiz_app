@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'generated/l10n.dart';
+import './questionList.dart';
 
 class Result extends StatelessWidget {
   final Function resetHandler;
   final int score;
-  final List<Map<String, Object>> questions;
+  final List<QuestionInside> questions;
 
   Result({this.score, this.resetHandler, this.questions});
 
@@ -14,7 +15,7 @@ class Result extends StatelessWidget {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: Image.network(
-                      'https://lh3.googleusercontent.com/proxy/ryGAu_ryOUlOcuAiuYhl4atXwWitF4AcMUMh6Q6iTTpwIwoSaJ1yq0C79iII2D3GeFl3YpC6Dl4cUKVjcg2kWECkRZFdhXTv9vDA421prbduuh2hIuF-kw')
+                      'https://vogazeta.ru/uploads/full_size_1551691416-ec07565f279118e2314a7eb80dc93e66.jpg')
                   .image,
               fit: BoxFit.cover)),
       child: Center(
@@ -27,11 +28,11 @@ class Result extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Правильных ответов - $score из ${questions.length}',
+                S.of(context).result(score, questions.length),
                 style: TextStyle(fontSize: 30, color: Colors.black),
               ),
               TextButton(
-                child: Text('На главную страницу',
+                child: Text(S.of(context).toMainPage,
                     style: TextStyle(fontSize: 30, color: Colors.black)),
                 onPressed: resetHandler,
               )
