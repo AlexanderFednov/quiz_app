@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'answer.dart';
 import 'question.dart';
 import 'result.dart';
-import 'questionList.dart';
+import 'models/questionList.dart';
 
 class Quiz extends StatelessWidget {
   final List<QuestionInside> questions;

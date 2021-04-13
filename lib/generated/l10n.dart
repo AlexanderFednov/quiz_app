@@ -55,10 +55,10 @@ class S {
     );
   }
 
-  /// `Select a category`
+  /// `Select a category:`
   String get categotyChoice {
     return Intl.message(
-      'Select a category',
+      'Select a category:',
       name: 'categotyChoice',
       desc: '',
       args: [],
@@ -90,6 +90,16 @@ class S {
     return Intl.message(
       'Space',
       name: 'questionsSpace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sector 13`
+  String get questionsWeb {
+    return Intl.message(
+      'Sector 13',
+      name: 'questionsWeb',
       desc: '',
       args: [],
     );
@@ -138,6 +148,176 @@ class S {
       name: 'lastResult',
       desc: 'Last Result',
       args: [savedScore, questionsLenght],
+    );
+  }
+
+  /// `Reset`
+  String get resetLeaderBoard {
+    return Intl.message(
+      'Reset',
+      name: 'resetLeaderBoard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last results`
+  String get lastResults {
+    return Intl.message(
+      'Last results',
+      name: 'lastResults',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hello, {user}!`
+  String helloMessage(Object user) {
+    return Intl.message(
+      'Hello, $user!',
+      name: 'helloMessage',
+      desc: 'Welcome Message',
+      args: [user],
+    );
+  }
+
+  /// `Change user`
+  String get changeUser {
+    return Intl.message(
+      'Change user',
+      name: 'changeUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select user`
+  String get selectUser {
+    return Intl.message(
+      'Select user',
+      name: 'selectUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Information`
+  String get information {
+    return Intl.message(
+      'Information',
+      name: 'information',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Users`
+  String get userList {
+    return Intl.message(
+      'Users',
+      name: 'userList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current user:`
+  String get currentUser {
+    return Intl.message(
+      'Current user:',
+      name: 'currentUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get search {
+    return Intl.message(
+      'Search',
+      name: 'search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nullify`
+  String get nullify {
+    return Intl.message(
+      'Nullify',
+      name: 'nullify',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User list is empty`
+  String get userListEmpty {
+    return Intl.message(
+      'User list is empty',
+      name: 'userListEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Registration date:`
+  String get registrationDate {
+    return Intl.message(
+      'Registration date:',
+      name: 'registrationDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Result:`
+  String get userResult {
+    return Intl.message(
+      'Result:',
+      name: 'userResult',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter name`
+  String get enterName {
+    return Intl.message(
+      'Enter name',
+      name: 'enterName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This name is taken`
+  String get nameIsTaken {
+    return Intl.message(
+      'This name is taken',
+      name: 'nameIsTaken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add user`
+  String get addUser {
+    return Intl.message(
+      'Add user',
+      name: 'addUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
     );
   }
 }

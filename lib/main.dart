@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:quiz_app/screens/userList.dart';
 import './quiz.dart';
-import './main_page.dart';
+import 'screens/main_page.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/l10n.dart';
-import './questionList.dart';
+import 'models/questionList.dart';
+import 'models/hive_userData.dart';
 import 'progressBar.dart';
+import 'leaderBoard.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserDataAdapter());
+  await Hive.openBox<UserData>('UserData1');
   runApp(QuizApp());
 }
 
@@ -44,6 +54,7 @@ class MyAppState extends State<MyApp> {
   List<QuestionInside> questionAll;
   List<QuestionInside> questionFilms;
   List<QuestionInside> questionSpace;
+  List<QuestionInside> questionWeb;
 
   int _questionIndex = 0;
   int _totalScore = 0;
@@ -51,6 +62,9 @@ class MyAppState extends State<MyApp> {
   int _questionsLenght = 0;
 
   List<Widget> _progress = [];
+  List<String> _lastResults = [];
+
+  UserData currentUser;
 
 // Reset Quiz App
 
@@ -58,7 +72,18 @@ class MyAppState extends State<MyApp> {
     cont.animateToPage(0,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    var contactBox = Hive.box<UserData>('UserData1');
     setState(() {
+      contactBox.values.forEach((element) {
+        if (element.isCurrentUser == true) {
+          element.userResult = _totalScore;
+          element.save();
+        }
+      });
+      var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
+      _lastResults.add(
+          '${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow');
+      prefs.setStringList('lastResults', _lastResults);
       _questionsLenght = _questionIndex;
       prefs.setInt('questionsLenght', _questionIndex);
       _saveScore = _totalScore;
@@ -71,7 +96,7 @@ class MyAppState extends State<MyApp> {
 
 //When answer question
 
-  void _answerQuestion(bool result) async {
+  void _answerQuestion(bool result) {
     if (result == true) {
       setState(() {
         _questionIndex = _questionIndex + 1;
@@ -92,6 +117,13 @@ class MyAppState extends State<MyApp> {
     setState(() {
       _saveScore = (prefs.getInt('saveScore') ?? 0);
       _questionsLenght = (prefs.getInt('questionsLenght') ?? 0);
+      _lastResults = (prefs.getStringList('lastResults') ?? 0);
+    });
+  }
+
+  void _resetLeaderboard() {
+    setState(() {
+      _lastResults = [];
     });
   }
 
@@ -123,6 +155,149 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+  _loadData() async {
+    final responce = await http.get(Uri.http("10.0.2.2:8000", ""));
+
+    if (responce.statusCode == 200) {
+      Map decoded = jsonDecode(responce.body);
+      var questionListWeb = QuestionList.fromJson(decoded).question;
+      print(decoded);
+      setState(() {
+        questionWeb = questionListWeb;
+      });
+      //responceText = decoded;
+    } else {
+      print('Error');
+      String jsonQuestionNull =
+          await rootBundle.loadString('assets/questions/questionsNull.json');
+      Map decoded = jsonDecode(jsonQuestionNull);
+
+      var questionListNull = QuestionList.fromJson(decoded).question;
+
+      setState(() {
+        questionWeb = questionListNull;
+      });
+    }
+  }
+
+//Select User
+
+  void _selectUser() {
+    showDialog(
+        context: context,
+        builder: (_) => Center(
+              child: Container(
+                width: double.infinity,
+                height: 300,
+                child: Dialog(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      colors: [Colors.white, Colors.blue[100], Colors.red[100]],
+                    )),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                              margin: EdgeInsets.only(bottom: 20),
+                              child: Text('Выбор пользователя',
+                                  style: TextStyle(fontSize: 30))),
+                          Container(
+                            child: Text('Текущий пользователь:',
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                          currentUser != null
+                              ? Column(
+                                  children: [
+                                    Container(
+                                      //margin: EdgeInsets.only(top: 10),
+                                      child: Text('${currentUser.userName}',
+                                          style: TextStyle(
+                                              fontSize: 35,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 20),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            child: Text('Ок',
+                                                style: TextStyle(fontSize: 25)),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                          ),
+                                          TextButton(
+                                              onPressed: () => {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              UserList(
+                                                                setCurrentUser:
+                                                                    _setCurrentUser,
+                                                              )),
+                                                    )
+                                                  },
+                                              child: Text('Изменить',
+                                                  style:
+                                                      TextStyle(fontSize: 25)))
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    Container(
+                                      //margin: EdgeInsets.all(20),
+                                      child: Text('Не выбран',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(top: 30),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            child: Text('Ок',
+                                                style: TextStyle(
+                                                    fontSize: 25,
+                                                    color: Colors.grey)),
+                                            onPressed: () => null,
+                                          ),
+                                          TextButton(
+                                              onPressed: () => {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              UserList(
+                                                                setCurrentUser:
+                                                                    _setCurrentUser,
+                                                              )),
+                                                    )
+                                                  },
+                                              child: Text(
+                                                'Выбрать',
+                                                style: TextStyle(fontSize: 25),
+                                              ))
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
+                        ]),
+                  ),
+                ),
+              ),
+            ));
+  }
+
 //Page navigation
 
   PageController cont = PageController();
@@ -144,6 +319,11 @@ class MyAppState extends State<MyApp> {
 
   void swap3() {
     cont.animateToPage(3,
+        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+  }
+
+  void swap4() {
+    cont.animateToPage(4,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
   }
 
@@ -171,13 +351,45 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+  // Get current User
+  void _getCurrentUser() {
+    Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+    if (contactsBox.isNotEmpty) {
+      contactsBox.values.forEach((element) {
+        if (element.isCurrentUser == true) {
+          currentUser = element;
+        }
+      });
+    } else
+      currentUser = null;
+  }
+
+  void _setCurrentUser() {
+    Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+    setState(() {
+      contactsBox.values.forEach((element) {
+        if (element.isCurrentUser == true) currentUser = element;
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     loadList();
     _loadSaveScore();
+    _loadData();
+    _getCurrentUser();
 
     S.load(Locale('ru', 'RU'));
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   return _selectUser();
+    // });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -190,6 +402,22 @@ class MyAppState extends State<MyApp> {
         ),
         centerTitle: true,
         backgroundColor: Colors.amber,
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.leaderboard,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return LeaderBoard(
+                    lastResults: _lastResults,
+                    resetLeaderBoard: _resetLeaderboard,
+                  );
+                }));
+              })
+        ],
       ),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
@@ -199,10 +427,13 @@ class MyAppState extends State<MyApp> {
             swap1: swap1,
             swap2: swap2,
             swap3: swap3,
+            swap4: swap4,
             localeRu: localeRu,
             localeEn: localeEn,
             savedResult: _saveScore,
             questionsLenght: _questionsLenght,
+            currentUser: currentUser,
+            setCurrentUser: _setCurrentUser,
           ),
           Quiz(
               answerQuestions: _answerQuestion,
@@ -233,6 +464,16 @@ class MyAppState extends State<MyApp> {
               onMainPage: onMainPage,
               imageUrl:
                   'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
+              progress: _progress),
+          Quiz(
+              answerQuestions: _answerQuestion,
+              questionIndex: _questionIndex,
+              questions: questionWeb,
+              resetQuiz: _resetQuiz,
+              totalScore: _totalScore,
+              onMainPage: onMainPage,
+              imageUrl:
+                  'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
               progress: _progress)
         ],
       ),

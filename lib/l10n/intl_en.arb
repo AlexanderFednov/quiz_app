@@ -1,10 +1,11 @@
 {
 "titleAppbar" : "Quiz without cash prizes ",
 "title" : "Funny Quiz",
-"categotyChoice" : "Select a category",
+"categotyChoice" : "Select a category:",
 "questionsAll" : "General questions",
 "questionsFilms" : "Movies of the USSR",
 "questionsSpace" : "Space",
+"questionsWeb" :"Sector 13",
 "reset" : "To the main page (the result will be reset)",
 "toMainPage" : "To the main page",
 "result" : "Your score - {score} of {questions}",
@@ -21,6 +22,30 @@
         "type" : "int"
         }, "questionsLenght":{"type" : "int"}
         }
-    }
+    },
+    "resetLeaderBoard" : "Reset",
+    "lastResults" : "Last results",
+    "helloMessage" : "Hello, {user}!",
+"@helloMessage" :{"description": "Welcome Message", "placeholders":{
+    "user":{
+        "type" : "String"
+        }
+            }
+    },
+"changeUser" : "Change user",
+"selectUser" : "Select user",
+"information" : "Information",
+"userList" : "Users",
+"currentUser" : "Current user:",
+"search" : "Search",
+"nullify" : "Nullify",
+"userListEmpty" :"User list is empty",
+"registrationDate" : "Registration date:",
+"userResult" : "Result:",
+"enterName" : "Enter name",
+"nameIsTaken" : "This name is taken",
+"addUser" : "Add user",
+"cancel" : "Cancel"
+
 
 }

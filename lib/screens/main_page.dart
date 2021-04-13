@@ -4,25 +4,34 @@ import 'package:animated_button/animated_button.dart';
 //import 'package:json_annotation/json_annotation.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:intl/intl.dart';
-import 'generated/l10n.dart';
+import '../generated/l10n.dart';
+import '../models/hive_userData.dart';
+import '../screens/userList.dart';
+import '../screens/user_Information.dart';
 
 class MainPage extends StatelessWidget {
   final Function swap1;
   final Function swap2;
   final Function swap3;
+  final Function swap4;
   final Function localeRu;
   final Function localeEn;
   final int savedResult;
   final int questionsLenght;
+  final UserData currentUser;
+  final Function setCurrentUser;
 
   MainPage(
       {this.swap1,
       this.swap2,
       this.swap3,
+      this.swap4,
       this.localeRu,
       this.localeEn,
       this.savedResult,
-      this.questionsLenght});
+      this.questionsLenght,
+      this.currentUser,
+      this.setCurrentUser});
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +68,39 @@ class MainPage extends StatelessWidget {
                     color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
+              ),
+              if (currentUser != null)
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Text(S.of(context).helloMessage(currentUser.userName),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => UserList(
+                                  setCurrentUser: setCurrentUser,
+                                ))),
+                    child: Text(
+                        currentUser != null
+                            ? S.of(context).changeUser
+                            : S.of(context).selectUser,
+                        style: TextStyle(fontSize: 15)),
+                  ),
+                  if (currentUser != null)
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UserInformation(user: currentUser))),
+                      child: Text(S.of(context).information,
+                          style: TextStyle(fontSize: 15)),
+                    )
+                ],
               )
             ],
           ),
@@ -89,6 +131,11 @@ class MainPage extends StatelessWidget {
                       swap: swap3,
                       categoryColor: Colors.blue[800],
                     ),
+                    CategoryButton(
+                      category: S.of(context).questionsWeb,
+                      swap: swap4,
+                      categoryColor: Colors.indigoAccent,
+                    )
                   ],
                 )),
           ),

@@ -1,12 +1,31 @@
 {
 "titleAppbar" : "Викторина без денежных призов",
 "title" : "Весёлая викторина",
-"categotyChoice" : "Выберите категорию",
+"categotyChoice" : "Выберите категорию:",
 "questionsAll" : "Общие вопросы",
 "questionsFilms" : "Кинофильмы СССР",
 "questionsSpace" : "Космос",
+"questionsWeb" : "13 Сектор",
 "reset" : "На главную страницу(результат будет сброшен)",
 "toMainPage" : "На главную страницу",
 "result" : "Правильных ответов - {score} из {questions}",
-"lastResult" : "{savedScore, plural, zero{Последний результат - {savedScore} баллов из {questionsLenght}} one{Последний результат - {savedScore} балл из {questionsLenght}} two{Последний результат - {savedScore} балла из {questionsLenght}}  few{Последний результат - {savedScore} балла из {questionsLenght}} many{Последний результат - {savedScore} баллов из {questionsLenght}} other{Последний результат - {savedScore} баллов из {questionsLenght}}} "
+"lastResult" : "{savedScore, plural, zero{Последний результат - {savedScore} баллов из {questionsLenght}} one{Последний результат - {savedScore} балл из {questionsLenght}} two{Последний результат - {savedScore} балла из {questionsLenght}}  few{Последний результат - {savedScore} балла из {questionsLenght}} many{Последний результат - {savedScore} баллов из {questionsLenght}} other{Последний результат - {savedScore} баллов из {questionsLenght}}} ",
+"resetLeaderBoard" : "Обнулить",
+"lastResults" : "Последние результаты",
+"helloMessage" : "Привет, {user}!",
+"changeUser" : "Сменить пользователя",
+"selectUser" : "Выберите пользователя",
+"information" : "Информация",
+"userList" : "Список пользователей",
+"currentUser" : "Текущий пользователь:",
+"search" : "Поиск",
+"nullify" : "Обнулить",
+"userListEmpty" :"Список пользователей пуст",
+"registrationDate" : "Дата регистрации:",
+"userResult" : "Результат:",
+"enterName" : "Введите имя",
+"nameIsTaken" : "Данное имя используется",
+"addUser" : "Добавить",
+"cancel" : "Отмена"
+
 }
