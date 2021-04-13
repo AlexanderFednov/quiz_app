@@ -277,6 +277,9 @@ class UserListState extends State<UserList> {
     super.initState();
 
     _getCurrentUser();
+    _focus.addListener(() {
+      setState(() {});
+    });
   }
 
   _onSearchChange(String text) async {
