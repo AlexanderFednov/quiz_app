@@ -78,7 +78,7 @@ class MyAppState extends State<MyApp> {
   int _questionsLenght = 0;
   int _categoryNumber = 0;
 
-  bool isAudionPlaying;
+  bool isAudionPlaying = true;
 
   List<Widget> _progress = [];
   List<String> _lastResults = [];
@@ -92,6 +92,8 @@ class MyAppState extends State<MyApp> {
   Duration position;
 
 // Reset Quiz App
+//
+//
 
   void _resetQuiz() async {
     cont.animateToPage(0,
@@ -138,6 +140,8 @@ class MyAppState extends State<MyApp> {
   }
 
 //When answer question
+//
+//
 
   void _answerQuestion(bool result) {
     if (result == true) {
@@ -155,6 +159,8 @@ class MyAppState extends State<MyApp> {
   }
 
   //Loading savescore value on start
+  //
+  //
 
   _loadSaveScore() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -172,6 +178,8 @@ class MyAppState extends State<MyApp> {
   // }
 
 //Load banks of questions
+//
+//
 
   loadList() async {
     String jsonQuestionAll =
@@ -344,6 +352,8 @@ class MyAppState extends State<MyApp> {
   // }
 
 //Page navigation
+//
+//
 
   PageController cont = PageController();
 
@@ -387,6 +397,8 @@ class MyAppState extends State<MyApp> {
   }
 
 //localization select
+//
+//
 
   void localeRu() {
     setState(() {
@@ -401,6 +413,8 @@ class MyAppState extends State<MyApp> {
   }
 
   // Get current User
+  //
+  //
   void _getCurrentUser() {
     Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
     if (contactsBox.isNotEmpty) {
@@ -423,6 +437,8 @@ class MyAppState extends State<MyApp> {
   }
 
 //Load music
+//
+//
 
   void _loadMusic() async {
     final ByteData data =
@@ -432,27 +448,36 @@ class MyAppState extends State<MyApp> {
     await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
     mp3Uri = tempFile.uri.toString();
     audioPlugin.stop();
-    audioPlugin.play(mp3Uri);
-    isAudionPlaying = true;
+    if (isAudionPlaying == true) {
+      audioPlugin.play(mp3Uri);
+    }
     audioPlugin.onPlayerStateChanged.listen((event) {
-      if (event == AudioPlayerState.STOPPED) {
+      if (event == AudioPlayerState.COMPLETED) {
         audioPlugin.play(mp3Uri);
       }
     });
   }
 
-  void _soundButton() {
+  void _soundButton() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (isAudionPlaying == true) {
       audioPlugin.pause();
       setState(() {
         isAudionPlaying = false;
       });
+      prefs.setBool('isAudioPlaying', false);
     } else {
       audioPlugin.play(mp3Uri);
       setState(() {
         isAudionPlaying = true;
       });
+      prefs.setBool('isAudioPlaying', true);
     }
+  }
+
+  void _loadIsPlaying() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isAudionPlaying = prefs.getBool('isAudioPlaying');
   }
 
   @override
@@ -462,6 +487,7 @@ class MyAppState extends State<MyApp> {
     _loadSaveScore();
     _loadData();
     _getCurrentUser();
+    _loadIsPlaying();
     _loadMusic();
 
     // S.load(Locale('ru', 'RU'));
