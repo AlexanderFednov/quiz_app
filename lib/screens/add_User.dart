@@ -17,7 +17,8 @@ class AddUser extends StatefulWidget {
 
 class AddUserState extends State<AddUser> {
   String userName;
-  Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+  //Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+  List<UserData> userData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -90,42 +91,37 @@ class AddUserState extends State<AddUser> {
   void _onForSubmit() {
     Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
 
-    if (userName == null || userName.isEmpty) {
-      _errorDialog('Введите имя');
-    } else {
-      if (contactsBox.values.any((element) => element.userName == userName)) {
-        _errorDialog('Данное имя используется');
-      } else {
-        Navigator.of(context).pop();
-        contactsBox
-            .add(UserData(userName: userName, registerDate: DateTime.now()));
-      }
-    }
+    Navigator.of(context).pop();
+    contactsBox.add(UserData(
+        userName: userName,
+        registerDate: DateTime.now(),
+        userResults: [],
+        isCurrentUser: false));
   }
 
-  void _errorDialog(String errorText) {
-    showDialog(
-        context: context,
-        builder: (_) => Center(
-              child: Dialog(
-                child: Container(
-                  height: 100,
-                  width: 300,
-                  child: Column(
-                    children: [
-                      Text(
-                        errorText,
-                        style: TextStyle(fontSize: 23),
-                      ),
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('Ок', style: TextStyle(fontSize: 20)))
-                    ],
-                  ),
-                ),
-              ),
-            ));
-  }
+  // void _errorDialog(String errorText) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (_) => Center(
+  //             child: Dialog(
+  //               child: Container(
+  //                 height: 100,
+  //                 width: 300,
+  //                 child: Column(
+  //                   children: [
+  //                     Text(
+  //                       errorText,
+  //                       style: TextStyle(fontSize: 23),
+  //                     ),
+  //                     TextButton(
+  //                         onPressed: () => Navigator.of(context).pop(),
+  //                         child: Text('Ок', style: TextStyle(fontSize: 20)))
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ));
+  // }
 
   @override
   void dispose() {

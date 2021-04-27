@@ -28,6 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "addUser" : MessageLookupByLibrary.simpleMessage("Добавить"),
+    "allUserResult" : MessageLookupByLibrary.simpleMessage("Все результаты:"),
+    "areYouSure" : MessageLookupByLibrary.simpleMessage("Вы уверены?"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Отмена"),
     "categotyChoice" : MessageLookupByLibrary.simpleMessage("Выберите категорию:"),
     "changeUser" : MessageLookupByLibrary.simpleMessage("Сменить пользователя"),
@@ -37,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "information" : MessageLookupByLibrary.simpleMessage("Информация"),
     "lastResult" : m1,
     "lastResults" : MessageLookupByLibrary.simpleMessage("Последние результаты"),
+    "leaderBoard" : MessageLookupByLibrary.simpleMessage("Лидеры"),
     "nameIsTaken" : MessageLookupByLibrary.simpleMessage("Данное имя используется"),
     "nullify" : MessageLookupByLibrary.simpleMessage("Обнулить"),
     "questionsAll" : MessageLookupByLibrary.simpleMessage("Общие вопросы"),
@@ -47,13 +50,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset" : MessageLookupByLibrary.simpleMessage("На главную страницу(результат будет сброшен)"),
     "resetLeaderBoard" : MessageLookupByLibrary.simpleMessage("Обнулить"),
     "result" : m2,
+    "resultsListEmpty" : MessageLookupByLibrary.simpleMessage("Результатов нет"),
+    "rightAnswersPercent" : MessageLookupByLibrary.simpleMessage("Процент правильных ответов:"),
     "search" : MessageLookupByLibrary.simpleMessage("Поиск"),
     "selectUser" : MessageLookupByLibrary.simpleMessage("Выберите пользователя"),
     "title" : MessageLookupByLibrary.simpleMessage("Весёлая викторина"),
     "titleAppbar" : MessageLookupByLibrary.simpleMessage("Викторина без денежных призов"),
     "toMainPage" : MessageLookupByLibrary.simpleMessage("На главную страницу"),
+    "userLastResult" : MessageLookupByLibrary.simpleMessage("Последний результат:"),
     "userList" : MessageLookupByLibrary.simpleMessage("Список пользователей"),
     "userListEmpty" : MessageLookupByLibrary.simpleMessage("Список пользователей пуст"),
-    "userResult" : MessageLookupByLibrary.simpleMessage("Результат:")
+    "userResult" : MessageLookupByLibrary.simpleMessage("Результат:"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Да")
   };
 }

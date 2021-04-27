@@ -320,6 +320,76 @@ class S {
       args: [],
     );
   }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure?`
+  String get areYouSure {
+    return Intl.message(
+      'Are you sure?',
+      name: 'areYouSure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last result:`
+  String get userLastResult {
+    return Intl.message(
+      'Last result:',
+      name: 'userLastResult',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All results:`
+  String get allUserResult {
+    return Intl.message(
+      'All results:',
+      name: 'allUserResult',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Right answers percent:`
+  String get rightAnswersPercent {
+    return Intl.message(
+      'Right answers percent:',
+      name: 'rightAnswersPercent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List of results is empty`
+  String get resultsListEmpty {
+    return Intl.message(
+      'List of results is empty',
+      name: 'resultsListEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leaderboard`
+  String get leaderBoard {
+    return Intl.message(
+      'Leaderboard',
+      name: 'leaderBoard',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

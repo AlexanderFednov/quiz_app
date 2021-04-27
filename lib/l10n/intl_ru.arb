@@ -26,6 +26,13 @@
 "enterName" : "Введите имя",
 "nameIsTaken" : "Данное имя используется",
 "addUser" : "Добавить",
-"cancel" : "Отмена"
+"cancel" : "Отмена",
+"yes" : "Да",
+"areYouSure" : "Вы уверены?",
+"userLastResult" : "Последний результат:",
+"allUserResult" : "Все результаты:",
+"rightAnswersPercent" : "Процент правильных ответов:",
+"resultsListEmpty" : "Результатов нет",
+"leaderBoard" : "Лидеры"
 
 }

@@ -22,13 +22,14 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       userId: fields[2] as int,
       isCurrentUser: fields[3] as bool,
       registerDate: fields[4] as DateTime,
+      userResults: (fields[5] as List)?.cast<UserResult>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserData obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.userName)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       ..writeByte(3)
       ..write(obj.isCurrentUser)
       ..writeByte(4)
-      ..write(obj.registerDate);
+      ..write(obj.registerDate)
+      ..writeByte(5)
+      ..write(obj.userResults);
   }
 
   @override
@@ -48,6 +51,49 @@ class UserDataAdapter extends TypeAdapter<UserData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UserDataAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class UserResultAdapter extends TypeAdapter<UserResult> {
+  @override
+  final int typeId = 1;
+
+  @override
+  UserResult read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return UserResult(
+      score: fields[0] as int,
+      questionsLenght: fields[1] as int,
+      resultDate: fields[2] as DateTime,
+      categoryNumber: fields[3] as int,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, UserResult obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.score)
+      ..writeByte(1)
+      ..write(obj.questionsLenght)
+      ..writeByte(2)
+      ..write(obj.resultDate)
+      ..writeByte(3)
+      ..write(obj.categoryNumber);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserResultAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

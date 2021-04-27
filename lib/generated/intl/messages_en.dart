@@ -28,6 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "addUser" : MessageLookupByLibrary.simpleMessage("Add user"),
+    "allUserResult" : MessageLookupByLibrary.simpleMessage("All results:"),
+    "areYouSure" : MessageLookupByLibrary.simpleMessage("Are you sure?"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "categotyChoice" : MessageLookupByLibrary.simpleMessage("Select a category:"),
     "changeUser" : MessageLookupByLibrary.simpleMessage("Change user"),
@@ -37,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "information" : MessageLookupByLibrary.simpleMessage("Information"),
     "lastResult" : m1,
     "lastResults" : MessageLookupByLibrary.simpleMessage("Last results"),
+    "leaderBoard" : MessageLookupByLibrary.simpleMessage("Leaderboard"),
     "nameIsTaken" : MessageLookupByLibrary.simpleMessage("This name is taken"),
     "nullify" : MessageLookupByLibrary.simpleMessage("Nullify"),
     "questionsAll" : MessageLookupByLibrary.simpleMessage("General questions"),
@@ -47,13 +50,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset" : MessageLookupByLibrary.simpleMessage("To the main page (the result will be reset)"),
     "resetLeaderBoard" : MessageLookupByLibrary.simpleMessage("Reset"),
     "result" : m2,
+    "resultsListEmpty" : MessageLookupByLibrary.simpleMessage("List of results is empty"),
+    "rightAnswersPercent" : MessageLookupByLibrary.simpleMessage("Right answers percent:"),
     "search" : MessageLookupByLibrary.simpleMessage("Search"),
     "selectUser" : MessageLookupByLibrary.simpleMessage("Select user"),
     "title" : MessageLookupByLibrary.simpleMessage("Funny Quiz"),
     "titleAppbar" : MessageLookupByLibrary.simpleMessage("Quiz without cash prizes "),
     "toMainPage" : MessageLookupByLibrary.simpleMessage("To the main page"),
+    "userLastResult" : MessageLookupByLibrary.simpleMessage("Last result:"),
     "userList" : MessageLookupByLibrary.simpleMessage("Users"),
     "userListEmpty" : MessageLookupByLibrary.simpleMessage("User list is empty"),
-    "userResult" : MessageLookupByLibrary.simpleMessage("Result:")
+    "userResult" : MessageLookupByLibrary.simpleMessage("Result:"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Yes")
   };
 }

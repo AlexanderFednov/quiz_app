@@ -45,7 +45,13 @@
 "enterName" : "Enter name",
 "nameIsTaken" : "This name is taken",
 "addUser" : "Add user",
-"cancel" : "Cancel"
-
+"cancel" : "Cancel",
+"yes" : "Yes",
+"areYouSure" : "Are you sure?",
+"userLastResult" : "Last result:",
+"allUserResult" : "All results:",
+"rightAnswersPercent" : "Right answers percent:",
+"resultsListEmpty" : "List of results is empty",
+"leaderBoard" : "Leaderboard"
 
 }

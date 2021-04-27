@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:quiz_app/screens/userList.dart';
+import 'package:provider/provider.dart';
+import 'package:quiz_app/models/moor_database.dart';
+// import 'package:quiz_app/screens/userList.dart';
 import './quiz.dart';
 import 'screens/main_page.dart';
 import 'package:flutter/services.dart';
@@ -13,14 +17,18 @@ import 'generated/l10n.dart';
 import 'models/questionList.dart';
 import 'models/hive_userData.dart';
 import 'progressBar.dart';
-import 'leaderBoard.dart';
+import 'screens/leaderBoard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:audioplayer/audioplayer.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   await Hive.initFlutter();
+  Hive.registerAdapter(UserResultAdapter());
   Hive.registerAdapter(UserDataAdapter());
   await Hive.openBox<UserData>('UserData1');
+  await Hive.openBox<UserData>('UserData1Learn');
   runApp(QuizApp());
 }
 
@@ -34,12 +42,20 @@ class QuizApp extends StatefulWidget {
 class QuizAppState extends State<QuizApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(localizationsDelegates: [
-      S.delegate,
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ], supportedLocales: S.delegate.supportedLocales, home: MyApp());
+    return Provider(
+      create: (_) => MyDatabase(),
+      child: MaterialApp(
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        home: MyApp(),
+        locale: Locale('ru', 'RU'),
+      ),
+    );
   }
 }
 
@@ -54,17 +70,26 @@ class MyAppState extends State<MyApp> {
   List<QuestionInside> questionAll;
   List<QuestionInside> questionFilms;
   List<QuestionInside> questionSpace;
-  List<QuestionInside> questionWeb;
+  List<QuestionInside> questionWeb = [];
 
   int _questionIndex = 0;
   int _totalScore = 0;
   int _saveScore = 0;
   int _questionsLenght = 0;
+  int _categoryNumber = 0;
+
+  bool isAudionPlaying;
 
   List<Widget> _progress = [];
   List<String> _lastResults = [];
 
   UserData currentUser;
+
+  AudioPlayer audioPlugin = AudioPlayer();
+
+  String mp3Uri = '';
+
+  Duration position;
 
 // Reset Quiz App
 
@@ -73,25 +98,43 @@ class MyAppState extends State<MyApp> {
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var contactBox = Hive.box<UserData>('UserData1');
-    setState(() {
-      contactBox.values.forEach((element) {
-        if (element.isCurrentUser == true) {
-          element.userResult = _totalScore;
-          element.save();
-        }
+    if (_questionIndex > 0)
+      setState(() {
+        contactBox.values.forEach((element) {
+          if (element.isCurrentUser == true) {
+            element.userResult = _totalScore;
+            element.userResults.insert(
+                0,
+                UserResult(
+                    score: _totalScore,
+                    questionsLenght: _questionIndex,
+                    resultDate: DateTime.now(),
+                    categoryNumber: _categoryNumber));
+            element.save();
+          }
+        });
+        Provider.of<MyDatabase>(context, listen: false).insertMoorResult(
+            MoorResult(
+                id: null,
+                name: currentUser.userName,
+                result: _totalScore,
+                questionsLenght: _questionsLenght,
+                rightResultsPercent: (100 / _questionsLenght * _totalScore),
+                categoryNumber: _categoryNumber,
+                resultDate: DateTime.now()));
+        // MyDatabase().insertMoorResult();
+        var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
+        _lastResults.add(
+            '${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow');
+        prefs.setStringList('lastResults', _lastResults);
+        _questionsLenght = _questionIndex;
+        prefs.setInt('questionsLenght', _questionIndex);
+        _saveScore = _totalScore;
+        prefs.setInt('saveScore', _saveScore);
+        _questionIndex = 0;
+        _totalScore = 0;
+        _progress = [];
       });
-      var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
-      _lastResults.add(
-          '${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow');
-      prefs.setStringList('lastResults', _lastResults);
-      _questionsLenght = _questionIndex;
-      prefs.setInt('questionsLenght', _questionIndex);
-      _saveScore = _totalScore;
-      prefs.setInt('saveScore', _saveScore);
-      _questionIndex = 0;
-      _totalScore = 0;
-      _progress = [];
-    });
   }
 
 //When answer question
@@ -112,6 +155,7 @@ class MyAppState extends State<MyApp> {
   }
 
   //Loading savescore value on start
+
   _loadSaveScore() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -121,11 +165,11 @@ class MyAppState extends State<MyApp> {
     });
   }
 
-  void _resetLeaderboard() {
-    setState(() {
-      _lastResults = [];
-    });
-  }
+  // void _resetLeaderboard() {
+  //   setState(() {
+  //     _lastResults = [];
+  //   });
+  // }
 
 //Load banks of questions
 
@@ -182,121 +226,122 @@ class MyAppState extends State<MyApp> {
 
 //Select User
 
-  void _selectUser() {
-    showDialog(
-        context: context,
-        builder: (_) => Center(
-              child: Container(
-                width: double.infinity,
-                height: 300,
-                child: Dialog(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      colors: [Colors.white, Colors.blue[100], Colors.red[100]],
-                    )),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              margin: EdgeInsets.only(bottom: 20),
-                              child: Text('Выбор пользователя',
-                                  style: TextStyle(fontSize: 30))),
-                          Container(
-                            child: Text('Текущий пользователь:',
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                          currentUser != null
-                              ? Column(
-                                  children: [
-                                    Container(
-                                      //margin: EdgeInsets.only(top: 10),
-                                      child: Text('${currentUser.userName}',
-                                          style: TextStyle(
-                                              fontSize: 35,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.symmetric(vertical: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextButton(
-                                            child: Text('Ок',
-                                                style: TextStyle(fontSize: 25)),
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(),
-                                          ),
-                                          TextButton(
-                                              onPressed: () => {
-                                                    Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              UserList(
-                                                                setCurrentUser:
-                                                                    _setCurrentUser,
-                                                              )),
-                                                    )
-                                                  },
-                                              child: Text('Изменить',
-                                                  style:
-                                                      TextStyle(fontSize: 25)))
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              : Column(
-                                  children: [
-                                    Container(
-                                      //margin: EdgeInsets.all(20),
-                                      child: Text('Не выбран',
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(top: 30),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextButton(
-                                            child: Text('Ок',
-                                                style: TextStyle(
-                                                    fontSize: 25,
-                                                    color: Colors.grey)),
-                                            onPressed: () => null,
-                                          ),
-                                          TextButton(
-                                              onPressed: () => {
-                                                    Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              UserList(
-                                                                setCurrentUser:
-                                                                    _setCurrentUser,
-                                                              )),
-                                                    )
-                                                  },
-                                              child: Text(
-                                                'Выбрать',
-                                                style: TextStyle(fontSize: 25),
-                                              ))
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                        ]),
-                  ),
-                ),
-              ),
-            ));
-  }
+  // void _selectUser() {
+  //   showDialog(
+  //       context: context,
+  //       builder: (_) => Center(
+  //             child: Container(
+  //               width: double.infinity,
+  //               height: 300,
+  //               child: Dialog(
+  //                 child: Container(
+  //                   decoration: BoxDecoration(
+  //                       gradient: LinearGradient(
+  //                     begin: Alignment.topCenter,
+  //                     colors: [Colors.white, Colors.blue[100], Colors.red[100]],
+  //                   )),
+  //                   child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                             margin: EdgeInsets.only(bottom: 20),
+  //                             child: Text('Выбор пользователя',
+  //                                 style: TextStyle(fontSize: 30))),
+  //                         Container(
+  //                           child: Text('Текущий пользователь:',
+  //                               style: TextStyle(fontSize: 20)),
+  //                         ),
+  //                         currentUser != null
+  //                             ? Column(
+  //                                 children: [
+  //                                   Container(
+  //                                     //margin: EdgeInsets.only(top: 10),
+  //                                     child: Text('${currentUser.userName}',
+  //                                         style: TextStyle(
+  //                                             fontSize: 35,
+  //                                             fontWeight: FontWeight.bold)),
+  //                                   ),
+  //                                   Container(
+  //                                     margin:
+  //                                         EdgeInsets.symmetric(vertical: 20),
+  //                                     child: Row(
+  //                                       mainAxisAlignment:
+  //                                           MainAxisAlignment.center,
+  //                                       children: [
+  //                                         TextButton(
+  //                                           child: Text('Ок',
+  //                                               style: TextStyle(fontSize: 25)),
+  //                                           onPressed: () =>
+  //                                               Navigator.of(context).pop(),
+  //                                         ),
+  //                                         TextButton(
+  //                                             onPressed: () {
+  //                                               Navigator.of(context).pop();
+  //                                               Navigator.of(context).push(
+  //                                                 MaterialPageRoute(
+  //                                                     builder: (context) =>
+  //                                                         UserList(
+  //                                                           setCurrentUser:
+  //                                                               _setCurrentUser,
+  //                                                         )),
+  //                                               );
+  //                                             },
+  //                                             child: Text('Изменить',
+  //                                                 style:
+  //                                                     TextStyle(fontSize: 25)))
+  //                                       ],
+  //                                     ),
+  //                                   )
+  //                                 ],
+  //                               )
+  //                             : Column(
+  //                                 children: [
+  //                                   Container(
+  //                                     //margin: EdgeInsets.all(20),
+  //                                     child: Text('Не выбран',
+  //                                         style: TextStyle(
+  //                                             fontSize: 30,
+  //                                             fontWeight: FontWeight.bold)),
+  //                                   ),
+  //                                   Container(
+  //                                     margin: EdgeInsets.only(top: 30),
+  //                                     child: Row(
+  //                                       mainAxisAlignment:
+  //                                           MainAxisAlignment.center,
+  //                                       children: [
+  //                                         TextButton(
+  //                                           child: Text('Ок',
+  //                                               style: TextStyle(
+  //                                                   fontSize: 25,
+  //                                                   color: Colors.grey)),
+  //                                           onPressed: () => null,
+  //                                         ),
+  //                                         TextButton(
+  //                                             onPressed: () => {
+  //                                                   Navigator.of(context).push(
+  //                                                     MaterialPageRoute(
+  //                                                         builder: (context) =>
+  //                                                             UserList(
+  //                                                               setCurrentUser:
+  //                                                                   _setCurrentUser,
+  //                                                             )),
+  //                                                   )
+  //                                                 },
+  //                                             child: Text(
+  //                                               'Выбрать',
+  //                                               style: TextStyle(fontSize: 25),
+  //                                             ))
+  //                                       ],
+  //                                     ),
+  //                                   )
+  //                                 ],
+  //                               )
+  //                       ]),
+  //                 ),
+  //               ),
+  //             ),
+  //           ));
+  // }
 
 //Page navigation
 
@@ -310,21 +355,25 @@ class MyAppState extends State<MyApp> {
   void swap1() {
     cont.animateToPage(1,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+    _categoryNumber = 1;
   }
 
   void swap2() {
     cont.animateToPage(2,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+    _categoryNumber = 2;
   }
 
   void swap3() {
     cont.animateToPage(3,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+    _categoryNumber = 3;
   }
 
   void swap4() {
     cont.animateToPage(4,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+    _categoryNumber = 4;
   }
 
   void onMainPage() {
@@ -373,6 +422,42 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+//Load music
+
+  void _loadMusic() async {
+    final ByteData data =
+        await rootBundle.load('assets/music/Shadowing - Corbyn Kites.mp3');
+    Directory tempDir = await getTemporaryDirectory();
+    File tempFile = File('${tempDir.path}/Shadowing - Corbyn Kites.mp3');
+    await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
+    mp3Uri = tempFile.uri.toString();
+    audioPlugin.stop();
+    audioPlugin.play(mp3Uri);
+    setState(() {
+      isAudionPlaying = true;
+      audioPlugin.onAudioPositionChanged.listen((event) {
+        setState(() {
+          position = event;
+        });
+      });
+    });
+    if (isAudionPlaying != false && position == null) audioPlugin.play(mp3Uri);
+  }
+
+  void _soundButton() {
+    if (isAudionPlaying == true) {
+      audioPlugin.pause();
+      setState(() {
+        isAudionPlaying = false;
+      });
+    } else {
+      audioPlugin.play(mp3Uri);
+      setState(() {
+        isAudionPlaying = true;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -380,8 +465,9 @@ class MyAppState extends State<MyApp> {
     _loadSaveScore();
     _loadData();
     _getCurrentUser();
+    _loadMusic();
 
-    S.load(Locale('ru', 'RU'));
+    // S.load(Locale('ru', 'RU'));
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   return _selectUser();
     // });
@@ -393,30 +479,43 @@ class MyAppState extends State<MyApp> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
           S.of(context).titleAppbar,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
         ),
         centerTitle: true,
         backgroundColor: Colors.amber,
         actions: [
           IconButton(
               icon: Icon(
-                Icons.leaderboard,
+                Icons.emoji_events,
                 color: Colors.black,
               ),
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return LeaderBoard(
-                    lastResults: _lastResults,
-                    resetLeaderBoard: _resetLeaderboard,
-                  );
+                  return LeaderBoard();
                 }));
-              })
+              }),
+          IconButton(
+              icon: isAudionPlaying == true
+                  ? Icon(
+                      Icons.music_note,
+                      color: Colors.black,
+                    )
+                  : Icon(
+                      Icons.music_off,
+                      color: Colors.black,
+                    ),
+              onPressed: _soundButton)
         ],
       ),
       body: PageView(

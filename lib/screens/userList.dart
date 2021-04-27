@@ -34,6 +34,8 @@ class UserListState extends State<UserList> {
 
   UserListState({@required this.setCurrentUser});
 
+  List<UserData> userData = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +65,10 @@ class UserListState extends State<UserList> {
                       children: [
                         Text(currentUser.userName,
                             style: TextStyle(fontSize: 30)),
-                        Text(currentUser.userResult.toString(),
+                        Text(
+                            currentUser.userResults.isEmpty
+                                ? '0/0'
+                                : '${currentUser.userResults[0].score}/${currentUser.userResults[0].questionsLenght}',
                             style: TextStyle(fontSize: 30))
                       ],
                     )
@@ -165,20 +170,23 @@ class UserListState extends State<UserList> {
                       return Center(
                         child: Text(S.of(context).userListEmpty),
                       );
+                    userData = Hive.box<UserData>('UserData1').values.toList();
+                    userData.sort((a, b) => a.userName.compareTo(b.userName));
                     return ListView.builder(
-                        itemCount: box.values.length,
+                        itemCount: userData.length,
                         itemBuilder: (context, index) {
-                          UserData res = box.getAt(index);
+                          UserData res = userData[index];
                           res.userId = index;
                           return Dismissible(
                             key: UniqueKey(),
                             onDismissed: (direction) {
-                              res.delete();
-                              setState(() {
-                                if (currentUser == res) {
-                                  currentUser = null;
-                                }
-                              });
+                              onDismiss(res);
+                              // res.delete();
+                              // setState(() {
+                              //   if (currentUser == res) {
+                              //     currentUser = null;
+                              //   }
+                              // });
                             },
                             child: ListTile(
                               title: Text(
@@ -191,11 +199,15 @@ class UserListState extends State<UserList> {
                               // ),
                               trailing: Container(
                                 height: 40,
-                                width: 60,
+                                width: 110,
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text(res.userResult.toString(),
-                                        style: TextStyle(fontSize: 20)),
+                                    Text(
+                                        res.userResults.isNotEmpty
+                                            ? '${res.rightAnswersPercentAll.toStringAsFixed(1)} %'
+                                            : '0 %',
+                                        style: TextStyle(fontSize: 15)),
                                     IconButton(
                                       icon: Icon(Icons.info_rounded,
                                           color: Colors.blue),
@@ -239,8 +251,8 @@ class UserListState extends State<UserList> {
               child: Text(
                 S.of(context).nullify,
               ),
-              onPressed: deleteData,
-            )
+              onPressed: onNullifyPress,
+            ),
           ],
         ),
       ),
@@ -257,7 +269,50 @@ class UserListState extends State<UserList> {
     setState(() {
       contactsBox.clear();
       currentUser = null;
+      Navigator.of(context).pop();
     });
+  }
+
+  onNullifyPress() {
+    showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  colors: [Colors.white, Colors.blue[100], Colors.red[100]],
+                )),
+                height: 200,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(S.of(context).areYouSure,
+                          style: TextStyle(fontSize: 30)),
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              child: Text(S.of(context).yes,
+                                  style: TextStyle(fontSize: 25)),
+                              onPressed: deleteData,
+                            ),
+                            TextButton(
+                              child: Text(S.of(context).cancel,
+                                  style: TextStyle(fontSize: 25)),
+                              onPressed: () => Navigator.of(context).pop(),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ));
   }
 
   void _getCurrentUser() {
@@ -297,6 +352,57 @@ class UserListState extends State<UserList> {
         });
       }
     });
+  }
+
+  void onDismiss(UserData res) {
+    showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  colors: [Colors.white, Colors.blue[100], Colors.red[100]],
+                )),
+                height: 200,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(S.of(context).areYouSure,
+                          style: TextStyle(fontSize: 30)),
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              child: Text(S.of(context).yes,
+                                  style: TextStyle(fontSize: 25)),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                res.delete();
+                                setState(() {
+                                  if (currentUser == res) currentUser = null;
+                                });
+                              },
+                            ),
+                            TextButton(
+                              child: Text(S.of(context).cancel,
+                                  style: TextStyle(fontSize: 25)),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                setState(() {});
+                              },
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ));
   }
 
   @override
