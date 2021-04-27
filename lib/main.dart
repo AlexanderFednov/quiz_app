@@ -433,15 +433,12 @@ class MyAppState extends State<MyApp> {
     mp3Uri = tempFile.uri.toString();
     audioPlugin.stop();
     audioPlugin.play(mp3Uri);
-    setState(() {
-      isAudionPlaying = true;
-      audioPlugin.onAudioPositionChanged.listen((event) {
-        setState(() {
-          position = event;
-        });
-      });
+    isAudionPlaying = true;
+    audioPlugin.onPlayerStateChanged.listen((event) {
+      if (event == AudioPlayerState.STOPPED) {
+        audioPlugin.play(mp3Uri);
+      }
     });
-    if (isAudionPlaying != false && position == null) audioPlugin.play(mp3Uri);
   }
 
   void _soundButton() {
