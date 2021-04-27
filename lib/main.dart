@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/l10n.dart';
 import 'models/questionList.dart';
 import 'models/hive_userData.dart';
-import 'progressBar.dart';
+import 'widgets/progressBar.dart';
 import 'screens/leaderBoard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';

@@ -3,7 +3,7 @@ import 'generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'answer.dart';
-import 'question.dart';
+import 'widgets/question.dart';
 import 'result.dart';
 import 'models/questionList.dart';
 
