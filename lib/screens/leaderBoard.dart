@@ -38,7 +38,7 @@ class LeaderBoardState extends State<LeaderBoard>
                 spawnMaxRadius: 20.0,
                 spawnMinSpeed: 20,
                 spawnMaxSpeed: 30,
-                particleCount: 100)),
+                particleCount: 200)),
         vsync: this,
         child: Center(
           child: Column(
