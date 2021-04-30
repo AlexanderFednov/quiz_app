@@ -118,8 +118,8 @@ class MyAppState extends State<MyApp> {
                 id: null,
                 name: currentUser.userName,
                 result: _totalScore,
-                questionsLenght: _questionsLenght,
-                rightResultsPercent: (100 / _questionsLenght * _totalScore),
+                questionsLenght: _questionIndex,
+                rightResultsPercent: (100 / _questionIndex * _totalScore),
                 categoryNumber: _categoryNumber,
                 resultDate: DateTime.now()));
         // MyDatabase().insertMoorResult();
