@@ -472,7 +472,7 @@ class MyAppState extends State<MyApp> {
     _loadSaveScore();
     _loadData();
     _getCurrentUser();
-    _loadIsPlaying();
+    // _loadIsPlaying();
     _loadMusic();
 
     // S.load(Locale('ru', 'RU'));
