@@ -30,7 +30,7 @@ dependencies:
   hive_flutter: ^0.3.0+2 
   provider:
   grafpix:
-  audioplayer:  
+  audioplayer: 
   path_provider: 
   animated_text_kit: 
   animated_background:
