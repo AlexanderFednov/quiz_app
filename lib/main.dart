@@ -100,28 +100,30 @@ class MyAppState extends State<MyApp> {
     var contactBox = Hive.box<UserData>('UserData1');
     if (_questionIndex > 0)
       setState(() {
-        contactBox.values.forEach((element) {
-          if (element.isCurrentUser == true) {
-            element.userResult = _totalScore;
-            element.userResults.insert(
-                0,
-                UserResult(
-                    score: _totalScore,
-                    questionsLenght: _questionIndex,
-                    resultDate: DateTime.now(),
-                    categoryNumber: _categoryNumber));
-            element.save();
-          }
-        });
-        Provider.of<MyDatabase>(context, listen: false).insertMoorResult(
-            MoorResult(
-                id: null,
-                name: currentUser.userName,
-                result: _totalScore,
-                questionsLenght: _questionIndex,
-                rightResultsPercent: (100 / _questionIndex * _totalScore),
-                categoryNumber: _categoryNumber,
-                resultDate: DateTime.now()));
+        if (currentUser != null) {
+          contactBox.values.forEach((element) {
+            if (element.isCurrentUser == true) {
+              element.userResult = _totalScore;
+              element.userResults.insert(
+                  0,
+                  UserResult(
+                      score: _totalScore,
+                      questionsLenght: _questionIndex,
+                      resultDate: DateTime.now(),
+                      categoryNumber: _categoryNumber));
+              element.save();
+            }
+          });
+          Provider.of<MyDatabase>(context, listen: false).insertMoorResult(
+              MoorResult(
+                  id: null,
+                  name: currentUser.userName,
+                  result: _totalScore,
+                  questionsLenght: _questionIndex,
+                  rightResultsPercent: (100 / _questionIndex * _totalScore),
+                  categoryNumber: _categoryNumber,
+                  resultDate: DateTime.now()));
+        }
         // MyDatabase().insertMoorResult();
         var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
         _lastResults.add(
@@ -161,7 +163,7 @@ class MyAppState extends State<MyApp> {
     setState(() {
       _saveScore = (prefs.getInt('saveScore') ?? 0);
       _questionsLenght = (prefs.getInt('questionsLenght') ?? 0);
-      _lastResults = (prefs.getStringList('lastResults') ?? 0);
+      _lastResults = (prefs.getStringList('lastResults') ?? []);
     });
   }
 
@@ -472,7 +474,7 @@ class MyAppState extends State<MyApp> {
     _loadSaveScore();
     _loadData();
     _getCurrentUser();
-    // _loadIsPlaying();
+    _loadIsPlaying();
     _loadMusic();
 
     // S.load(Locale('ru', 'RU'));
