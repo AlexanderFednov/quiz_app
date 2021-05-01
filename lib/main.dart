@@ -66,7 +66,7 @@ class MyApp extends StatefulWidget {
   }
 }
 
-class MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   List<QuestionInside> questionAll;
   List<QuestionInside> questionFilms;
   List<QuestionInside> questionSpace;
@@ -481,6 +481,7 @@ class MyAppState extends State<MyApp> {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   return _selectUser();
     // });
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -489,9 +490,30 @@ class MyAppState extends State<MyApp> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print("Inactive");
+        audioPlugin.stop();
+        break;
+      case AppLifecycleState.paused:
+        print("Paused");
+        audioPlugin.stop();
+        break;
+      case AppLifecycleState.resumed:
+        print("Resumed");
+        audioPlugin.play(mp3Uri);
+        break;
+      case AppLifecycleState.detached:
+        print("detached");
+        break;
+    }
+  }
+
+  @override
   void dispose() {
     super.dispose();
-    audioPlugin.stop();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
