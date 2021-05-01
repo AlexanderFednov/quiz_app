@@ -443,6 +443,11 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         audioPlugin.play(mp3Uri);
       }
     });
+    audioPlugin.onAudioPositionChanged.listen((event) {
+      setState(() {
+        position = event;
+      });
+    });
   }
 
   void _soundButton() async {
@@ -481,6 +486,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   return _selectUser();
     // });
+
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -506,7 +512,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.detached:
         print("detached");
-        audioPlugin.play(mp3Uri);
+        audioPlugin.stop();
         break;
     }
   }
@@ -514,6 +520,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
+    audioPlugin.stop();
     WidgetsBinding.instance.removeObserver(this);
   }
 
