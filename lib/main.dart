@@ -500,11 +500,11 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.inactive:
         print("Inactive");
-        audioPlugin.stop();
+        audioPlugin.pause();
         break;
       case AppLifecycleState.paused:
         print("Paused");
-        audioPlugin.stop();
+        audioPlugin.pause();
         break;
       case AppLifecycleState.resumed:
         print("Resumed");
