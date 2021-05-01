@@ -464,7 +464,7 @@ class MyAppState extends State<MyApp> {
 
   void _loadIsPlaying() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isAudionPlaying = prefs.getBool('isAudioPlaying');
+    isAudionPlaying = (prefs.getBool('isAudioPlaying') ?? true);
   }
 
   @override
@@ -491,6 +491,7 @@ class MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
+    audioPlugin.stop();
   }
 
   @override
