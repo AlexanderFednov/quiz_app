@@ -506,6 +506,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.detached:
         print("detached");
+        audioPlugin.play(mp3Uri);
         break;
     }
   }
