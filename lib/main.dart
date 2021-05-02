@@ -54,6 +54,9 @@ class QuizAppState extends State<QuizApp> {
         supportedLocales: S.delegate.supportedLocales,
         home: MyApp(),
         locale: Locale('ru', 'RU'),
+        theme: ThemeData(
+            // platform: TargetPlatform.iOS,
+            ),
       ),
     );
   }
@@ -124,7 +127,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   categoryNumber: _categoryNumber,
                   resultDate: DateTime.now()));
         }
-        // MyDatabase().insertMoorResult();
+
         var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
         _lastResults.add(
             '${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow');
@@ -528,9 +531,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          S.of(context).titleAppbar,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+        title: FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(
+            S.of(context).titleAppbar,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
         ),
         centerTitle: true,
         backgroundColor: Colors.amber,

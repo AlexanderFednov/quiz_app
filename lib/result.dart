@@ -27,9 +27,12 @@ class Result extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                S.of(context).result(score, questions.length),
-                style: TextStyle(fontSize: 30, color: Colors.black),
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  S.of(context).result(score, questions.length),
+                  style: TextStyle(fontSize: 30, color: Colors.black),
+                ),
               ),
               TextButton(
                 child: Text(S.of(context).toMainPage,
