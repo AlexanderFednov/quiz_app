@@ -11,11 +11,13 @@ import '../generated/l10n.dart';
 
 class UserList extends StatefulWidget {
   final Function setCurrentUser;
-  UserList({@required this.setCurrentUser});
+  final Function clearCurrentUser;
+  UserList({@required this.setCurrentUser, @required this.clearCurrentUser});
 
   @override
   State<StatefulWidget> createState() {
-    return UserListState(setCurrentUser: setCurrentUser);
+    return UserListState(
+        setCurrentUser: setCurrentUser, clearCurrentUser: clearCurrentUser);
   }
 }
 
@@ -23,6 +25,7 @@ class UserListState extends State<UserList> {
   UserData currentUser;
 
   Function setCurrentUser;
+  Function clearCurrentUser;
 
   TextEditingController cont = TextEditingController();
 
@@ -32,7 +35,8 @@ class UserListState extends State<UserList> {
 
   FocusNode _focus = FocusNode();
 
-  UserListState({@required this.setCurrentUser});
+  UserListState(
+      {@required this.setCurrentUser, @required this.clearCurrentUser});
 
   List<UserData> userData = [];
 
@@ -383,7 +387,10 @@ class UserListState extends State<UserList> {
                                 Navigator.of(context).pop();
                                 res.delete();
                                 setState(() {
-                                  if (currentUser == res) currentUser = null;
+                                  if (currentUser == res) {
+                                    currentUser = null;
+                                    clearCurrentUser();
+                                  }
                                 });
                               },
                             ),

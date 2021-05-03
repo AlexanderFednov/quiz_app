@@ -428,6 +428,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
+  void _clearCurrentUser() {
+    setState(() {
+      currentUser = null;
+    });
+  }
+
 //Load music
 
   void _loadMusic() async {
@@ -580,6 +586,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             questionsLenght: _questionsLenght,
             currentUser: currentUser,
             setCurrentUser: _setCurrentUser,
+            clearCurrentUser: _clearCurrentUser,
           ),
           Quiz(
               answerQuestions: _answerQuestion,

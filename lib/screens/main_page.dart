@@ -24,18 +24,21 @@ class MainPage extends StatelessWidget {
   final int questionsLenght;
   final UserData currentUser;
   final Function setCurrentUser;
+  final Function clearCurrentUser;
 
-  MainPage(
-      {this.swap1,
-      this.swap2,
-      this.swap3,
-      this.swap4,
-      this.localeRu,
-      this.localeEn,
-      this.savedResult,
-      this.questionsLenght,
-      this.currentUser,
-      this.setCurrentUser});
+  MainPage({
+    @required this.swap1,
+    @required this.swap2,
+    @required this.swap3,
+    @required this.swap4,
+    @required this.localeRu,
+    @required this.localeEn,
+    @required this.savedResult,
+    @required this.questionsLenght,
+    @required this.currentUser,
+    @required this.setCurrentUser,
+    @required this.clearCurrentUser,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +157,7 @@ class MainPage extends StatelessWidget {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => UserList(
                                   setCurrentUser: setCurrentUser,
+                                  clearCurrentUser: clearCurrentUser,
                                 ))),
                     child: Text(
                         currentUser != null
