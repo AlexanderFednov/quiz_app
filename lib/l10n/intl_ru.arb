@@ -33,6 +33,9 @@
 "allUserResult" : "Все результаты:",
 "rightAnswersPercent" : "Процент правильных ответов:",
 "resultsListEmpty" : "Результатов нет",
-"leaderBoard" : "Лидеры"
+"leaderBoard" : "Лидеры",
+"newUser" : "Новый пользователь",
+"addNewUser" : "Добавить нового пользователя",
+"userName" : "Имя пользователя"
 
 }

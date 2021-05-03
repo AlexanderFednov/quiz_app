@@ -262,7 +262,7 @@ class UserListState extends State<UserList> {
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          tooltip: 'Add User',
+          tooltip: S.of(context).addNewUser,
           onPressed: () => Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => AddUser()))),
     );
@@ -273,6 +273,7 @@ class UserListState extends State<UserList> {
     setState(() {
       contactsBox.clear();
       currentUser = null;
+      clearCurrentUser();
       Navigator.of(context).pop();
     });
   }

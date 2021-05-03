@@ -34,7 +34,7 @@ dependencies:
   path_provider: 
   animated_text_kit: 
   animated_background:
-  
+  google_fonts:  
   
   
 
@@ -56,7 +56,7 @@ dev_dependencies:
     sdk: flutter
   moor_generator:   
   hive_generator: 
-  google_fonts:  
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

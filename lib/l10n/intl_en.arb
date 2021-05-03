@@ -52,6 +52,9 @@
 "allUserResult" : "All results:",
 "rightAnswersPercent" : "Right answers percent:",
 "resultsListEmpty" : "List of results is empty",
-"leaderBoard" : "Leaderboard"
+"leaderBoard" : "Leaderboard",
+"newUser" : "New User",
+"addNewUser" : "Add new User",
+"userName" : "User name"
 
 }

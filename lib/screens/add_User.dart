@@ -32,11 +32,14 @@ class AddUserState extends State<AddUser> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(S.of(context).newUser,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                   TextFormField(
                     autofocus: true,
                     initialValue: '',
-                    decoration: const InputDecoration(
-                        labelText: 'User name',
+                    decoration: InputDecoration(
+                        labelText: S.of(context).userName,
                         errorStyle: TextStyle(color: Colors.red)),
                     validator: (value) {
                       Box<UserData> contactsBox =

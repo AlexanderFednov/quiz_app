@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "addNewUser" : MessageLookupByLibrary.simpleMessage("Add new User"),
     "addUser" : MessageLookupByLibrary.simpleMessage("Add user"),
     "allUserResult" : MessageLookupByLibrary.simpleMessage("All results:"),
     "areYouSure" : MessageLookupByLibrary.simpleMessage("Are you sure?"),
@@ -41,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lastResults" : MessageLookupByLibrary.simpleMessage("Last results"),
     "leaderBoard" : MessageLookupByLibrary.simpleMessage("Leaderboard"),
     "nameIsTaken" : MessageLookupByLibrary.simpleMessage("This name is taken"),
+    "newUser" : MessageLookupByLibrary.simpleMessage("New User"),
     "nullify" : MessageLookupByLibrary.simpleMessage("Nullify"),
     "questionsAll" : MessageLookupByLibrary.simpleMessage("General questions"),
     "questionsFilms" : MessageLookupByLibrary.simpleMessage("Movies of the USSR"),
@@ -60,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "userLastResult" : MessageLookupByLibrary.simpleMessage("Last result:"),
     "userList" : MessageLookupByLibrary.simpleMessage("Users"),
     "userListEmpty" : MessageLookupByLibrary.simpleMessage("User list is empty"),
+    "userName" : MessageLookupByLibrary.simpleMessage("User name"),
     "userResult" : MessageLookupByLibrary.simpleMessage("Result:"),
     "yes" : MessageLookupByLibrary.simpleMessage("Yes")
   };

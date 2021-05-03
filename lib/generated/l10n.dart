@@ -390,6 +390,36 @@ class S {
       args: [],
     );
   }
+
+  /// `New User`
+  String get newUser {
+    return Intl.message(
+      'New User',
+      name: 'newUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add new User`
+  String get addNewUser {
+    return Intl.message(
+      'Add new User',
+      name: 'addNewUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User name`
+  String get userName {
+    return Intl.message(
+      'User name',
+      name: 'userName',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
