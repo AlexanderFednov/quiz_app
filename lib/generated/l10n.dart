@@ -420,6 +420,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Server unavailable.\n Return to the main page and try again or select another category. `
+  String get httpServerError {
+    return Intl.message(
+      'Server unavailable.\n Return to the main page and try again or select another category. ',
+      name: 'httpServerError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

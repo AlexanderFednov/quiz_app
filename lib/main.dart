@@ -204,10 +204,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  _loadData() async {
-    final responce = await http.get(Uri.http("10.0.2.2:8000", ""));
+  void _loadData() async {
+    final responce = await http
+        .get(Uri.http("10.0.2.2:8000", ""))
+        .timeout(Duration(seconds: 3), onTimeout: () => null);
 
-    if (responce.statusCode == 200) {
+    if (responce != null) {
       Map decoded = jsonDecode(responce.body);
       var questionListWeb = QuestionList.fromJson(decoded).question;
       print(decoded);
@@ -216,16 +218,16 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       });
       //responceText = decoded;
     } else {
-      print('Error');
-      String jsonQuestionNull =
-          await rootBundle.loadString('assets/questions/questionsNull.json');
-      Map decoded = jsonDecode(jsonQuestionNull);
+      print('HTTP error: server is not available');
+      // String jsonQuestionNull =
+      //     await rootBundle.loadString('assets/questions/questionsNull.json');
+      // Map decoded = jsonDecode(jsonQuestionNull);
 
-      var questionListNull = QuestionList.fromJson(decoded).question;
+      // var questionListNull = QuestionList.fromJson(decoded).question;
 
-      setState(() {
-        questionWeb = questionListNull;
-      });
+      // setState(() {
+      //   questionWeb = questionListNull;
+      // });
     }
   }
 
@@ -357,28 +359,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   //       duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
   // }
 
-  void swap1() {
-    cont.animateToPage(1,
+  void swap(int number) {
+    cont.animateToPage(number,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
-    _categoryNumber = 1;
-  }
-
-  void swap2() {
-    cont.animateToPage(2,
-        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
-    _categoryNumber = 2;
-  }
-
-  void swap3() {
-    cont.animateToPage(3,
-        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
-    _categoryNumber = 3;
-  }
-
-  void swap4() {
-    cont.animateToPage(4,
-        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
-    _categoryNumber = 4;
+    _categoryNumber = number;
   }
 
   void onMainPage() {
@@ -576,10 +560,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         controller: cont,
         children: <Widget>[
           MainPage(
-            swap1: swap1,
-            swap2: swap2,
-            swap3: swap3,
-            swap4: swap4,
+            swap1: () => swap(1),
+            swap2: () => swap(2),
+            swap3: () => swap(3),
+            swap4: () => swap(4),
             localeRu: localeRu,
             localeEn: localeEn,
             savedResult: _saveScore,
@@ -595,6 +579,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
               resetQuiz: _resetQuiz,
               totalScore: _totalScore,
               onMainPage: onMainPage,
+              loadData: _loadData,
               imageUrl:
                   'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
               progress: _progress),
@@ -605,6 +590,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
               resetQuiz: _resetQuiz,
               totalScore: _totalScore,
               onMainPage: onMainPage,
+              loadData: _loadData,
               imageUrl:
                   'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
               progress: _progress),
@@ -615,6 +601,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
               resetQuiz: _resetQuiz,
               totalScore: _totalScore,
               onMainPage: onMainPage,
+              loadData: _loadData,
               imageUrl:
                   'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
               progress: _progress),
@@ -625,6 +612,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
               resetQuiz: _resetQuiz,
               totalScore: _totalScore,
               onMainPage: onMainPage,
+              loadData: _loadData,
               imageUrl:
                   'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
               progress: _progress)

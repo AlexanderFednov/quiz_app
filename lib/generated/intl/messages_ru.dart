@@ -37,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "currentUser" : MessageLookupByLibrary.simpleMessage("Текущий пользователь:"),
     "enterName" : MessageLookupByLibrary.simpleMessage("Введите имя"),
     "helloMessage" : m0,
+    "httpServerError" : MessageLookupByLibrary.simpleMessage("Сервер недоступен.\n Вернитесь на главную страницу и выберите другую категорию или перезапустите приложение."),
     "information" : MessageLookupByLibrary.simpleMessage("Информация"),
     "lastResult" : m1,
     "lastResults" : MessageLookupByLibrary.simpleMessage("Последние результаты"),

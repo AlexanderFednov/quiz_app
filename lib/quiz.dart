@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/screens/error_Screen.dart';
 import 'generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -14,6 +15,7 @@ class Quiz extends StatelessWidget {
   final int totalScore;
   final Function resetQuiz;
   final Function onMainPage;
+  final Function loadData;
   final String imageUrl;
   final List<Widget> progress;
 
@@ -24,6 +26,7 @@ class Quiz extends StatelessWidget {
       @required this.totalScore,
       @required this.resetQuiz,
       @required this.onMainPage,
+      @required this.loadData,
       @required this.imageUrl,
       @required this.progress});
 
@@ -78,10 +81,20 @@ class Quiz extends StatelessWidget {
                 )
               ],
             ))
-        : Result(
-            score: totalScore,
-            resetHandler: resetQuiz,
-            questions: questions,
-          );
+        : questionIndex > 0
+            ? Result(
+                score: totalScore,
+                resetHandler: resetQuiz,
+                questions: questions,
+              )
+            : ErrorScreen(
+                errorText: S.of(context).httpServerError,
+                buttonText: S.of(context).toMainPage,
+                buttonFunction: () async {
+                  resetQuiz();
+                  await loadData();
+                },
+                imageUrl: imageUrl,
+              );
   }
 }

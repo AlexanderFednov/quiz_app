@@ -55,6 +55,7 @@
 "leaderBoard" : "Leaderboard",
 "newUser" : "New User",
 "addNewUser" : "Add new User",
-"userName" : "User name"
+"userName" : "User name",
+"httpServerError" : "Server unavailable.\n Return to the main page and try again or select another category. "
 
 }
