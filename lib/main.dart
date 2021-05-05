@@ -161,7 +161,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   //Loading savescore value on start
 
-  _loadSaveScore() async {
+  void _loadSaveScore() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _saveScore = (prefs.getInt('saveScore') ?? 0);
@@ -178,7 +178,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
 //Load banks of questions
 
-  loadList() async {
+  void loadList() async {
     String jsonQuestionAll =
         await rootBundle.loadString('assets/questions/questionsAll.json');
     Map decoded = jsonDecode(jsonQuestionAll);
