@@ -53,9 +53,9 @@ class Quiz extends StatelessWidget {
                       border: Border.all(color: Colors.grey),
                       color: Colors.white),
                   child: TextButton(
+                    onPressed: onMainPage,
                     child: Text(S.of(context).reset,
                         style: TextStyle(color: Colors.black)),
-                    onPressed: onMainPage,
                   ),
                 ),
                 Container(

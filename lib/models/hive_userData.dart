@@ -20,8 +20,8 @@ class UserData extends HiveObject {
   List<UserResult> userResults = [];
 
   double get rightAnswersPercentAll {
-    int sumAnswers = 0;
-    int sumQuestions = 0;
+    var sumAnswers = 0;
+    var sumQuestions = 0;
 
     userResults.forEach((element) {
       sumAnswers = sumAnswers + element.score;

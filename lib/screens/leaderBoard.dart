@@ -45,10 +45,10 @@ class LeaderBoardState extends State<LeaderBoard>
             children: [
               Flexible(child: Container(child: _buildList(context))),
               TextButton(
-                child: Text(S.of(context).nullify),
                 onPressed: () {
                   _onNullifyPress();
                 },
+                child: Text(S.of(context).nullify),
               ),
               // TextButton(
               //   child: Text('Sort'),
@@ -71,12 +71,13 @@ class LeaderBoardState extends State<LeaderBoard>
           moorResults = snapshot.data ?? [];
           moorResults.sort(
               (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent));
-          if (moorResults.isEmpty)
+          if (moorResults.isEmpty) {
             return Center(
                 child: Text(
               S.of(context).userListEmpty,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ));
+          }
           return ListView.builder(
               itemCount: moorResults.length < 10 ? moorResults.length : 10,
               itemBuilder: (_, index) {
@@ -115,7 +116,7 @@ class LeaderBoardState extends State<LeaderBoard>
         });
   }
 
-  _onNullifyPress() {
+  void _onNullifyPress() {
     showDialog(
         context: context,
         builder: (_) => Dialog(
@@ -138,18 +139,18 @@ class LeaderBoardState extends State<LeaderBoard>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
-                              child: Text(S.of(context).yes,
-                                  style: TextStyle(fontSize: 25)),
                               onPressed: () {
                                 Provider.of<MyDatabase>(context, listen: false)
                                     .clearMyDatabase();
                                 Navigator.of(context).pop();
                               },
+                              child: Text(S.of(context).yes,
+                                  style: TextStyle(fontSize: 25)),
                             ),
                             TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
                               child: Text(S.of(context).cancel,
                                   style: TextStyle(fontSize: 25)),
-                              onPressed: () => Navigator.of(context).pop(),
                             )
                           ],
                         ),

@@ -18,6 +18,7 @@ class Answer extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       child: ElevatedButton(
+        onPressed: selectHandler,
         style: ButtonStyle(
           backgroundColor:
               MaterialStateColor.resolveWith((states) => Colors.blueGrey),
@@ -43,7 +44,6 @@ class Answer extends StatelessWidget {
             )
           ],
         ),
-        onPressed: selectHandler,
       ),
     );
   }

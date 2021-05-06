@@ -34,7 +34,8 @@ dependencies:
   path_provider: 
   animated_text_kit: 
   animated_background:
-  google_fonts:  
+  google_fonts:
+    
   
   
 
@@ -55,7 +56,8 @@ dev_dependencies:
   flutter_localizations:
     sdk: flutter
   moor_generator:   
-  hive_generator: 
+  hive_generator:
+  pedantic: 
   
 
 # For information on the generic Dart part of this file, see the

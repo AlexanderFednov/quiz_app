@@ -16,6 +16,7 @@ class UserInformation extends StatefulWidget {
 
 class UserInformationState extends State<UserInformation> {
   final UserData user;
+  List<UserResult> results;
 
   UserInformationState({@required this.user});
 
@@ -83,10 +84,13 @@ class UserInformationState extends State<UserInformation> {
                     child: ListView.builder(
                         itemCount: user.userResults.length,
                         itemBuilder: (context, index) {
+                          results = user.userResults;
+                          results.sort(
+                              (b, a) => a.resultDate.compareTo(b.resultDate));
                           return Card(
                               child: ListTile(
                             title: Text(
-                              '${user.userResults[index].score} / ${user.userResults[index].questionsLenght} (${user.userResults[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, user.userResults[index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(user.userResults[index].resultDate)}',
+                              '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate)}',
                               style: TextStyle(fontSize: 15),
                             ),
                           ));
@@ -99,12 +103,12 @@ class UserInformationState extends State<UserInformation> {
                     ),
                   ),
             TextButton(
+              onPressed: _onNullifyPress,
               child: Text(S.of(context).nullify,
                   style: TextStyle(
                       color: user.userResults.isEmpty
                           ? Colors.grey
                           : Theme.of(context).primaryColor)),
-              onPressed: onNullifyPress,
             )
           ],
         ),
@@ -121,7 +125,7 @@ class UserInformationState extends State<UserInformation> {
     });
   }
 
-  onNullifyPress() {
+  void _onNullifyPress() {
     showDialog(
         context: context,
         builder: (_) => Dialog(
@@ -144,14 +148,14 @@ class UserInformationState extends State<UserInformation> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
+                              onPressed: deleteData,
                               child: Text(S.of(context).yes,
                                   style: TextStyle(fontSize: 25)),
-                              onPressed: deleteData,
                             ),
                             TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
                               child: Text(S.of(context).cancel,
                                   style: TextStyle(fontSize: 25)),
-                              onPressed: () => Navigator.of(context).pop(),
                             )
                           ],
                         ),

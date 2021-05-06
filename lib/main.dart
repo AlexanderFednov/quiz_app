@@ -99,9 +99,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void _resetQuiz() async {
     cont.animateToPage(0,
         duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
     var contactBox = Hive.box<UserData>('UserData1');
-    if (_questionIndex > 0)
+    if (_questionIndex > 0) {
       setState(() {
         if (currentUser != null) {
           contactBox.values.forEach((element) {
@@ -140,6 +140,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         _totalScore = 0;
         _progress = [];
       });
+    }
   }
 
 //When answer question
@@ -162,7 +163,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   //Loading savescore value on start
 
   void _loadSaveScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
     setState(() {
       _saveScore = (prefs.getInt('saveScore') ?? 0);
       _questionsLenght = (prefs.getInt('questionsLenght') ?? 0);
@@ -179,19 +180,19 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 //Load banks of questions
 
   void loadList() async {
-    String jsonQuestionAll =
+    var jsonQuestionAll =
         await rootBundle.loadString('assets/questions/questionsAll.json');
     Map decoded = jsonDecode(jsonQuestionAll);
 
     var questionListAll = QuestionList.fromJson(decoded).question;
 
-    String jsonQuestionFilms =
+    var jsonQuestionFilms =
         await rootBundle.loadString('assets/questions/questionsFilms.json');
     Map decoded2 = jsonDecode(jsonQuestionFilms);
 
     var questionListFilms = QuestionList.fromJson(decoded2).question;
 
-    String jsonQuestionSpace =
+    var jsonQuestionSpace =
         await rootBundle.loadString('assets/questions/questionsSpace.json');
     Map decoded3 = jsonDecode(jsonQuestionSpace);
 
@@ -206,7 +207,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   void _loadData() async {
     final responce = await http
-        .get(Uri.http("10.0.2.2:8000", ""))
+        .get(Uri.http('10.0.2.2:8000', ''))
         .timeout(Duration(seconds: 3), onTimeout: () => null);
 
     if (responce != null) {
@@ -392,19 +393,20 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // Get current User
 
   void _getCurrentUser() {
-    Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+    var contactsBox = Hive.box<UserData>('UserData1');
     if (contactsBox.isNotEmpty) {
       contactsBox.values.forEach((element) {
         if (element.isCurrentUser == true) {
           currentUser = element;
         }
       });
-    } else
+    } else {
       currentUser = null;
+    }
   }
 
   void _setCurrentUser() {
-    Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+    var contactsBox = Hive.box<UserData>('UserData1');
     setState(() {
       contactsBox.values.forEach((element) {
         if (element.isCurrentUser == true) currentUser = element;
@@ -444,7 +446,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void _soundButton() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
     if (isAudionPlaying == true) {
       audioPlugin.pause();
       setState(() {
@@ -461,7 +463,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void _loadIsPlaying() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
     isAudionPlaying = (prefs.getBool('isAudioPlaying') ?? true);
   }
 
@@ -492,19 +494,19 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.inactive:
-        print("Inactive");
+        print('Inactive');
         audioPlugin.pause();
         break;
       case AppLifecycleState.paused:
-        print("Paused");
+        print('Paused');
         audioPlugin.pause();
         break;
       case AppLifecycleState.resumed:
-        print("Resumed");
+        print('Resumed');
         audioPlugin.play(mp3Uri);
         break;
       case AppLifecycleState.detached:
-        print("detached");
+        print('detached');
         audioPlugin.stop();
         break;
     }

@@ -35,9 +35,9 @@ class Result extends StatelessWidget {
                 ),
               ),
               TextButton(
+                onPressed: resetHandler,
                 child: Text(S.of(context).toMainPage,
                     style: TextStyle(fontSize: 30, color: Colors.black)),
-                onPressed: resetHandler,
               )
             ],
           ),

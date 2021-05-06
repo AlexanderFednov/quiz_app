@@ -149,13 +149,13 @@ class Questions {
 
   final questionNull = [
     {
-      "questionText":
-          "Сервер недоступен /n Вернитесь на главную страницу и выберите другую категорию или перезапустите приложение",
-      "answers": [
-        {"text": "-", "result": false, "code": "A"},
-        {"text": "-", "result": false, "code": "B"},
-        {"text": "-", "result": true, "code": "C"},
-        {"text": "-", "result": false, "code": "D"}
+      'questionText':
+          'Сервер недоступен /n Вернитесь на главную страницу и выберите другую категорию или перезапустите приложение',
+      'answers': [
+        {'text': '-', 'result': false, 'code': 'A'},
+        {'text': '-', 'result': false, 'code': 'B'},
+        {'text': '-', 'result': true, 'code': 'C'},
+        {'text': '-', 'result': false, 'code': 'D'}
       ]
     }
   ];

@@ -42,8 +42,7 @@ class AddUserState extends State<AddUser> {
                         labelText: S.of(context).userName,
                         errorStyle: TextStyle(color: Colors.red)),
                     validator: (value) {
-                      Box<UserData> contactsBox =
-                          Hive.box<UserData>('UserData1');
+                      var contactsBox = Hive.box<UserData>('UserData1');
                       if (value.trim().isEmpty || value.trim() == null) {
                         return S.of(context).enterName;
                       } else if (contactsBox.values
@@ -53,7 +52,7 @@ class AddUserState extends State<AddUser> {
                       return null;
                     },
                     onChanged: (value) {
-                      String name = value.trim();
+                      var name = value.trim();
                       userName = name;
                     },
                     // inputFormatters: [
@@ -92,7 +91,7 @@ class AddUserState extends State<AddUser> {
   }
 
   void _onForSubmit() {
-    Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+    var contactsBox = Hive.box<UserData>('UserData1');
 
     Navigator.of(context).pop();
     contactsBox.add(UserData(

@@ -33,7 +33,7 @@ class UserListState extends State<UserList> {
 
   String searchText;
 
-  FocusNode _focus = FocusNode();
+  final FocusNode _focus = FocusNode();
 
   UserListState(
       {@required this.setCurrentUser, @required this.clearCurrentUser});
@@ -125,7 +125,10 @@ class UserListState extends State<UserList> {
             ),
             if (_searchResult.isNotEmpty)
               Expanded(
+                flex: 1,
                 child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
                     itemCount: _searchResult.length,
                     itemBuilder: (context, index) {
                       return ListTile(
@@ -170,16 +173,17 @@ class UserListState extends State<UserList> {
                 child: ValueListenableBuilder(
                   valueListenable: Hive.box<UserData>('UserData1').listenable(),
                   builder: (context, Box<UserData> box, _) {
-                    if (box.values.isEmpty)
+                    if (box.values.isEmpty) {
                       return Center(
                         child: Text(S.of(context).userListEmpty),
                       );
+                    }
                     userData = Hive.box<UserData>('UserData1').values.toList();
                     userData.sort((a, b) => a.userName.compareTo(b.userName));
                     return ListView.builder(
                         itemCount: userData.length,
                         itemBuilder: (context, index) {
-                          UserData res = userData[index];
+                          var res = userData[index];
                           res.userId = index;
                           return Dismissible(
                             key: UniqueKey(),
@@ -252,24 +256,28 @@ class UserListState extends State<UserList> {
               ),
             ),
             TextButton(
+              onPressed: _onNullifyPress,
               child: Text(
                 S.of(context).nullify,
               ),
-              onPressed: onNullifyPress,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          tooltip: S.of(context).addNewUser,
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddUser()))),
+        tooltip: S.of(context).addNewUser,
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => AddUser(),
+          ),
+        ),
+        child: Icon(Icons.add),
+      ),
     );
   }
 
-  void deleteData() async {
-    Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+  void _deleteData() async {
+    var contactsBox = Hive.box<UserData>('UserData1');
     setState(() {
       contactsBox.clear();
       currentUser = null;
@@ -278,7 +286,7 @@ class UserListState extends State<UserList> {
     });
   }
 
-  onNullifyPress() {
+  void _onNullifyPress() {
     showDialog(
         context: context,
         builder: (_) => Dialog(
@@ -301,14 +309,14 @@ class UserListState extends State<UserList> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
+                              onPressed: _deleteData,
                               child: Text(S.of(context).yes,
                                   style: TextStyle(fontSize: 25)),
-                              onPressed: deleteData,
                             ),
                             TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
                               child: Text(S.of(context).cancel,
                                   style: TextStyle(fontSize: 25)),
-                              onPressed: () => Navigator.of(context).pop(),
                             )
                           ],
                         ),
@@ -321,15 +329,16 @@ class UserListState extends State<UserList> {
   }
 
   void _getCurrentUser() {
-    Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+    var contactsBox = Hive.box<UserData>('UserData1');
     if (contactsBox.isNotEmpty) {
       contactsBox.values.forEach((element) {
         if (element.isCurrentUser == true) {
           currentUser = element;
         }
       });
-    } else
+    } else {
       currentUser = null;
+    }
   }
 
   @override
@@ -342,9 +351,9 @@ class UserListState extends State<UserList> {
     });
   }
 
-  _onSearchChange(String text) async {
+  void _onSearchChange(String text) async {
     var contactBox = Hive.box<UserData>('UserData1');
-    String searchedText = text.trim();
+    var searchedText = text.trim();
     _searchResult.clear();
     if (text.isEmpty) {
       setState(() {});
@@ -382,8 +391,6 @@ class UserListState extends State<UserList> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
-                              child: Text(S.of(context).yes,
-                                  style: TextStyle(fontSize: 25)),
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 res.delete();
@@ -394,14 +401,16 @@ class UserListState extends State<UserList> {
                                   }
                                 });
                               },
+                              child: Text(S.of(context).yes,
+                                  style: TextStyle(fontSize: 25)),
                             ),
                             TextButton(
-                              child: Text(S.of(context).cancel,
-                                  style: TextStyle(fontSize: 25)),
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 setState(() {});
                               },
+                              child: Text(S.of(context).cancel,
+                                  style: TextStyle(fontSize: 25)),
                             )
                           ],
                         ),

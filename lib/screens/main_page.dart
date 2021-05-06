@@ -110,7 +110,7 @@ class MainPage extends StatelessWidget {
                       isRepeatingAnimation: true,
                       repeatForever: true,
                       onTap: () {
-                        print("Tap Event");
+                        print('Tap Event');
                       },
                     ),
                   ),
@@ -225,25 +225,25 @@ class MainPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AnimatedButton(
-                child: Text('Русский',
-                    style: TextStyle(color: Colors.black, fontSize: 20)),
                 onPressed: localeRu,
                 width: 110,
                 height: 30,
                 color: Colors.cyan,
+                child: Text('Русский',
+                    style: TextStyle(color: Colors.black, fontSize: 20)),
               ),
               SizedBox(
                 width: 10,
               ),
               AnimatedButton(
-                child: Text(
-                  'English',
-                  style: TextStyle(color: Colors.black, fontSize: 20),
-                ),
                 onPressed: localeEn,
                 width: 110,
                 height: 30,
                 color: Colors.pink[100],
+                child: Text(
+                  'English',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
               )
             ],
           ),
@@ -287,12 +287,12 @@ class CategoryButton extends StatelessWidget {
       width: 300,
       decoration: BoxDecoration(color: categoryColor),
       child: TextButton(
+        onPressed: swap,
         child: Text(
           category,
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        onPressed: swap,
       ),
     );
   }
