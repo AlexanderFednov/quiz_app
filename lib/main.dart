@@ -97,8 +97,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 // Reset Quiz App
 
   void _resetQuiz() async {
-    cont.animateToPage(0,
-        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
     var prefs = await SharedPreferences.getInstance();
     var contactBox = Hive.box<UserData>('UserData1');
     if (_questionIndex > 0) {
@@ -141,6 +139,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         _progress = [];
       });
     }
+    await cont.animateToPage(0,
+        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
   }
 
 //When answer question
