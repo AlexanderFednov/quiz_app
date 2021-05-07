@@ -21,6 +21,7 @@ class ErrorScreen extends StatelessWidget {
           height: 300,
           // width: double.infinity,
           padding: EdgeInsets.all(5),
+          // margin: EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
@@ -29,25 +30,32 @@ class ErrorScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Text(
-                  errorText,
-                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 25),
-                  softWrap: true,
-                  textAlign: TextAlign.center,
+              Flexible(
+                flex: 0,
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    errorText,
+                    style:
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 25),
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-              TextButton(
-                  onPressed: buttonFunction,
-                  child: Text(
-                    buttonText,
-                    softWrap: true,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ))
+              Flexible(
+                flex: 0,
+                child: TextButton(
+                    onPressed: buttonFunction,
+                    child: Text(
+                      buttonText,
+                      softWrap: true,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    )),
+              )
             ],
           ),
         ),
