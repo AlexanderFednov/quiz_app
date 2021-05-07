@@ -116,7 +116,7 @@ class UserInformationState extends State<UserInformation> {
     );
   }
 
-  void deleteData() async {
+  void _deleteData() async {
     setState(() {
       user.userResults.clear();
       user.userResult = 0;
@@ -148,7 +148,7 @@ class UserInformationState extends State<UserInformation> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
-                              onPressed: deleteData,
+                              onPressed: _deleteData,
                               child: Text(S.of(context).yes,
                                   style: TextStyle(fontSize: 25)),
                             ),

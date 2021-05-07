@@ -429,9 +429,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     File tempFile = File('${tempDir.path}/Shadowing - Corbyn Kites.mp3');
     await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
     mp3Uri = tempFile.uri.toString();
-    audioPlugin.stop();
+    await audioPlugin.stop();
     if (isAudionPlaying == true) {
-      audioPlugin.play(mp3Uri);
+      await audioPlugin.play(mp3Uri);
     }
     audioPlugin.onPlayerStateChanged.listen((event) {
       if (event == AudioPlayerState.COMPLETED) {
@@ -448,17 +448,17 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void _soundButton() async {
     var prefs = await SharedPreferences.getInstance();
     if (isAudionPlaying == true) {
-      audioPlugin.pause();
+      await audioPlugin.pause();
       setState(() {
         isAudionPlaying = false;
       });
-      prefs.setBool('isAudioPlaying', false);
+      await prefs.setBool('isAudioPlaying', false);
     } else {
-      audioPlugin.play(mp3Uri);
+      await audioPlugin.play(mp3Uri);
       setState(() {
         isAudionPlaying = true;
       });
-      prefs.setBool('isAudioPlaying', true);
+      await prefs.setBool('isAudioPlaying', true);
     }
   }
 
