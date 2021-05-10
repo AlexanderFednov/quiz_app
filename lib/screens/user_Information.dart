@@ -31,86 +31,131 @@ class UserInformationState extends State<UserInformation> {
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text(S.of(context).registrationDate,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Text(
-                    '${DateFormat('yyyy-MM-dd (kk:mm)').format(user.registerDate).toString()}',
-                    style: TextStyle(fontSize: 20))
-              ],
+      body: _userInformationCollumn(),
+    );
+  }
+
+  Widget _userInformationCollumn() {
+    return Center(
+      child: Column(
+        children: [
+          _registrationDate(),
+          _lastResult(),
+          _rightAnswersPersent(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                S.of(context).allUserResult,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          user.userResults.isNotEmpty && user.userResults != null
+              ? _allUserResultsList()
+              : _userResultsListEmpty(),
+          _nullifyButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _registrationDate() {
+    return Row(
+      children: [
+        Text(
+          S.of(context).registrationDate,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          '${DateFormat('yyyy-MM-dd (kk:mm)').format(user.registerDate).toString()}',
+          style: TextStyle(fontSize: 20),
+        ),
+      ],
+    );
+  }
+
+  Widget _lastResult() {
+    return Row(
+      children: [
+        Text(
+          S.of(context).userLastResult,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          user.userResults.isEmpty
+              ? '0'
+              : '${user.userResults[0].score} / ${user.userResults[0].questionsLenght}',
+          style: TextStyle(fontSize: 20),
+        ),
+      ],
+    );
+  }
+
+  Widget _rightAnswersPersent() {
+    return Row(
+      children: [
+        Text(
+          S.of(context).rightAnswersPercent,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          user.userResults.isEmpty
+              ? '0 %'
+              : '${user.rightAnswersPercentAll.toStringAsFixed(2)} %',
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _allUserResultsList() {
+    return Container(
+      height: 400,
+      child: ListView.builder(
+        itemCount: user.userResults.length,
+        itemBuilder: (context, index) {
+          results = user.userResults;
+          results.sort(
+            (b, a) => a.resultDate.compareTo(b.resultDate),
+          );
+
+          return Card(
+            child: ListTile(
+              title: Text(
+                '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate)}',
+                style: TextStyle(fontSize: 15),
+              ),
             ),
-            Row(
-              children: [
-                Text(S.of(context).userLastResult,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Text(
-                    user.userResults.isEmpty
-                        ? '0'
-                        : '${user.userResults[0].score} / ${user.userResults[0].questionsLenght}',
-                    style: TextStyle(fontSize: 20))
-              ],
-            ),
-            Row(
-              children: [
-                Text(S.of(context).rightAnswersPercent,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Text(
-                    user.userResults.isEmpty
-                        ? '0 %'
-                        : '${user.rightAnswersPercentAll.toStringAsFixed(2)} %',
-                    style: TextStyle(
-                      fontSize: 20,
-                    )),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(S.of(context).allUserResult,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ],
-            ),
-            user.userResults.isNotEmpty && user.userResults != null
-                ? Container(
-                    height: 400,
-                    child: ListView.builder(
-                        itemCount: user.userResults.length,
-                        itemBuilder: (context, index) {
-                          results = user.userResults;
-                          results.sort(
-                              (b, a) => a.resultDate.compareTo(b.resultDate));
-                          return Card(
-                              child: ListTile(
-                            title: Text(
-                              '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate)}',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ));
-                        }))
-                : Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                    child: Center(
-                      child: Text(S.of(context).resultsListEmpty,
-                          style: TextStyle(fontSize: 15)),
-                    ),
-                  ),
-            TextButton(
-              onPressed: _onNullifyPress,
-              child: Text(S.of(context).nullify,
-                  style: TextStyle(
-                      color: user.userResults.isEmpty
-                          ? Colors.grey
-                          : Theme.of(context).primaryColor)),
-            )
-          ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _userResultsListEmpty() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Center(
+        child: Text(
+          S.of(context).resultsListEmpty,
+          style: TextStyle(fontSize: 15),
+        ),
+      ),
+    );
+  }
+
+  Widget _nullifyButton() {
+    return TextButton(
+      onPressed: _onNullifyPress,
+      child: Text(
+        S.of(context).nullify,
+        style: TextStyle(
+          color: user.userResults.isEmpty
+              ? Colors.grey
+              : Theme.of(context).primaryColor,
         ),
       ),
     );
@@ -127,44 +172,52 @@ class UserInformationState extends State<UserInformation> {
 
   void _onNullifyPress() {
     showDialog(
-        context: context,
-        builder: (_) => Dialog(
-              child: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  colors: [Colors.white, Colors.blue[100], Colors.red[100]],
-                )),
-                height: 200,
-                child: Center(
-                  child: Column(
+      context: context,
+      builder: (_) => Dialog(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [Colors.white, Colors.blue[100], Colors.red[100]],
+            ),
+          ),
+          height: 200,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  S.of(context).areYouSure,
+                  style: TextStyle(fontSize: 30),
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(S.of(context).areYouSure,
-                          style: TextStyle(fontSize: 30)),
-                      Container(
-                        margin: EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                              onPressed: _deleteData,
-                              child: Text(S.of(context).yes,
-                                  style: TextStyle(fontSize: 25)),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: Text(S.of(context).cancel,
-                                  style: TextStyle(fontSize: 25)),
-                            )
-                          ],
+                      TextButton(
+                        onPressed: _deleteData,
+                        child: Text(
+                          S.of(context).yes,
+                          style: TextStyle(fontSize: 25),
                         ),
-                      )
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          S.of(context).cancel,
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ));
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   String category(BuildContext context, int categoryNumber) {

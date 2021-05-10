@@ -35,6 +35,7 @@ dependencies:
   animated_text_kit: 
   animated_background:
   google_fonts:
+  dart_code_metrics: 2.4.1
     
   
   

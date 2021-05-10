@@ -102,33 +102,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     if (_questionIndex > 0) {
       setState(() {
         if (currentUser != null) {
-          contactBox.values.forEach((element) {
-            if (element.isCurrentUser == true) {
-              element.userResult = _totalScore;
-              element.userResults.insert(
-                  0,
-                  UserResult(
-                      score: _totalScore,
-                      questionsLenght: _questionIndex,
-                      resultDate: DateTime.now(),
-                      categoryNumber: _categoryNumber));
-              element.save();
-            }
-          });
-          Provider.of<MyDatabase>(context, listen: false).insertMoorResult(
-              MoorResult(
-                  id: null,
-                  name: currentUser.userName,
-                  result: _totalScore,
-                  questionsLenght: _questionIndex,
-                  rightResultsPercent: (100 / _questionIndex * _totalScore),
-                  categoryNumber: _categoryNumber,
-                  resultDate: DateTime.now()));
+          _addHiveUserResult(contactBox);
+          _addMoorUserResult();
         }
 
         var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
         _lastResults.add(
-            '${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow');
+          '${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow',
+        );
         prefs.setStringList('lastResults', _lastResults);
         _questionsLenght = _questionIndex;
         prefs.setInt('questionsLenght', _questionIndex);
@@ -139,14 +120,49 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         _progress = [];
       });
     }
-    await cont.animateToPage(0,
-        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+    await cont.animateToPage(
+      0,
+      duration: (Duration(seconds: 1)),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _addHiveUserResult(Box<UserData> contactBox) {
+    contactBox.values.forEach((element) {
+      if (element.isCurrentUser) {
+        element.userResult = _totalScore;
+        element.userResults.insert(
+          0,
+          UserResult(
+            score: _totalScore,
+            questionsLenght: _questionIndex,
+            resultDate: DateTime.now(),
+            categoryNumber: _categoryNumber,
+          ),
+        );
+        element.save();
+      }
+    });
+  }
+
+  void _addMoorUserResult() {
+    Provider.of<MyDatabase>(context, listen: false).insertMoorResult(
+      MoorResult(
+        id: null,
+        name: currentUser.userName,
+        result: _totalScore,
+        questionsLenght: _questionIndex,
+        rightResultsPercent: (100 / _questionIndex * _totalScore),
+        categoryNumber: _categoryNumber,
+        resultDate: DateTime.now(),
+      ),
+    );
   }
 
 //When answer question
 
   void _answerQuestion(bool result) {
-    if (result == true) {
+    if (result) {
       setState(() {
         _questionIndex = _questionIndex + 1;
         _totalScore++;
@@ -361,14 +377,20 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // }
 
   void swap(int number) {
-    cont.animateToPage(number,
-        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+    cont.animateToPage(
+      number,
+      duration: (Duration(seconds: 1)),
+      curve: Curves.easeInOut,
+    );
     _categoryNumber = number;
   }
 
   void onMainPage() {
-    cont.animateToPage(0,
-        duration: (Duration(seconds: 1)), curve: Curves.easeInOut);
+    cont.animateToPage(
+      0,
+      duration: (Duration(seconds: 1)),
+      curve: Curves.easeInOut,
+    );
     setState(() {
       _totalScore = 0;
       _questionIndex = 0;
@@ -396,7 +418,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     var contactsBox = Hive.box<UserData>('UserData1');
     if (contactsBox.isNotEmpty) {
       contactsBox.values.forEach((element) {
-        if (element.isCurrentUser == true) {
+        if (element.isCurrentUser) {
           currentUser = element;
         }
       });
@@ -409,7 +431,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     var contactsBox = Hive.box<UserData>('UserData1');
     setState(() {
       contactsBox.values.forEach((element) {
-        if (element.isCurrentUser == true) currentUser = element;
+        if (element.isCurrentUser) currentUser = element;
       });
     });
   }
@@ -423,14 +445,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 //Load music
 
   void _loadMusic() async {
-    final ByteData data =
+    final data =
         await rootBundle.load('assets/music/Shadowing - Corbyn Kites.mp3');
-    Directory tempDir = await getTemporaryDirectory();
-    File tempFile = File('${tempDir.path}/Shadowing - Corbyn Kites.mp3');
+    var tempDir = await getTemporaryDirectory();
+    var tempFile = File('${tempDir.path}/Shadowing - Corbyn Kites.mp3');
     await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
     mp3Uri = tempFile.uri.toString();
     await audioPlugin.stop();
-    if (isAudionPlaying == true) {
+    if (isAudionPlaying) {
       await audioPlugin.play(mp3Uri);
     }
     audioPlugin.onPlayerStateChanged.listen((event) {
@@ -447,7 +469,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   void _soundButton() async {
     var prefs = await SharedPreferences.getInstance();
-    if (isAudionPlaying == true) {
+    if (isAudionPlaying) {
       await audioPlugin.pause();
       setState(() {
         isAudionPlaying = false;
@@ -534,92 +556,105 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         backgroundColor: Colors.amber,
         actions: [
           IconButton(
-              icon: Icon(
-                Icons.emoji_events,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return LeaderBoard();
-                }));
-              }),
-          IconButton(
-              icon: isAudionPlaying == true
-                  ? Icon(
-                      Icons.music_note,
-                      color: Colors.black,
-                    )
-                  : Icon(
-                      Icons.music_off,
-                      color: Colors.black,
-                    ),
-              onPressed: _soundButton)
-        ],
-      ),
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: cont,
-        children: <Widget>[
-          MainPage(
-            swap1: () => swap(1),
-            swap2: () => swap(2),
-            swap3: () => swap(3),
-            swap4: () => swap(4),
-            localeRu: localeRu,
-            localeEn: localeEn,
-            savedResult: _saveScore,
-            questionsLenght: _questionsLenght,
-            currentUser: currentUser,
-            setCurrentUser: _setCurrentUser,
-            clearCurrentUser: _clearCurrentUser,
+            icon: Icon(
+              Icons.emoji_events,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return LeaderBoard();
+              }));
+            },
           ),
-          Quiz(
-              answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: questionAll,
-              resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
-              onMainPage: onMainPage,
-              loadData: _loadData,
-              imageUrl:
-                  'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
-              progress: _progress),
-          Quiz(
-              answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: questionFilms,
-              resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
-              onMainPage: onMainPage,
-              loadData: _loadData,
-              imageUrl:
-                  'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
-              progress: _progress),
-          Quiz(
-              answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: questionSpace,
-              resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
-              onMainPage: onMainPage,
-              loadData: _loadData,
-              imageUrl:
-                  'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
-              progress: _progress),
-          Quiz(
-              answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: questionWeb,
-              resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
-              onMainPage: onMainPage,
-              loadData: _loadData,
-              imageUrl:
-                  'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
-              progress: _progress)
+          IconButton(
+            icon: isAudionPlaying
+                ? Icon(
+                    Icons.music_note,
+                    color: Colors.black,
+                  )
+                : Icon(
+                    Icons.music_off,
+                    color: Colors.black,
+                  ),
+            onPressed: _soundButton,
+          ),
         ],
       ),
+      body: _appPageView(),
+    );
+  }
+
+  Widget _appPageView() {
+    return PageView(
+      physics: NeverScrollableScrollPhysics(),
+      controller: cont,
+      children: <Widget>[
+        _appMainPage(),
+        Quiz(
+          answerQuestions: _answerQuestion,
+          questionIndex: _questionIndex,
+          questions: questionAll,
+          resetQuiz: _resetQuiz,
+          totalScore: _totalScore,
+          onMainPage: onMainPage,
+          loadData: _loadData,
+          imageUrl:
+              'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
+          progress: _progress,
+        ),
+        Quiz(
+          answerQuestions: _answerQuestion,
+          questionIndex: _questionIndex,
+          questions: questionFilms,
+          resetQuiz: _resetQuiz,
+          totalScore: _totalScore,
+          onMainPage: onMainPage,
+          loadData: _loadData,
+          imageUrl:
+              'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
+          progress: _progress,
+        ),
+        Quiz(
+          answerQuestions: _answerQuestion,
+          questionIndex: _questionIndex,
+          questions: questionSpace,
+          resetQuiz: _resetQuiz,
+          totalScore: _totalScore,
+          onMainPage: onMainPage,
+          loadData: _loadData,
+          imageUrl:
+              'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
+          progress: _progress,
+        ),
+        Quiz(
+          answerQuestions: _answerQuestion,
+          questionIndex: _questionIndex,
+          questions: questionWeb,
+          resetQuiz: _resetQuiz,
+          totalScore: _totalScore,
+          onMainPage: onMainPage,
+          loadData: _loadData,
+          imageUrl:
+              'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
+          progress: _progress,
+        ),
+      ],
+    );
+  }
+
+  Widget _appMainPage() {
+    return MainPage(
+      swap1: () => swap(1),
+      swap2: () => swap(2),
+      swap3: () => swap(3),
+      swap4: () => swap(4),
+      localeRu: localeRu,
+      localeEn: localeEn,
+      savedResult: _saveScore,
+      questionsLenght: _questionsLenght,
+      currentUser: currentUser,
+      setCurrentUser: _setCurrentUser,
+      clearCurrentUser: _clearCurrentUser,
     );
   }
 }

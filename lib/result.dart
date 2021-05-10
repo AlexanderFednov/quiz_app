@@ -15,14 +15,14 @@ class Result extends StatelessWidget {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: Image.network(
-                      'https://vogazeta.ru/uploads/full_size_1551691416-ec07565f279118e2314a7eb80dc93e66.jpg')
+                      'https://vogazeta.ru/uploads/full_size_1551691416-ec07565f279118e2314a7eb80dc93e66.jpg',)
                   .image,
-              fit: BoxFit.cover)),
+              fit: BoxFit.cover,),),
       child: Center(
         child: Container(
           height: 120,
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              color: Colors.white, borderRadius: BorderRadius.circular(10),),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,8 +37,8 @@ class Result extends StatelessWidget {
               TextButton(
                 onPressed: resetHandler,
                 child: Text(S.of(context).toMainPage,
-                    style: TextStyle(fontSize: 30, color: Colors.black)),
-              )
+                    style: TextStyle(fontSize: 30, color: Colors.black),),
+              ),
             ],
           ),
         ),

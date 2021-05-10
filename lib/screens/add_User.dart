@@ -32,15 +32,17 @@ class AddUserState extends State<AddUser> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(S.of(context).newUser,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  Text(
+                    S.of(context).newUser,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
                   TextFormField(
                     autofocus: true,
                     initialValue: '',
                     decoration: InputDecoration(
-                        labelText: S.of(context).userName,
-                        errorStyle: TextStyle(color: Colors.red)),
+                      labelText: S.of(context).userName,
+                      errorStyle: TextStyle(color: Colors.red),
+                    ),
                     validator: (value) {
                       var contactsBox = Hive.box<UserData>('UserData1');
                       if (value.trim().isEmpty || value.trim() == null) {
@@ -49,6 +51,7 @@ class AddUserState extends State<AddUser> {
                           .any((element) => element.userName == userName)) {
                         return S.of(context).nameIsTaken;
                       }
+
                       return null;
                     },
                     onChanged: (value) {
@@ -59,26 +62,12 @@ class AddUserState extends State<AddUser> {
                     //   FilteringTextInputFormatter(' ', allow: false)
                     // ],
                   ),
+
+                  // Control buttons
                   Row(
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          if (widget.formKey.currentState.validate()) {
-                            _onForSubmit();
-                          }
-                        },
-                        child: Text(S.of(context).addUser),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            FocusScope.of(context).unfocus();
-                          },
-                          child: Text(S.of(context).cancel),
-                        ),
-                      )
+                      _addUserButton(),
+                      _cancelButton(),
                     ],
                   ),
                 ],
@@ -90,15 +79,40 @@ class AddUserState extends State<AddUser> {
     );
   }
 
+  Widget _addUserButton() {
+    return ElevatedButton(
+      onPressed: () {
+        if (widget.formKey.currentState.validate()) {
+          _onForSubmit();
+        }
+      },
+      child: Text(S.of(context).addUser),
+    );
+  }
+
   void _onForSubmit() {
     var contactsBox = Hive.box<UserData>('UserData1');
 
     Navigator.of(context).pop();
     contactsBox.add(UserData(
-        userName: userName,
-        registerDate: DateTime.now(),
-        userResults: [],
-        isCurrentUser: false));
+      userName: userName,
+      registerDate: DateTime.now(),
+      userResults: [],
+      isCurrentUser: false,
+    ));
+  }
+
+  Widget _cancelButton() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+          FocusScope.of(context).unfocus();
+        },
+        child: Text(S.of(context).cancel),
+      ),
+    );
   }
 
   // void _errorDialog(String errorText) {

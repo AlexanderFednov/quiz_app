@@ -4,3 +4,43 @@ include: package:pedantic/analysis_options.yaml
 #   strong-mode:
 #     implicit-casts: false
 #     implicit-dynamic: false
+
+analyzer:
+  exclude:
+    - windows/flutter/ephemeral/.plugin_symlinks/path_provider_windows/lib/src/path_provider_windows_real.dart
+    - windows/flutter/ephemeral/.plugin_symlinks/path_provider_windows/test/path_provider_windows_test.dart
+    - windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/integration_test/shared_preferences_test.dart
+    - lib/generated/intl/messages_ru.dart
+    - lib/generated/intl/messages_all.dart
+    - lib/generated/intl/messages_en.dart
+    - windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/integration_test/shared_preferences_test.dart
+    - windows/flutter/ephemeral/.plugin_symlinks/path_provider_windows/lib/src/path_provider_windows_real.dart
+    - windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/lib/shared_preferences_windows.dart
+    - windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/lib/main.dart
+    - windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/test/shared_preferences_windows_test.dart
+    - lib/generated/l10n.dart
+
+  plugins:
+    - dart_code_metrics
+
+dart_code_metrics:
+  anti-patterns:
+    - long-method
+    - long-parameter-list
+  metrics:
+    cyclomatic-complexity: 20
+    lines-of-executable-code: 55
+    number-of-parameters: 4
+    maximum-nesting-level: 5
+  metrics-exclude:
+    - test/**
+  rules:
+    - binary-expression-operand-order
+    - double-literal-format
+    - newline-before-return
+    - no-boolean-literal-compare
+    - no-empty-block
+    - no-equal-then-else
+    - no-object-declaration
+    - prefer-conditional-expressions
+    - prefer-trailing-comma

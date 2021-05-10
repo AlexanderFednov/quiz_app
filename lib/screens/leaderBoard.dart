@@ -38,7 +38,7 @@ class LeaderBoardState extends State<LeaderBoard>
                 spawnMaxRadius: 20.0,
                 spawnMinSpeed: 20,
                 spawnMaxSpeed: 30,
-                particleCount: 200)),
+                particleCount: 200,),),
         vsync: this,
         child: Center(
           child: Column(
@@ -65,23 +65,26 @@ class LeaderBoardState extends State<LeaderBoard>
 
   StreamBuilder<List<MoorResult>> _buildList(BuildContext context) {
     final database = Provider.of<MyDatabase>(context);
+
     return StreamBuilder(
         stream: database.watchAllResults(),
         builder: (context, AsyncSnapshot<List<MoorResult>> snapshot) {
           moorResults = snapshot.data ?? [];
           moorResults.sort(
-              (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent));
+              (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent),);
           if (moorResults.isEmpty) {
             return Center(
                 child: Text(
               S.of(context).userListEmpty,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ));
+            ),);
           }
+
           return ListView.builder(
               itemCount: moorResults.length < 10 ? moorResults.length : 10,
               itemBuilder: (_, index) {
                 final res = moorResults[index];
+
                 return Container(
                   height: 80,
                   child: Card(
@@ -96,12 +99,12 @@ class LeaderBoardState extends State<LeaderBoard>
                                 style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 15)),
+                                    fontSize: 15,),),
                             index < 3
                                 ? Container(
                                     margin: EdgeInsets.only(left: 7),
-                                    child: pixMedal(index + 1))
-                                : SizedBox()
+                                    child: pixMedal(index + 1),)
+                                : SizedBox(),
                           ],
                         ),
                       ),
@@ -112,8 +115,8 @@ class LeaderBoardState extends State<LeaderBoard>
                     ),
                   ),
                 );
-              });
-        });
+              },);
+        },);
   }
 
   void _onNullifyPress() {
@@ -125,14 +128,14 @@ class LeaderBoardState extends State<LeaderBoard>
                     gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   colors: [Colors.white, Colors.blue[100], Colors.red[100]],
-                )),
+                ),),
                 height: 200,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(S.of(context).areYouSure,
-                          style: TextStyle(fontSize: 30)),
+                          style: TextStyle(fontSize: 30),),
                       Container(
                         margin: EdgeInsets.all(10),
                         child: Row(
@@ -145,21 +148,21 @@ class LeaderBoardState extends State<LeaderBoard>
                                 Navigator.of(context).pop();
                               },
                               child: Text(S.of(context).yes,
-                                  style: TextStyle(fontSize: 25)),
+                                  style: TextStyle(fontSize: 25),),
                             ),
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
                               child: Text(S.of(context).cancel,
-                                  style: TextStyle(fontSize: 25)),
-                            )
+                                  style: TextStyle(fontSize: 25),),
+                            ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
-            ));
+            ),);
   }
 
   String category(BuildContext context, int categoryNumber) {
@@ -240,7 +243,7 @@ class LeaderBoardState extends State<LeaderBoard>
       setState(() {
         moorResults = sortList;
         moorResults.sort(
-            (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent));
+            (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent),);
       });
     });
   }

@@ -36,12 +36,12 @@ class Answer extends StatelessWidget {
                   fontSize: 25,
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.white,),
             ),
             Text(
               answerText,
               style: TextStyle(fontSize: 25, color: Colors.white),
-            )
+            ),
           ],
         ),
       ),

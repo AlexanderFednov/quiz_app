@@ -8,14 +8,14 @@ class ErrorScreen extends StatelessWidget {
   final Function buttonFunction;
 
   ErrorScreen(
-      {this.imageUrl, this.errorText, this.buttonFunction, this.buttonText});
+      {this.imageUrl, this.errorText, this.buttonFunction, this.buttonText,});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: CachedNetworkImageProvider(imageUrl), fit: BoxFit.cover)),
+              image: CachedNetworkImageProvider(imageUrl), fit: BoxFit.cover,),),
       child: Center(
         child: Container(
           height: 300,
@@ -53,9 +53,9 @@ class ErrorScreen extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    )),
-              )
+                          color: Colors.black,),
+                    ),),
+              ),
             ],
           ),
         ),

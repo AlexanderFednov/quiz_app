@@ -27,6 +27,7 @@ class UserData extends HiveObject {
       sumAnswers = sumAnswers + element.score;
       sumQuestions = sumQuestions + element.questionsLenght;
     });
+
     return 100 / sumQuestions * sumAnswers;
   }
 
@@ -36,7 +37,7 @@ class UserData extends HiveObject {
       this.userId = 0,
       this.isCurrentUser = false,
       this.registerDate,
-      this.userResults});
+      this.userResults,});
 }
 
 @HiveType(typeId: 1)
@@ -79,5 +80,5 @@ class UserResult extends HiveObject {
       {this.score = 0,
       this.questionsLenght = 0,
       this.resultDate,
-      this.categoryNumber});
+      this.categoryNumber,});
 }

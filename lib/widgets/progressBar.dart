@@ -13,7 +13,7 @@ class IconTrue extends StatelessWidget {
         child: Icon(
           Icons.brightness_1,
           color: Colors.green[800],
-        ));
+        ),);
   }
 }
 
@@ -30,6 +30,6 @@ class IconFalse extends StatelessWidget {
         child: Icon(
           Icons.brightness_1,
           color: Colors.red[900],
-        ));
+        ),);
   }
 }
