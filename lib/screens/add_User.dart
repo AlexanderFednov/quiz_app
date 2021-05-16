@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 //import 'package:intl/intl.dart';
 import '../generated/l10n.dart';
 
-import '../models/hive_userData.dart';
+import '../models/hive_user_data.dart';
 
 class AddUser extends StatefulWidget {
   final formKey = GlobalKey<FormState>();

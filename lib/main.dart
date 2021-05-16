@@ -1,9 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_app/data/load_questions_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
+import 'package:quiz_app/quiz_audioplayer.dart';
+import 'package:quiz_app/widgets/last_result.dart';
 // import 'package:quiz_app/screens/userList.dart';
 import './quiz.dart';
 import 'screens/main_page.dart';
@@ -14,14 +15,15 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/l10n.dart';
-import 'models/questionList.dart';
-import 'models/hive_userData.dart';
-import 'widgets/progressBar.dart';
-import 'screens/leaderBoard.dart';
+import 'models/question_list.dart';
+import 'models/hive_user_data.dart';
+import 'widgets/progressbar.dart';
+import 'screens/leaderboard.dart';
+import './quiz_audioplayer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
-import 'package:audioplayer/audioplayer.dart';
-import 'package:path_provider/path_provider.dart';
+import './widgets/last_result.dart';
+import './data/load_questions_data.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -75,24 +77,18 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   List<QuestionInside> questionSpace;
   List<QuestionInside> questionWeb = [];
 
+  var questionsData = LoadQuestionsData();
+
   int _questionIndex = 0;
   int _totalScore = 0;
   int _saveScore = 0;
   int _questionsLenght = 0;
   int _categoryNumber = 0;
 
-  bool isAudionPlaying = true;
-
   List<Widget> _progress = [];
-  List<String> _lastResults = [];
+  final List<String> _lastResults = [];
 
   UserData currentUser;
-
-  AudioPlayer audioPlugin = AudioPlayer();
-
-  String mp3Uri = '';
-
-  Duration position;
 
 // Reset Quiz App
 
@@ -112,8 +108,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         );
         prefs.setStringList('lastResults', _lastResults);
         _questionsLenght = _questionIndex;
+        LastResultWidgetState().questionsLenght = _questionIndex;
         prefs.setInt('questionsLenght', _questionIndex);
         _saveScore = _totalScore;
+        LastResultWidgetState().savedResult = _totalScore;
         prefs.setInt('saveScore', _saveScore);
         _questionIndex = 0;
         _totalScore = 0;
@@ -176,24 +174,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  //Loading savescore value on start
-
-  void _loadSaveScore() async {
-    var prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _saveScore = (prefs.getInt('saveScore') ?? 0);
-      _questionsLenght = (prefs.getInt('questionsLenght') ?? 0);
-      _lastResults = (prefs.getStringList('lastResults') ?? []);
-    });
-  }
-
-  // void _resetLeaderboard() {
-  //   setState(() {
-  //     _lastResults = [];
-  //   });
-  // }
-
-//Load banks of questions
+// Load banks of questions
 
   void loadList() async {
     var jsonQuestionAll =
@@ -221,7 +202,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  void _loadData() async {
+  void loadData() async {
     final responce = await http
         .get(Uri.http('10.0.2.2:8000', ''))
         .timeout(Duration(seconds: 3), onTimeout: () => null);
@@ -442,69 +423,19 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-//Load music
-
-  void _loadMusic() async {
-    final data =
-        await rootBundle.load('assets/music/Shadowing - Corbyn Kites.mp3');
-    var tempDir = await getTemporaryDirectory();
-    var tempFile = File('${tempDir.path}/Shadowing - Corbyn Kites.mp3');
-    await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    mp3Uri = tempFile.uri.toString();
-    await audioPlugin.stop();
-    if (isAudionPlaying) {
-      await audioPlugin.play(mp3Uri);
-    }
-    audioPlugin.onPlayerStateChanged.listen((event) {
-      if (event == AudioPlayerState.COMPLETED) {
-        audioPlugin.play(mp3Uri);
-      }
-    });
-    audioPlugin.onAudioPositionChanged.listen((event) {
-      setState(() {
-        position = event;
-      });
-    });
-  }
-
-  void _soundButton() async {
-    var prefs = await SharedPreferences.getInstance();
-    if (isAudionPlaying) {
-      await audioPlugin.pause();
-      setState(() {
-        isAudionPlaying = false;
-      });
-      await prefs.setBool('isAudioPlaying', false);
-    } else {
-      await audioPlugin.play(mp3Uri);
-      setState(() {
-        isAudionPlaying = true;
-      });
-      await prefs.setBool('isAudioPlaying', true);
-    }
-  }
-
-  void _loadIsPlaying() async {
-    var prefs = await SharedPreferences.getInstance();
-    isAudionPlaying = (prefs.getBool('isAudioPlaying') ?? true);
-  }
-
   @override
   void initState() {
     super.initState();
-    loadList();
-    _loadSaveScore();
-    _loadData();
+    // _loadList();
+    // _loadData();
     _getCurrentUser();
-    _loadIsPlaying();
-    _loadMusic();
+
+    // questionsData.loadQuestions();
 
     // S.load(Locale('ru', 'RU'));
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   return _selectUser();
     // });
-
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -513,32 +444,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.inactive:
-        print('Inactive');
-        audioPlugin.pause();
-        break;
-      case AppLifecycleState.paused:
-        print('Paused');
-        audioPlugin.pause();
-        break;
-      case AppLifecycleState.resumed:
-        print('Resumed');
-        audioPlugin.play(mp3Uri);
-        break;
-      case AppLifecycleState.detached:
-        print('detached');
-        audioPlugin.stop();
-        break;
-    }
-  }
-
-  @override
   void dispose() {
     super.dispose();
-    audioPlugin.stop();
-    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -566,18 +473,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
               }));
             },
           ),
-          IconButton(
-            icon: isAudionPlaying
-                ? Icon(
-                    Icons.music_note,
-                    color: Colors.black,
-                  )
-                : Icon(
-                    Icons.music_off,
-                    color: Colors.black,
-                  ),
-            onPressed: _soundButton,
-          ),
+          QuizAudioPlayer(),
         ],
       ),
       body: _appPageView(),
@@ -585,60 +481,65 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   Widget _appPageView() {
-    return PageView(
-      physics: NeverScrollableScrollPhysics(),
-      controller: cont,
-      children: <Widget>[
-        _appMainPage(),
-        Quiz(
-          answerQuestions: _answerQuestion,
-          questionIndex: _questionIndex,
-          questions: questionAll,
-          resetQuiz: _resetQuiz,
-          totalScore: _totalScore,
-          onMainPage: onMainPage,
-          loadData: _loadData,
-          imageUrl:
-              'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
-          progress: _progress,
-        ),
-        Quiz(
-          answerQuestions: _answerQuestion,
-          questionIndex: _questionIndex,
-          questions: questionFilms,
-          resetQuiz: _resetQuiz,
-          totalScore: _totalScore,
-          onMainPage: onMainPage,
-          loadData: _loadData,
-          imageUrl:
-              'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
-          progress: _progress,
-        ),
-        Quiz(
-          answerQuestions: _answerQuestion,
-          questionIndex: _questionIndex,
-          questions: questionSpace,
-          resetQuiz: _resetQuiz,
-          totalScore: _totalScore,
-          onMainPage: onMainPage,
-          loadData: _loadData,
-          imageUrl:
-              'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
-          progress: _progress,
-        ),
-        Quiz(
-          answerQuestions: _answerQuestion,
-          questionIndex: _questionIndex,
-          questions: questionWeb,
-          resetQuiz: _resetQuiz,
-          totalScore: _totalScore,
-          onMainPage: onMainPage,
-          loadData: _loadData,
-          imageUrl:
-              'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
-          progress: _progress,
-        ),
-      ],
+    return FutureBuilder(
+      future: questionsData.loadQuestions(),
+      builder: (context, snapshot) {
+        return PageView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: cont,
+          children: <Widget>[
+            _appMainPage(),
+            Quiz(
+              answerQuestions: _answerQuestion,
+              questionIndex: _questionIndex,
+              questions: questionsData.questionAll,
+              resetQuiz: _resetQuiz,
+              totalScore: _totalScore,
+              onMainPage: onMainPage,
+              loadData: questionsData.loadData,
+              imageUrl:
+                  'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
+              progress: _progress,
+            ),
+            Quiz(
+              answerQuestions: _answerQuestion,
+              questionIndex: _questionIndex,
+              questions: questionsData.questionFilms,
+              resetQuiz: _resetQuiz,
+              totalScore: _totalScore,
+              onMainPage: onMainPage,
+              loadData: questionsData.loadData,
+              imageUrl:
+                  'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
+              progress: _progress,
+            ),
+            Quiz(
+              answerQuestions: _answerQuestion,
+              questionIndex: _questionIndex,
+              questions: questionsData.questionSpace,
+              resetQuiz: _resetQuiz,
+              totalScore: _totalScore,
+              onMainPage: onMainPage,
+              loadData: questionsData.loadData,
+              imageUrl:
+                  'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
+              progress: _progress,
+            ),
+            Quiz(
+              answerQuestions: _answerQuestion,
+              questionIndex: _questionIndex,
+              questions: questionsData.questionWeb,
+              resetQuiz: _resetQuiz,
+              totalScore: _totalScore,
+              onMainPage: onMainPage,
+              loadData: questionsData.loadData,
+              imageUrl:
+                  'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
+              progress: _progress,
+            ),
+          ],
+        );
+      },
     );
   }
 

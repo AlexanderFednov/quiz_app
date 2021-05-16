@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 //import 'package:flutter/material.dart';
-part 'questionList.g.dart';
+part 'question_list.g.dart';
 
 @JsonSerializable()
 class QuestionList {

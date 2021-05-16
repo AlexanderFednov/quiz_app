@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/screens/error_Screen.dart';
+import 'package:quiz_app/screens/error_screen.dart';
 import 'generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'answer.dart';
 import 'widgets/question.dart';
 import 'result.dart';
-import 'models/questionList.dart';
+import 'models/question_list.dart';
 
 class Quiz extends StatelessWidget {
   final List<QuestionInside> questions;
@@ -53,7 +53,7 @@ class Quiz extends StatelessWidget {
                   );
                 }).toList(),
                 _resetButton(context),
-                _questionIndex(),
+                _showQuestionIndex(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [...progress],
@@ -71,8 +71,8 @@ class Quiz extends StatelessWidget {
                 errorText: S.of(context).httpServerError,
                 buttonText: S.of(context).toMainPage,
                 buttonFunction: () async {
+                  loadData();
                   resetQuiz();
-                  await loadData();
                 },
                 imageUrl: imageUrl,
               );
@@ -95,7 +95,7 @@ class Quiz extends StatelessWidget {
     );
   }
 
-  Widget _questionIndex() {
+  Widget _showQuestionIndex() {
     return Container(
       padding: EdgeInsets.all(5),
       margin: EdgeInsets.only(top: 10),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'generated/l10n.dart';
-import 'models/questionList.dart';
+import 'models/question_list.dart';
 
 class Result extends StatelessWidget {
   final Function resetHandler;

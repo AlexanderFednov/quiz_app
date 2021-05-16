@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 //import 'package:intl/intl.dart';
-import 'package:quiz_app/screens/add_User.dart';
-import '../models/hive_userData.dart';
+import 'package:quiz_app/screens/add_user.dart';
+import '../models/hive_user_data.dart';
 import '../screens/user_Information.dart';
 import '../generated/l10n.dart';
 
@@ -58,7 +58,9 @@ class UserListState extends State<UserList> {
             if (currentUser != null)
               Flexible(
                 flex: 0,
-                child: _showCurrentUser(),
+                child: ShowCurrentUserWidget(
+                  currentUser: currentUser,
+                ),
               ),
             Flexible(
               flex: 0,
@@ -94,39 +96,39 @@ class UserListState extends State<UserList> {
     );
   }
 
-  Widget _showCurrentUser() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.all(5),
-      child: Column(
-        children: [
-          Text(
-            S.of(context).currentUser,
-            style: TextStyle(fontSize: 30),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                currentUser.userName,
-                style: TextStyle(fontSize: 30),
-              ),
-              Text(
-                currentUser.userResults.isEmpty
-                    ? '0/0'
-                    : '${currentUser.userResults[0].score}/${currentUser.userResults[0].questionsLenght}',
-                style: TextStyle(fontSize: 30),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _showCurrentUser() {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(vertical: 10),
+  //     decoration: BoxDecoration(
+  //       border: Border.all(color: Colors.black),
+  //       borderRadius: BorderRadius.circular(12),
+  //     ),
+  //     padding: EdgeInsets.all(5),
+  //     child: Column(
+  //       children: [
+  //         Text(
+  //           S.of(context).currentUser,
+  //           style: TextStyle(fontSize: 30),
+  //         ),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               currentUser.userName,
+  //               style: TextStyle(fontSize: 30),
+  //             ),
+  //             Text(
+  //               currentUser.userResults.isEmpty
+  //                   ? '0/0'
+  //                   : '${currentUser.userResults[0].score}/${currentUser.userResults[0].questionsLenght}',
+  //               style: TextStyle(fontSize: 30),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _searchBar() {
     return Container(
@@ -495,5 +497,58 @@ class UserListState extends State<UserList> {
   @override
   void dispose() {
     super.dispose();
+  }
+}
+
+class ShowCurrentUserWidget extends StatefulWidget {
+  final UserData currentUser;
+
+  ShowCurrentUserWidget({@required this.currentUser});
+
+  @override
+  State<StatefulWidget> createState() {
+    return ShowCurrentUserWidgetState();
+  }
+}
+
+class ShowCurrentUserWidgetState extends State<ShowCurrentUserWidget> {
+  // UserData currentUser;
+  // Function currentUserChange;
+
+  // ShowCurrentUserWidgetState({@required this.currentUser});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: EdgeInsets.all(5),
+      child: Column(
+        children: [
+          Text(
+            S.of(context).currentUser,
+            style: TextStyle(fontSize: 30),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.currentUser.userName,
+                style: TextStyle(fontSize: 30),
+              ),
+              Text(
+                widget.currentUser.userResults.isEmpty
+                    ? '0/0'
+                    : '${widget.currentUser.userResults[0].score}/${widget.currentUser.userResults[0].questionsLenght}',
+                style: TextStyle(fontSize: 30),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

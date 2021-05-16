@@ -2,14 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_button/animated_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:quiz_app/widgets/last_result.dart';
 // import 'package:intl/intl.dart';
 //import 'package:json_annotation/json_annotation.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:intl/intl.dart';
 import '../generated/l10n.dart';
-import '../models/hive_userData.dart';
-import '../screens/userList.dart';
+import '../models/hive_user_data.dart';
+import '../screens/user_list.dart';
 import '../screens/user_Information.dart';
+import '../widgets/last_result.dart';
 // import '../screens/learning.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -70,7 +72,7 @@ class MainPage extends StatelessWidget {
               ),
               Flexible(
                 flex: 0,
-                child: _lastResults(context),
+                child: LastResultWidget(),
               ),
               if (currentUser != null)
                 Flexible(
@@ -192,16 +194,16 @@ class MainPage extends StatelessWidget {
   //   super.initState();
   // }
 
-  Widget _lastResults(BuildContext context) {
-    return Text(
-      S.of(context).lastResult(savedResult, questionsLenght),
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
+  // Widget _lastResults(BuildContext context) {
+  //   return Text(
+  //     S.of(context).lastResult(savedResult, questionsLenght),
+  //     style: TextStyle(
+  //       color: Colors.black,
+  //       fontSize: 20,
+  //       fontWeight: FontWeight.bold,
+  //     ),
+  //   );
+  // }
 
   Widget _greetingMessage(BuildContext context) {
     return Container(

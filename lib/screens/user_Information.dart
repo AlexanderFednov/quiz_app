@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../models/hive_userData.dart';
+import '../models/hive_user_data.dart';
 import '../generated/l10n.dart';
 
 class UserInformation extends StatefulWidget {
