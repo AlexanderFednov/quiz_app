@@ -105,7 +105,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
         var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
         _lastResults.add(
-          '${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow',
+          '${currentUser.userName} - ${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow',
         );
         prefs.setStringList('lastResults', _lastResults);
         _questionsLenght = _questionIndex;
