@@ -90,6 +90,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   UserData currentUser;
 
+  PageController cont = PageController();
+
 // Reset Quiz App
 
   void _resetQuiz() async {
@@ -347,8 +349,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // }
 
 //Page navigation
-
-  PageController cont = PageController();
 
   // void swap0() {
   //   cont.animateToPage(0,
