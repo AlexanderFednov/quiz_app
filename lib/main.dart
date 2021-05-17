@@ -108,10 +108,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         );
         prefs.setStringList('lastResults', _lastResults);
         _questionsLenght = _questionIndex;
-        LastResultWidgetState().questionsLenght = _questionIndex;
         prefs.setInt('questionsLenght', _questionIndex);
         _saveScore = _totalScore;
-        LastResultWidgetState().savedResult = _totalScore;
         prefs.setInt('saveScore', _saveScore);
         _questionIndex = 0;
         _totalScore = 0;

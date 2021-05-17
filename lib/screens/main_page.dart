@@ -72,7 +72,10 @@ class MainPage extends StatelessWidget {
               ),
               Flexible(
                 flex: 0,
-                child: LastResultWidget(),
+                child: LastResultWidget(
+                  savedResult: savedResult,
+                  questionsLenght: questionsLenght,
+                ),
               ),
               if (currentUser != null)
                 Flexible(

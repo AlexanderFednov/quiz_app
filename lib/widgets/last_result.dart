@@ -4,15 +4,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../generated/l10n.dart';
 
 class LastResultWidget extends StatefulWidget {
+  final savedResult;
+  final questionsLenght;
+
+  LastResultWidget(
+      {@required this.savedResult, @required this.questionsLenght});
+
   @override
   State<StatefulWidget> createState() {
-    return LastResultWidgetState();
+    return LastResultWidgetState(
+        savedResult: savedResult, questionsLenght: questionsLenght);
   }
 }
 
 class LastResultWidgetState extends State<LastResultWidget> {
-  int savedResult = 0;
-  int questionsLenght = 0;
+  int savedResult;
+  int questionsLenght;
+
+  LastResultWidgetState(
+      {@required this.savedResult, @required this.questionsLenght});
 
   @override
   Widget build(BuildContext context) {
