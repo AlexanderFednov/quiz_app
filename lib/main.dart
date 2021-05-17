@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/data/load_questions_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
-import 'package:quiz_app/widgets/last_result.dart';
 // import 'package:quiz_app/screens/userList.dart';
 import './quiz.dart';
 import 'screens/main_page.dart';
@@ -22,7 +21,7 @@ import 'screens/leaderboard.dart';
 import './quiz_audioplayer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
-import './widgets/last_result.dart';
+
 import './data/load_questions_data.dart';
 
 void main() async {
