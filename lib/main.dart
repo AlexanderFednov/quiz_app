@@ -77,6 +77,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   List<QuestionInside> questionWeb = [];
 
   var questionsData = LoadQuestionsData();
+  var _futureloadQuestions;
 
   int _questionIndex = 0;
   int _totalScore = 0;
@@ -427,7 +428,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // _loadData();
     _getCurrentUser();
 
-    // questionsData.loadQuestions();
+    _futureloadQuestions = questionsData.loadQuestions();
 
     // S.load(Locale('ru', 'RU'));
     // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -479,7 +480,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   Widget _appPageView() {
     return FutureBuilder(
-      future: questionsData.loadQuestions(),
+      future: _futureloadQuestions,
       builder: (context, snapshot) {
         return PageView(
           physics: NeverScrollableScrollPhysics(),

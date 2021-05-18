@@ -21,6 +21,8 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
   AudioPlayer audioPlugin = AudioPlayer();
   Duration position;
 
+  var _futureloadIsPlaying;
+
   void loadMusic() async {
     final data =
         await rootBundle.load('assets/music/Shadowing - Corbyn Kites.mp3');
@@ -69,7 +71,7 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: loadIsPlaying(),
+      future: _futureloadIsPlaying,
       builder: (context, snapshot) {
         return IconButton(
           icon: isAudionPlaying
@@ -90,8 +92,7 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
   @override
   void initState() {
     super.initState();
-
-    // loadIsPlaying();
+    _futureloadIsPlaying = loadIsPlaying();
     loadMusic();
 
     WidgetsBinding.instance.addObserver(this);

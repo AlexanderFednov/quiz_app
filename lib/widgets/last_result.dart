@@ -8,12 +8,12 @@ class LastResultWidget extends StatefulWidget {
   final questionsLenght;
 
   LastResultWidget(
-      {@required this.savedResult, @required this.questionsLenght});
+      {@required this.savedResult, @required this.questionsLenght,});
 
   @override
   State<StatefulWidget> createState() {
     return LastResultWidgetState(
-        savedResult: savedResult, questionsLenght: questionsLenght);
+        savedResult: savedResult, questionsLenght: questionsLenght,);
   }
 }
 
@@ -22,7 +22,7 @@ class LastResultWidgetState extends State<LastResultWidget> {
   int questionsLenght;
 
   LastResultWidgetState(
-      {@required this.savedResult, @required this.questionsLenght});
+      {@required this.savedResult, @required this.questionsLenght,});
 
   @override
   Widget build(BuildContext context) {
