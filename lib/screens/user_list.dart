@@ -528,10 +528,11 @@ class UserListTileWidget extends StatelessWidget {
   final Box<UserData> box;
   final onUserListTileTap;
 
-  UserListTileWidget(
-      {@required this.res,
-      @required this.box,
-      @required this.onUserListTileTap,});
+  UserListTileWidget({
+    @required this.res,
+    @required this.box,
+    @required this.onUserListTileTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -577,18 +578,6 @@ class UserListTileWidget extends StatelessWidget {
               : Icon(Icons.check_box_outline_blank),
       onTap: () {
         onUserListTileTap(res, box);
-        // setState(() {
-        //   box.values.forEach((element) {
-        //     element.isCurrentUser = false;
-        //     element.save();
-        //   });
-        //   res.isCurrentUser = true;
-        //   //res.userId = index;
-        //   currentUser = res;
-        //   //currentUser.userId = index;
-        //   res.save();
-        //   setCurrentUser();
-        // });
       },
     );
   }
