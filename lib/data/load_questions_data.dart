@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -62,6 +63,11 @@ class LoadQuestionsData {
 
     return Future.value();
   }
+
+  StreamController loadDataStreamCont = StreamController();
+
+  Sink get loadDataSink => loadDataStreamCont.sink;
+  Stream get loadDataStream => loadDataStreamCont.stream;
 
   Future loadQuestions() async {
     loadData();

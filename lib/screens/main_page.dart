@@ -22,8 +22,6 @@ class MainPage extends StatelessWidget {
   final Function swap4;
   final Function localeRu;
   final Function localeEn;
-  final int savedResult;
-  final int questionsLenght;
   final UserData currentUser;
   final Function setCurrentUser;
   final Function clearCurrentUser;
@@ -35,8 +33,6 @@ class MainPage extends StatelessWidget {
     @required this.swap4,
     @required this.localeRu,
     @required this.localeEn,
-    @required this.savedResult,
-    @required this.questionsLenght,
     @required this.currentUser,
     @required this.setCurrentUser,
     @required this.clearCurrentUser,
@@ -72,10 +68,7 @@ class MainPage extends StatelessWidget {
               ),
               Flexible(
                 flex: 0,
-                child: LastResultWidget(
-                  savedResult: savedResult,
-                  questionsLenght: questionsLenght,
-                ),
+                child: LastResultWidget(),
               ),
               if (currentUser != null)
                 Flexible(

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_app/bloc/bloc_data.dart';
 import 'package:quiz_app/data/load_questions_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
 // import 'package:quiz_app/screens/userList.dart';
 import './quiz.dart';
 import 'screens/main_page.dart';
-import 'package:flutter/services.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+// import 'package:flutter/services.dart';
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/l10n.dart';
-import 'models/question_list.dart';
+// import 'models/question_list.dart';
 import 'models/hive_user_data.dart';
-import 'widgets/progressbar.dart';
+
 import 'screens/leaderboard.dart';
 import './quiz_audioplayer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -43,8 +44,15 @@ class QuizApp extends StatefulWidget {
 class QuizAppState extends State<QuizApp> {
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => MyDatabase(),
+    return MultiProvider(
+      providers: [
+        Provider<MyDatabase>(
+          create: (_) => MyDatabase(),
+        ),
+        Provider<MainBloc>(
+          create: (_) => MainBloc(),
+        ),
+      ],
       child: MaterialApp(
         localizationsDelegates: [
           S.delegate,
@@ -71,21 +79,11 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  List<QuestionInside> questionAll;
-  List<QuestionInside> questionFilms;
-  List<QuestionInside> questionSpace;
-  List<QuestionInside> questionWeb = [];
-
   var questionsData = LoadQuestionsData();
   var _futureloadQuestions;
 
-  int _questionIndex = 0;
-  int _totalScore = 0;
-  int _saveScore = 0;
-  int _questionsLenght = 0;
   int _categoryNumber = 0;
 
-  List<Widget> _progress = [];
   final List<String> _lastResults = [];
 
   UserData currentUser;
@@ -95,27 +93,28 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 // Reset Quiz App
 
   void _resetQuiz() async {
+    var bloc = Provider.of<MainBloc>(context, listen: false);
     var prefs = await SharedPreferences.getInstance();
     var contactBox = Hive.box<UserData>('UserData1');
-    if (_questionIndex > 0) {
+    if (bloc.questionIndex > 0) {
       setState(() {
         if (currentUser != null) {
-          _addHiveUserResult(contactBox);
-          _addMoorUserResult();
+          _addHiveUserResult(contactBox, bloc);
+          _addMoorUserResult(bloc);
         }
 
         var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
         _lastResults.add(
-          '${currentUser.userName} - ${_lastResults.length + 1}) $_totalScore / $_questionIndex - $timeNow',
+          '${currentUser.userName} - ${_lastResults.length + 1}) ${bloc.totalScore} / $bloc.questionIndex - $timeNow',
         );
         prefs.setStringList('lastResults', _lastResults);
-        _questionsLenght = _questionIndex;
-        prefs.setInt('questionsLenght', _questionIndex);
-        _saveScore = _totalScore;
-        prefs.setInt('saveScore', _saveScore);
-        _questionIndex = 0;
-        _totalScore = 0;
-        _progress = [];
+        bloc.inEvent.add(MainBlocEvent.setQuestionsLenght);
+        prefs.setInt('questionsLenght', bloc.questionIndex);
+        bloc.inEvent.add(MainBlocEvent.setSavedScore);
+        prefs.setInt('saveScore', bloc.totalScore);
+        bloc.inEvent.add(MainBlocEvent.questionIndexNullify);
+        bloc.inEvent.add(MainBlocEvent.totalScoreNullify);
+        bloc.inEvent.add(MainBlocEvent.progressNullify);
       });
     }
     await cont.animateToPage(
@@ -125,15 +124,15 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 
-  void _addHiveUserResult(Box<UserData> contactBox) {
+  void _addHiveUserResult(Box<UserData> contactBox, MainBloc bloc) {
     contactBox.values.forEach((element) {
       if (element.isCurrentUser) {
-        element.userResult = _totalScore;
+        element.userResult = bloc.totalScore;
         element.userResults.insert(
           0,
           UserResult(
-            score: _totalScore,
-            questionsLenght: _questionIndex,
+            score: bloc.totalScore,
+            questionsLenght: bloc.questionIndex,
             resultDate: DateTime.now(),
             categoryNumber: _categoryNumber,
           ),
@@ -143,14 +142,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  void _addMoorUserResult() {
+  void _addMoorUserResult(MainBloc bloc) {
     Provider.of<MyDatabase>(context, listen: false).insertMoorResult(
       MoorResult(
         id: null,
         name: currentUser.userName,
-        result: _totalScore,
-        questionsLenght: _questionIndex,
-        rightResultsPercent: (100 / _questionIndex * _totalScore),
+        result: bloc.totalScore,
+        questionsLenght: bloc.questionIndex,
+        rightResultsPercent: (100 / bloc.questionIndex * bloc.totalScore),
         categoryNumber: _categoryNumber,
         resultDate: DateTime.now(),
       ),
@@ -160,72 +159,15 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 //When answer question
 
   void _answerQuestion(bool result) {
+    var bloc = Provider.of<MainBloc>(context, listen: false);
+
     if (result) {
-      setState(() {
-        _questionIndex = _questionIndex + 1;
-        _totalScore++;
-        _progress.add(IconTrue());
-      });
+      bloc.inEvent.add(MainBlocEvent.questionIndexIncreement);
+      bloc.inEvent.add(MainBlocEvent.totalScoreIncreement);
+      bloc.inEvent.add(MainBlocEvent.progressAddTrue);
     } else {
-      setState(() {
-        _questionIndex = _questionIndex + 1;
-        _progress.add(IconFalse());
-      });
-    }
-  }
-
-// Load banks of questions
-
-  void loadList() async {
-    var jsonQuestionAll =
-        await rootBundle.loadString('assets/questions/questionsAll.json');
-    Map decoded = jsonDecode(jsonQuestionAll);
-
-    var questionListAll = QuestionList.fromJson(decoded).question;
-
-    var jsonQuestionFilms =
-        await rootBundle.loadString('assets/questions/questionsFilms.json');
-    Map decoded2 = jsonDecode(jsonQuestionFilms);
-
-    var questionListFilms = QuestionList.fromJson(decoded2).question;
-
-    var jsonQuestionSpace =
-        await rootBundle.loadString('assets/questions/questionsSpace.json');
-    Map decoded3 = jsonDecode(jsonQuestionSpace);
-
-    var questionListSpace = QuestionList.fromJson(decoded3).question;
-
-    setState(() {
-      questionAll = questionListAll;
-      questionFilms = questionListFilms;
-      questionSpace = questionListSpace;
-    });
-  }
-
-  void loadData() async {
-    final responce = await http
-        .get(Uri.http('10.0.2.2:8000', ''))
-        .timeout(Duration(seconds: 3), onTimeout: () => null);
-
-    if (responce != null) {
-      Map decoded = jsonDecode(responce.body);
-      var questionListWeb = QuestionList.fromJson(decoded).question;
-      print(decoded);
-      setState(() {
-        questionWeb = questionListWeb;
-      });
-      //responceText = decoded;
-    } else {
-      print('HTTP error: server is not available');
-      // String jsonQuestionNull =
-      //     await rootBundle.loadString('assets/questions/questionsNull.json');
-      // Map decoded = jsonDecode(jsonQuestionNull);
-
-      // var questionListNull = QuestionList.fromJson(decoded).question;
-
-      // setState(() {
-      //   questionWeb = questionListNull;
-      // });
+      bloc.inEvent.add(MainBlocEvent.questionIndexIncreement);
+      bloc.inEvent.add(MainBlocEvent.progressAddFalse);
     }
   }
 
@@ -365,15 +307,16 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void onMainPage() {
+    var bloc = Provider.of<MainBloc>(context, listen: false);
     cont.animateToPage(
       0,
       duration: (Duration(seconds: 1)),
       curve: Curves.easeInOut,
     );
     setState(() {
-      _totalScore = 0;
-      _questionIndex = 0;
-      _progress = [];
+      bloc.inEvent.add(MainBlocEvent.totalScoreNullify);
+      bloc.questionIndex = 0;
+      bloc.inEvent.add(MainBlocEvent.progressNullify);
     });
   }
 
@@ -489,51 +432,39 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             _appMainPage(),
             Quiz(
               answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
               questions: questionsData.questionAll,
               resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
               onMainPage: onMainPage,
               loadData: questionsData.loadData,
               imageUrl:
                   'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
-              progress: _progress,
             ),
             Quiz(
               answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
               questions: questionsData.questionFilms,
               resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
               onMainPage: onMainPage,
               loadData: questionsData.loadData,
               imageUrl:
                   'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
-              progress: _progress,
             ),
             Quiz(
               answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
               questions: questionsData.questionSpace,
               resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
               onMainPage: onMainPage,
               loadData: questionsData.loadData,
               imageUrl:
                   'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
-              progress: _progress,
             ),
             Quiz(
               answerQuestions: _answerQuestion,
-              questionIndex: _questionIndex,
               questions: questionsData.questionWeb,
               resetQuiz: _resetQuiz,
-              totalScore: _totalScore,
               onMainPage: onMainPage,
               loadData: questionsData.loadData,
               imageUrl:
                   'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
-              progress: _progress,
             ),
           ],
         );
@@ -549,8 +480,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       swap4: () => swap(4),
       localeRu: localeRu,
       localeEn: localeEn,
-      savedResult: _saveScore,
-      questionsLenght: _questionsLenght,
       currentUser: currentUser,
       setCurrentUser: _setCurrentUser,
       clearCurrentUser: _clearCurrentUser,
