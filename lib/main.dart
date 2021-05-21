@@ -105,7 +105,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
         var timeNow = DateFormat('yyyy-MM-dd (kk:mm)').format(DateTime.now());
         _lastResults.add(
-          '${currentUser.userName} - ${_lastResults.length + 1}) ${bloc.totalScore} / $bloc.questionIndex - $timeNow',
+          '${currentUser != null ? '${currentUser.userName} - ' : ''} ${_lastResults.length + 1}) ${bloc.totalScore} / $bloc.questionIndex - $timeNow',
         );
         prefs.setStringList('lastResults', _lastResults);
         bloc.inEvent.add(MainBlocEvent.setQuestionsLenght);
