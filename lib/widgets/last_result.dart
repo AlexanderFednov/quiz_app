@@ -6,20 +6,15 @@ import 'package:provider/provider.dart';
 import '../generated/l10n.dart';
 
 class LastResultWidget extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
-    return LastResultWidgetState(
-    );
+    return LastResultWidgetState();
   }
 }
 
 class LastResultWidgetState extends State<LastResultWidget> {
-
   final _mainBlocInstance = MainBloc();
   var _futureLoadLastResults;
-
-
 
   @override
   Widget build(BuildContext context) {
