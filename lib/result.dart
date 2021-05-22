@@ -22,7 +22,7 @@ class Result extends StatelessWidget {
         ),
       ),
       child: StreamBuilder(
-          stream: bloc.outlogic,
+          stream: bloc.outEvent,
           builder: (context, snapshot) {
             return Center(
               child: Container(

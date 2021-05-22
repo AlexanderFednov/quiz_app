@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class Quiz extends StatelessWidget {
   final List<QuestionInside> questions;
   final Function answerQuestions;
-  
+
   final Function resetQuiz;
   final Function onMainPage;
   final Function loadData;
@@ -33,56 +33,56 @@ class Quiz extends StatelessWidget {
     final bloc = context.watch<MainBloc>();
 
     return StreamBuilder(
-        stream: bloc.outlogic,
-        builder: (context, snapshot) {
-          return bloc.questionIndex < questions.length
-              ? Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(imageUrl),
-                      fit: BoxFit.cover,
-                    ),
+      stream: bloc.outEvent,
+      builder: (context, snapshot) {
+        return bloc.questionIndex < questions.length
+            ? Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(imageUrl),
+                    fit: BoxFit.cover,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Question(questions[bloc.questionIndex].questionText),
-                      ...(questions[bloc.questionIndex].answers).map((answers) {
-                        return Answer(
-                          () => answerQuestions(answers.result),
-                          answers.text,
-                          answers.code,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Question(questions[bloc.questionIndex].questionText),
+                    ...(questions[bloc.questionIndex].answers).map((answers) {
+                      return Answer(
+                        () => answerQuestions(answers.result),
+                        answers.text,
+                        answers.code,
+                      );
+                    }).toList(),
+                    _resetButton(context),
+                    _showQuestionIndex(context),
+                    StreamBuilder(
+                      stream: bloc.outEvent,
+                      builder: (context, snapshot) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [...bloc.progress],
                         );
-                      }).toList(),
-                      _resetButton(context),
-                      _showQuestionIndex(context),
-                      StreamBuilder(
-                          stream: bloc.outVoid,
-                          builder: (context, snapshot) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [...bloc.progress],
-                            );
-                          },),
-                    ],
-                  ),
-                )
-              : bloc.questionIndex > 0
-                  ? Result(
-                      
-                      resetHandler: resetQuiz,
-                      
-                    )
-                  : ErrorScreen(
-                      errorText: S.of(context).httpServerError,
-                      buttonText: S.of(context).toMainPage,
-                      buttonFunction: () async {
-                        loadData();
-                        resetQuiz();
                       },
-                      imageUrl: imageUrl,
-                    );
-        },);
+                    ),
+                  ],
+                ),
+              )
+            : bloc.questionIndex > 0
+                ? Result(
+                    resetHandler: resetQuiz,
+                  )
+                : ErrorScreen(
+                    errorText: S.of(context).httpServerError,
+                    buttonText: S.of(context).toMainPage,
+                    buttonFunction: () async {
+                      loadData();
+                      resetQuiz();
+                    },
+                    imageUrl: imageUrl,
+                  );
+      },
+    );
   }
 
   Widget _resetButton(BuildContext context) {
@@ -106,7 +106,7 @@ class Quiz extends StatelessWidget {
     var bloc = context.watch<MainBloc>();
 
     return StreamBuilder(
-      stream: bloc.outlogic,
+      stream: bloc.outEvent,
       builder: (context, snapshot) {
         return Container(
           padding: EdgeInsets.all(5),

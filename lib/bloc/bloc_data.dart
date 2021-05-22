@@ -35,27 +35,16 @@ class MainBloc extends BlocBase {
   List progress = [];
 
   MainBloc() {
-    _outEvent.listen((event) {
+    outEvent.listen((event) {
       _handleEvent(event);
     });
   }
 
   final StreamController<MainBlocEvent> _eventController =
-      StreamController<MainBlocEvent>();
-
-  final StreamController<int> _logicController =
-      StreamController<int>.broadcast();
-  final StreamController<void> _voidController =
-      StreamController<Object>.broadcast();
+      StreamController<MainBlocEvent>.broadcast();
 
   Sink<MainBlocEvent> get inEvent => _eventController.sink;
-  Stream<MainBlocEvent> get _outEvent => _eventController.stream;
-
-  Sink<int> get _inLogic => _logicController.sink;
-  Stream<int> get outlogic => _logicController.stream;
-
-  Sink<void> get _inVoid => _voidController.sink;
-  Stream<void> get outVoid => _voidController.stream;
+  Stream<MainBlocEvent> get outEvent => _eventController.stream;
 
   void _handleEvent(MainBlocEvent event) {
     switch (event) {
@@ -95,27 +84,27 @@ class MainBloc extends BlocBase {
   }
 
   void _totalScoreIncreement() {
-    _inLogic.add(++totalScore);
+    ++totalScore;
   }
 
   void _totalScoreNullify() {
-    _inLogic.add(totalScore = 0);
+    totalScore = 0;
   }
 
   void _questionIndexIncreement() {
-    _inLogic.add(++questionIndex);
+    ++questionIndex;
   }
 
   void _questionIndexNullify() {
-    _inLogic.add(questionIndex = 0);
+    questionIndex = 0;
   }
 
   void _setSavedScore() {
-    _inLogic.add(savedScore = totalScore);
+    savedScore = totalScore;
   }
 
   void _setQuestionsLenght() {
-    _inLogic.add(questionsLenght = questionIndex);
+    questionsLenght = questionIndex;
   }
 
   Future loadSavedScore() async {
@@ -128,29 +117,21 @@ class MainBloc extends BlocBase {
   }
 
   void _progressAddTrue() {
-    _inVoid.add(
-      progress.add(
-        IconTrue(),
-      ),
-    );
+    progress.add(IconTrue());
   }
 
   void _progressAddFalse() {
-    _inVoid.add(
-      progress.add(
-        IconFalse(),
-      ),
+    progress.add(
+      IconFalse(),
     );
   }
 
   void _progressNullify() {
-    _inVoid.add(progress = []);
+    progress = [];
   }
 
   @override
   void dispose() {
     _eventController.close();
-    _logicController.close();
-    _voidController.close();
   }
 }

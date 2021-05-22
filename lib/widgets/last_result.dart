@@ -24,19 +24,19 @@ class LastResultWidgetState extends State<LastResultWidget> {
         future: _futureLoadLastResults,
         builder: (context, snapshot) {
           return StreamBuilder(
-              stream: bloc.outlogic,
+              stream: bloc.outEvent,
               builder: (context, snapshot) {
                 return Text(
                   S.of(context).lastResult(_mainBlocInstance.savedScore,
-                      _mainBlocInstance.questionsLenght),
+                      _mainBlocInstance.questionsLenght,),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 );
-              });
-        });
+              },);
+        },);
   }
 
   // void loadSaveScore() async {

@@ -313,11 +313,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       duration: (Duration(seconds: 1)),
       curve: Curves.easeInOut,
     );
-    setState(() {
-      bloc.inEvent.add(MainBlocEvent.totalScoreNullify);
-      bloc.questionIndex = 0;
-      bloc.inEvent.add(MainBlocEvent.progressNullify);
-    });
+
+    bloc.inEvent.add(MainBlocEvent.totalScoreNullify);
+    bloc.inEvent.add(MainBlocEvent.questionIndexNullify);
+    bloc.inEvent.add(MainBlocEvent.progressNullify);
   }
 
 //localization select

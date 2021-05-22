@@ -31,11 +31,11 @@ class UserListState extends State<UserList> {
 
   TextEditingController cont = TextEditingController();
 
-  List _searchResult = [];
+  List searchResult = [];
 
   String searchText;
 
-  final FocusNode _focus = FocusNode();
+  final FocusNode focus = FocusNode();
 
   UserListState({
     @required this.setCurrentUser,
@@ -66,20 +66,20 @@ class UserListState extends State<UserList> {
               flex: 0,
               child: SearchBarWidget(
                 cont: cont,
-                focus: _focus,
+                focus: focus,
                 onSearchChange: _onSearchChange,
-                searchResult: _searchResult,
+                searchResult: searchResult,
                 cancelButton: _cancelButton,
               ),
             ),
-            if (_searchResult.isNotEmpty)
+            if (searchResult.isNotEmpty)
               Expanded(
                 flex: 1,
                 child: SearchResultListWidget(
                   cont: cont,
                   setCurrentUser: setCurrentUser,
                   currentUser: currentUser,
-                  searchResult: _searchResult,
+                  searchResult: searchResult,
                   searchResultListTap: _searchResultTap,
                 ),
               ),
@@ -189,7 +189,7 @@ class UserListState extends State<UserList> {
     super.initState();
 
     _getCurrentUser();
-    _focus.addListener(() {
+    focus.addListener(() {
       setState(() {
         null;
       });
@@ -199,7 +199,9 @@ class UserListState extends State<UserList> {
   void _onSearchChange(String text) async {
     var contactBox = Hive.box<UserData>('UserData1');
     var searchedText = text.trim();
-    _searchResult.clear();
+    setState(() {
+      searchResult.clear();
+    });
     if (text.isEmpty) {
       setState(() {
         null;
@@ -210,7 +212,7 @@ class UserListState extends State<UserList> {
     contactBox.values.forEach((element) {
       if (element.userName.toLowerCase().contains(searchedText.toLowerCase())) {
         setState(() {
-          _searchResult.add(element);
+          searchResult.add(element);
         });
       }
     });
@@ -257,7 +259,7 @@ class UserListState extends State<UserList> {
   void _cancelButton() {
     setState(() {
       cont.clear();
-      _searchResult = [];
+      searchResult = [];
       FocusScope.of(context).unfocus();
     });
   }
@@ -269,13 +271,13 @@ class UserListState extends State<UserList> {
         element.save();
       });
       Hive.box<UserData>('UserData1').values.forEach((element) {
-        if (element.userName.contains(_searchResult[index].userName)) {
+        if (element.userName.contains(searchResult[index].userName)) {
           element.isCurrentUser = true;
           element.save();
           currentUser = element;
         }
       });
-      _searchResult = [];
+      searchResult = [];
       cont.clear();
       setCurrentUser();
       FocusScope.of(context).unfocus();
