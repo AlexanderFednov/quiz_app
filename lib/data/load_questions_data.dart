@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:quiz_app/models/question_list.dart';
 
-class LoadQuestionsData {
+class LoadQuestionsData with ChangeNotifier {
   List<QuestionInside> questionAll = [];
   List<QuestionInside> questionFilms = [];
   List<QuestionInside> questionSpace = [];
@@ -63,11 +64,6 @@ class LoadQuestionsData {
 
     return Future.value();
   }
-
-  StreamController loadDataStreamCont = StreamController();
-
-  Sink get loadDataSink => loadDataStreamCont.sink;
-  Stream get loadDataStream => loadDataStreamCont.stream;
 
   Future loadQuestions() async {
     loadData();

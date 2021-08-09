@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:quiz_app/bloc/current_user_class.dart';
 //import 'package:intl/intl.dart';
 import 'package:quiz_app/screens/add_user.dart';
 import '../models/hive_user_data.dart';
@@ -10,26 +12,15 @@ import '../screens/user_Information.dart';
 import '../generated/l10n.dart';
 
 class UserList extends StatefulWidget {
-  final Function setCurrentUser;
-  final Function clearCurrentUser;
-  UserList({@required this.setCurrentUser, @required this.clearCurrentUser});
-
   @override
   State<StatefulWidget> createState() {
-    return UserListState(
-      setCurrentUser: setCurrentUser,
-      clearCurrentUser: clearCurrentUser,
-    );
+    return UserListState();
   }
 }
 
 class UserListState extends State<UserList> {
-  UserData currentUser;
 
-  Function setCurrentUser;
-  Function clearCurrentUser;
-
-  TextEditingController cont = TextEditingController();
+ TextEditingController cont = TextEditingController();
 
   List searchResult = [];
 
@@ -37,15 +28,12 @@ class UserListState extends State<UserList> {
 
   final FocusNode focus = FocusNode();
 
-  UserListState({
-    @required this.setCurrentUser,
-    @required this.clearCurrentUser,
-  });
-
   List<UserData> userData = [];
 
   @override
   Widget build(BuildContext context) {
+    var currentUserClass = Provider.of<CurrentUserClass>(context);
+    var currentUser = currentUserClass.currentUser;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).userList),
@@ -58,13 +46,11 @@ class UserListState extends State<UserList> {
             if (currentUser != null)
               Flexible(
                 flex: 0,
-                child: ShowCurrentUserWidget(
-                  currentUser: currentUser,
-                ),
+                child: _ShowCurrentUserWidget(),
               ),
             Flexible(
               flex: 0,
-              child: SearchBarWidget(
+              child: _SearchBarWidget(
                 cont: cont,
                 focus: focus,
                 onSearchChange: _onSearchChange,
@@ -75,17 +61,15 @@ class UserListState extends State<UserList> {
             if (searchResult.isNotEmpty)
               Expanded(
                 flex: 1,
-                child: SearchResultListWidget(
+                child: _SearchResultListWidget(
                   cont: cont,
-                  setCurrentUser: setCurrentUser,
-                  currentUser: currentUser,
                   searchResult: searchResult,
                   searchResultListTap: _searchResultTap,
                 ),
               ),
             Flexible(
               flex: 1,
-              child: UserListWidget(
+              child: _UsersListWidget(
                 onDismiss: _onDismiss,
                 onUserListTileTap: _onUserListTileTap,
               ),
@@ -112,11 +96,11 @@ class UserListState extends State<UserList> {
   }
 
   void _deleteData() async {
+    var currentUserClass = Provider.of<CurrentUserClass>(context);
     var contactsBox = Hive.box<UserData>('UserData1');
     setState(() {
       contactsBox.clear();
-      currentUser = null;
-      clearCurrentUser();
+      currentUserClass.clearCurrentUser();
       Navigator.of(context).pop();
     });
   }
@@ -171,24 +155,24 @@ class UserListState extends State<UserList> {
     );
   }
 
-  void _getCurrentUser() {
-    var contactsBox = Hive.box<UserData>('UserData1');
-    if (contactsBox.isNotEmpty) {
-      contactsBox.values.forEach((element) {
-        if (element.isCurrentUser) {
-          currentUser = element;
-        }
-      });
-    } else {
-      currentUser = null;
-    }
-  }
+  // void _getCurrentUser() {
+  //   var contactsBox = Hive.box<UserData>('UserData1');
+  //   if (contactsBox.isNotEmpty) {
+  //     contactsBox.values.forEach((element) {
+  //       if (element.isCurrentUser) {
+  //         currentUser = element;
+  //       }
+  //     });
+  //   } else {
+  //     currentUser = null;
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
 
-    _getCurrentUser();
+    // _getCurrentUser();
     focus.addListener(() {
       setState(() {
         null;
@@ -265,6 +249,9 @@ class UserListState extends State<UserList> {
   }
 
   void _searchResultTap(int index) {
+    var currentUserClass =
+        Provider.of<CurrentUserClass>(context, listen: false);
+
     setState(() {
       Hive.box<UserData>('UserData1').values.forEach((element) {
         element.isCurrentUser = false;
@@ -274,17 +261,20 @@ class UserListState extends State<UserList> {
         if (element.userName.contains(searchResult[index].userName)) {
           element.isCurrentUser = true;
           element.save();
-          currentUser = element;
+          // currentUserClass.setCurrentUser();
         }
       });
       searchResult = [];
       cont.clear();
-      setCurrentUser();
+      currentUserClass.setCurrentUser();
       FocusScope.of(context).unfocus();
     });
   }
 
   void _onUserListTileTap(UserData res, Box<UserData> box) async {
+    var currentUserClass =
+        Provider.of<CurrentUserClass>(context, listen: false);
+
     setState(() {
       box.values.forEach((element) {
         element.isCurrentUser = false;
@@ -292,14 +282,18 @@ class UserListState extends State<UserList> {
       });
       res.isCurrentUser = true;
       //res.userId = index;
-      currentUser = res;
+
       //currentUser.userId = index;
       res.save();
-      setCurrentUser();
+      currentUserClass.setCurrentUser();
+      // currentUserClass.getCurrentUser();
     });
   }
 
   Widget _onDismissTextButtonYes(BuildContext context, UserData res) {
+    var currentUserClass = Provider.of<CurrentUserClass>(context);
+    var currentUser = currentUserClass.currentUser;
+
     return TextButton(
       onPressed: () {
         Navigator.of(context).pop();
@@ -307,7 +301,8 @@ class UserListState extends State<UserList> {
         setState(() {
           if (currentUser == res) {
             currentUser = null;
-            clearCurrentUser();
+
+            currentUserClass.clearCurrentUser();
           }
         });
       },
@@ -339,25 +334,20 @@ class UserListState extends State<UserList> {
   }
 }
 
-class ShowCurrentUserWidget extends StatefulWidget {
-  final UserData currentUser;
-
-  ShowCurrentUserWidget({@required this.currentUser});
+class _ShowCurrentUserWidget extends StatefulWidget {
+  // final UserData currentUser;
 
   @override
   State<StatefulWidget> createState() {
-    return ShowCurrentUserWidgetState();
+    return _ShowCurrentUserWidgetState();
   }
 }
 
-class ShowCurrentUserWidgetState extends State<ShowCurrentUserWidget> {
-  // UserData currentUser;
-  // Function currentUserChange;
-
-  // ShowCurrentUserWidgetState({@required this.currentUser});
-
+class _ShowCurrentUserWidgetState extends State<_ShowCurrentUserWidget> {
   @override
   Widget build(BuildContext context) {
+    var currentUserClass = Provider.of<CurrentUserClass>(context);
+    var currentUser = currentUserClass.currentUser;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
@@ -375,13 +365,13 @@ class ShowCurrentUserWidgetState extends State<ShowCurrentUserWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.currentUser.userName,
+                currentUser.userName,
                 style: TextStyle(fontSize: 30),
               ),
               Text(
-                widget.currentUser.userResults.isEmpty
+                currentUser.userResults.isEmpty
                     ? '0/0'
-                    : '${widget.currentUser.userResults[0].score}/${widget.currentUser.userResults[0].questionsLenght}',
+                    : '${currentUser.userResults[0].score}/${currentUser.userResults[0].questionsLenght}',
                 style: TextStyle(fontSize: 30),
               ),
             ],
@@ -392,14 +382,14 @@ class ShowCurrentUserWidgetState extends State<ShowCurrentUserWidget> {
   }
 }
 
-class SearchBarWidget extends StatefulWidget {
+class _SearchBarWidget extends StatefulWidget {
   final cont;
   final focus;
   final onSearchChange;
   final cancelButton;
   final searchResult;
 
-  SearchBarWidget({
+  _SearchBarWidget({
     @required this.cont,
     @required this.focus,
     @required this.onSearchChange,
@@ -409,7 +399,7 @@ class SearchBarWidget extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return SearchBarWidgetState(
+    return _SearchBarWidgetState(
       cont: cont,
       focus: focus,
       onSearchChange: onSearchChange,
@@ -419,14 +409,14 @@ class SearchBarWidget extends StatefulWidget {
   }
 }
 
-class SearchBarWidgetState extends State<SearchBarWidget> {
+class _SearchBarWidgetState extends State<_SearchBarWidget> {
   TextEditingController cont;
   FocusNode focus;
   Function onSearchChange;
   Function cancelButton;
   List searchResult;
 
-  SearchBarWidgetState({
+  _SearchBarWidgetState({
     @required this.cont,
     @required this.focus,
     @required this.onSearchChange,
@@ -479,18 +469,16 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
   }
 }
 
-class SearchResultListWidget extends StatelessWidget {
+class _SearchResultListWidget extends StatelessWidget {
   final searchResult;
-  final currentUser;
+
   final cont;
-  final setCurrentUser;
+
   final searchResultListTap;
 
-  SearchResultListWidget({
+  _SearchResultListWidget({
     @required this.cont,
-    @required this.currentUser,
     @required this.searchResult,
-    @required this.setCurrentUser,
     @required this.searchResultListTap,
   });
 
@@ -501,95 +489,57 @@ class SearchResultListWidget extends StatelessWidget {
       shrinkWrap: true,
       itemCount: searchResult.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(
-            searchResult[index].userName,
-            style: TextStyle(fontSize: 20),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.info_rounded, color: Colors.blue),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => UserInformation(
-                  user: searchResult[index],
-                ),
-              ),
-            ),
-          ),
-          onTap: () {
-            searchResultListTap(index);
-          },
+        return _SearchResultListTile(
+          index: index,
+          searchResult: searchResult,
+          searchResultListTap: searchResultListTap,
         );
       },
     );
   }
 }
 
-class UserListTileWidget extends StatelessWidget {
-  final UserData res;
-  final Box<UserData> box;
-  final onUserListTileTap;
+class _SearchResultListTile extends StatelessWidget {
+  final searchResult;
+  final index;
+  final searchResultListTap;
 
-  UserListTileWidget({
-    @required this.res,
-    @required this.box,
-    @required this.onUserListTileTap,
+  _SearchResultListTile({
+    @required this.index,
+    @required this.searchResult,
+    @required this.searchResultListTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        res.userName,
+        searchResult[index].userName,
         style: TextStyle(fontSize: 20),
       ),
-      // subtitle: Text(
-      //   'Дата регистрации: ${DateFormat('yyyy-MM-dd (kk:mm)').format(res.registerDate).toString()}',
-      //   style: TextStyle(fontSize: 12),
-      // ),
-      trailing: Container(
-        height: 40,
-        width: 110,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              res.userResults.isNotEmpty
-                  ? '${res.rightAnswersPercentAll.toStringAsFixed(1)} %'
-                  : '0 %',
-              style: TextStyle(fontSize: 15),
+      leading: IconButton(
+        icon: Icon(Icons.info_rounded, color: Colors.blue),
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => UserInformation(
+              user: searchResult[index],
             ),
-            IconButton(
-              icon: Icon(
-                Icons.info_rounded,
-                color: Colors.blue,
-              ),
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => UserInformation(user: res),
-              )),
-            ),
-          ],
+          ),
         ),
       ),
-      leading: //Text(res.isCurrentUser.toString()),
-          res.isCurrentUser
-              ? Icon(
-                  Icons.check_box,
-                  color: Colors.green,
-                )
-              : Icon(Icons.check_box_outline_blank),
       onTap: () {
-        onUserListTileTap(res, box);
+        searchResultListTap(index);
       },
     );
   }
 }
 
-class UserListWidget extends StatelessWidget {
+class _UsersListWidget extends StatelessWidget {
   final onDismiss;
   final onUserListTileTap;
 
-  UserListWidget({@required this.onDismiss, @required this.onUserListTileTap});
+  _UsersListWidget(
+      {@required this.onDismiss, @required this.onUserListTileTap});
 
   @override
   Widget build(BuildContext context) {
@@ -605,32 +555,117 @@ class UserListWidget extends StatelessWidget {
           var userData = Hive.box<UserData>('UserData1').values.toList();
           userData.sort((a, b) => a.userName.compareTo(b.userName));
 
-          return ListView.builder(
-            itemCount: userData.length,
-            itemBuilder: (context, index) {
-              var res = userData[index];
-              res.userId = index;
-
-              return Dismissible(
-                key: UniqueKey(),
-                onDismissed: (direction) {
-                  onDismiss(res);
-                  // res.delete();
-                  // setState(() {
-                  //   if (currentUser == res) {
-                  //     currentUser = null;
-                  //   }
-                  // });
-                },
-                child: UserListTileWidget(
-                  box: box,
-                  res: res,
-                  onUserListTileTap: onUserListTileTap,
-                ),
-              );
-            },
+          return _UsersListViewWidget(
+            onDismiss: onDismiss,
+            onUserListTileTap: onUserListTileTap,
+            userData: userData,
+            box: box,
           );
         },
+      ),
+    );
+  }
+}
+
+class _UsersListViewWidget extends StatelessWidget {
+  final onDismiss;
+  final onUserListTileTap;
+  final userData;
+  final box;
+
+  _UsersListViewWidget(
+      {@required this.onDismiss,
+      @required this.onUserListTileTap,
+      @required this.userData,
+      @required this.box});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: userData.length,
+      itemBuilder: (context, index) {
+        var res = userData[index];
+        res.userId = index;
+
+        return Dismissible(
+          key: UniqueKey(),
+          onDismissed: (direction) {
+            onDismiss(res);
+          },
+          child: _UserListTileWidget(
+            box: box,
+            res: res,
+            onUserListTileTap: onUserListTileTap,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _UserListTileWidget extends StatelessWidget {
+  final UserData res;
+  final Box<UserData> box;
+  final onUserListTileTap;
+
+  _UserListTileWidget({
+    @required this.res,
+    @required this.box,
+    @required this.onUserListTileTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        res.userName,
+        style: TextStyle(fontSize: 20),
+      ),
+      trailing: _UserListTileTrailingWidget(
+        res: res,
+      ),
+      leading: res.isCurrentUser
+          ? Icon(
+              Icons.check_box,
+              color: Colors.green,
+            )
+          : Icon(Icons.check_box_outline_blank),
+      onTap: () {
+        onUserListTileTap(res, box);
+      },
+    );
+  }
+}
+
+class _UserListTileTrailingWidget extends StatelessWidget {
+  final res;
+
+  _UserListTileTrailingWidget({@required this.res});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      width: 110,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            res.userResults.isNotEmpty
+                ? '${res.rightAnswersPercentAll.toStringAsFixed(1)} %'
+                : '0 %',
+            style: TextStyle(fontSize: 15),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.info_rounded,
+              color: Colors.blue,
+            ),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UserInformation(user: res),
+            )),
+          ),
+        ],
       ),
     );
   }

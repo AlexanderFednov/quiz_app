@@ -114,23 +114,30 @@ class UserInformationState extends State<UserInformation> {
   Widget _allUserResultsList() {
     return Container(
       height: 400,
-      child: ListView.builder(
-        itemCount: user.userResults.length,
-        itemBuilder: (context, index) {
-          results = user.userResults;
-          results.sort(
-            (b, a) => a.resultDate.compareTo(b.resultDate),
-          );
+      child: Scrollbar(
+        hoverThickness: 10,
+        radius: Radius.circular(10),
+        showTrackOnHover: true,
+        isAlwaysShown: true,
+        thickness: 10,
+        child: ListView.builder(
+          itemCount: user.userResults.length,
+          itemBuilder: (context, index) {
+            results = user.userResults;
+            results.sort(
+              (b, a) => a.resultDate.compareTo(b.resultDate),
+            );
 
-          return Card(
-            child: ListTile(
-              title: Text(
-                '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate)}',
-                style: TextStyle(fontSize: 15),
+            return Card(
+              child: ListTile(
+                title: Text(
+                  '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate)}',
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

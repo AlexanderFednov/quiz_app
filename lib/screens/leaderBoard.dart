@@ -28,17 +28,19 @@ class LeaderBoardState extends State<LeaderBoard>
       ),
       body: AnimatedBackground(
         behaviour: RandomParticleBehaviour(
-            options: ParticleOptions(
-                image: Image.asset(
-                  'assets/images/starBig2.png',
-                ),
-                maxOpacity: 0.4,
-                minOpacity: 0.1,
-                spawnMinRadius: 5.0,
-                spawnMaxRadius: 20.0,
-                spawnMinSpeed: 20,
-                spawnMaxSpeed: 30,
-                particleCount: 200,),),
+          options: ParticleOptions(
+            image: Image.asset(
+              'assets/images/starBig2.png',
+            ),
+            maxOpacity: 0.4,
+            minOpacity: 0.1,
+            spawnMinRadius: 5.0,
+            spawnMaxRadius: 20.0,
+            spawnMinSpeed: 20,
+            spawnMaxSpeed: 30,
+            particleCount: 200,
+          ),
+        ),
         vsync: this,
         child: Center(
           child: Column(
@@ -64,105 +66,118 @@ class LeaderBoardState extends State<LeaderBoard>
   }
 
   StreamBuilder<List<MoorResult>> _buildList(BuildContext context) {
-    final database = Provider.of<MyDatabase>(context);
-
     return StreamBuilder(
-        stream: database.watchAllResults(),
-        builder: (context, AsyncSnapshot<List<MoorResult>> snapshot) {
-          moorResults = snapshot.data ?? [];
-          moorResults.sort(
-              (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent),);
-          if (moorResults.isEmpty) {
-            return Center(
-                child: Text(
+      stream: moorDatabase.watchAllResults(),
+      builder: (context, AsyncSnapshot<List<MoorResult>> snapshot) {
+        moorResults = snapshot.data ?? [];
+        moorResults.sort(
+          (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent),
+        );
+        if (moorResults.isEmpty) {
+          return Center(
+            child: Text(
               S.of(context).userListEmpty,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),);
-          }
+            ),
+          );
+        }
 
-          return ListView.builder(
-              itemCount: moorResults.length < 10 ? moorResults.length : 10,
-              itemBuilder: (_, index) {
-                final res = moorResults[index];
+        return ListView.builder(
+          itemCount: moorResults.length < 10 ? moorResults.length : 10,
+          itemBuilder: (_, index) {
+            final res = moorResults[index];
 
-                return Container(
-                  height: 80,
-                  child: Card(
-                    shadowColor: Colors.yellowAccent[100],
-                    elevation: 5,
-                    child: ListTile(
-                      leading: Container(
-                        width: 40,
-                        child: Row(
-                          children: [
-                            Text('${index + 1}',
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,),),
-                            index < 3
-                                ? Container(
-                                    margin: EdgeInsets.only(left: 7),
-                                    child: pixMedal(index + 1),)
-                                : SizedBox(),
-                          ],
+            return Container(
+              height: 80,
+              child: Card(
+                shadowColor: Colors.yellowAccent[100],
+                elevation: 5,
+                child: ListTile(
+                  leading: Container(
+                    width: 40,
+                    child: Row(
+                      children: [
+                        Text(
+                          '${index + 1}',
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
-                      ),
-                      title: Text(
-                        '${res.name} ${res.result}/${res.questionsLenght} (${res.rightResultsPercent.toStringAsFixed(1)}%) (${category(context, res.categoryNumber)}) - ${DateFormat('yyyy-MM-dd (kk:mm)').format(res.resultDate)}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                        index < 3
+                            ? Container(
+                                margin: EdgeInsets.only(left: 7),
+                                child: pixMedal(index + 1),
+                              )
+                            : SizedBox(),
+                      ],
                     ),
                   ),
-                );
-              },);
-        },);
+                  title: Text(
+                    '${res.name} ${res.result}/${res.questionsLenght} (${res.rightResultsPercent.toStringAsFixed(1)}%) (${category(context, res.categoryNumber)}) - ${DateFormat('yyyy-MM-dd (kk:mm)').format(res.resultDate)}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void _onNullifyPress() {
     showDialog(
-        context: context,
-        builder: (_) => Dialog(
-              child: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  colors: [Colors.white, Colors.blue[100], Colors.red[100]],
-                ),),
-                height: 200,
-                child: Center(
-                  child: Column(
+      context: context,
+      builder: (_) => Dialog(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [Colors.white, Colors.blue[100], Colors.red[100]],
+            ),
+          ),
+          height: 200,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  S.of(context).areYouSure,
+                  style: TextStyle(fontSize: 30),
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(S.of(context).areYouSure,
-                          style: TextStyle(fontSize: 30),),
-                      Container(
-                        margin: EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                Provider.of<MyDatabase>(context, listen: false)
-                                    .clearMyDatabase();
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(S.of(context).yes,
-                                  style: TextStyle(fontSize: 25),),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: Text(S.of(context).cancel,
-                                  style: TextStyle(fontSize: 25),),
-                            ),
-                          ],
+                      TextButton(
+                        onPressed: () {
+                          moorDatabase.clearMyDatabase();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          S.of(context).yes,
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          S.of(context).cancel,
+                          style: TextStyle(fontSize: 25),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),);
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   String category(BuildContext context, int categoryNumber) {
@@ -243,7 +258,8 @@ class LeaderBoardState extends State<LeaderBoard>
       setState(() {
         moorResults = sortList;
         moorResults.sort(
-            (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent),);
+          (b, a) => a.rightResultsPercent.compareTo(b.rightResultsPercent),
+        );
       });
     });
   }

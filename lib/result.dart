@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bloc/bloc_data.dart';
+import 'package:quiz_app/bloc/new_logic_ultimate.dart';
 import 'generated/l10n.dart';
 import 'package:provider/provider.dart';
 
@@ -10,21 +10,27 @@ class Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bloc = context.watch<MainBloc>();
+    // var bloc = context.watch<MainBloc>();
+    var logicBloc = Provider.of<NewLogicUltimate>(context);
 
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: Image.network(
-            'https://vogazeta.ru/uploads/full_size_1551691416-ec07565f279118e2314a7eb80dc93e66.jpg',
-          ).image,
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: StreamBuilder(
-          stream: bloc.outEvent,
-          builder: (context, snapshot) {
-            return Center(
+    return StreamProvider(
+        create: (_) => logicBloc.logicStream,
+        initialData: logicBloc.logic,
+        child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: Image.network(
+                  'https://vogazeta.ru/uploads/full_size_1551691416-ec07565f279118e2314a7eb80dc93e66.jpg',
+                ).image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            child:
+                //  StreamBuilder(
+                //   stream: bloc.outlogic,
+                //   builder: (context, snapshot) {
+                //     return
+                Center(
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(
@@ -38,9 +44,8 @@ class Result extends StatelessWidget {
                     FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Text(
-                        S
-                            .of(context)
-                            .result(bloc.totalScore, bloc.questionIndex),
+                        S.of(context).result(logicBloc.logic.totalScore,
+                            logicBloc.logic.questionIndex),
                         style: TextStyle(fontSize: 30, color: Colors.black),
                       ),
                     ),
@@ -54,8 +59,9 @@ class Result extends StatelessWidget {
                   ],
                 ),
               ),
-            );
-          },),
-    );
+            )
+            //   },
+            // ),
+            ));
   }
 }

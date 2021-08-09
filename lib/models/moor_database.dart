@@ -13,11 +13,15 @@ class MoorResults extends Table {
   DateTimeColumn get resultDate => dateTime()();
 }
 
+MyDatabase moorDatabase = MyDatabase();
+
 @UseMoor(tables: [MoorResults])
 class MyDatabase extends _$MyDatabase {
   MyDatabase()
       : super(FlutterQueryExecutor.inDatabaseFolder(
-            path: 'db.sqlite', logStatements: true,));
+          path: 'db.sqlite',
+          logStatements: true,
+        ));
 
   @override
   int get schemaVersion => 1;

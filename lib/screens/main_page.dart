@@ -2,7 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_button/animated_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:quiz_app/widgets/last_result.dart';
+import 'package:provider/provider.dart';
+import 'package:quiz_app/bloc/current_user_class.dart';
+import 'package:quiz_app/widgets/last_result/last_result_widget.dart';
+import 'package:quiz_app/bloc/new_logic_ultimate.dart';
 // import 'package:intl/intl.dart';
 //import 'package:json_annotation/json_annotation.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
@@ -11,7 +14,7 @@ import '../generated/l10n.dart';
 import '../models/hive_user_data.dart';
 import '../screens/user_list.dart';
 import '../screens/user_Information.dart';
-import '../widgets/last_result.dart';
+import '../widgets/last_result/last_result_widget.dart';
 // import '../screens/learning.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -22,9 +25,8 @@ class MainPage extends StatelessWidget {
   final Function swap4;
   final Function localeRu;
   final Function localeEn;
-  final UserData currentUser;
-  final Function setCurrentUser;
-  final Function clearCurrentUser;
+  // final Function setCurrentUser;
+  // final Function clearCurrentUser;
 
   MainPage({
     @required this.swap1,
@@ -33,9 +35,6 @@ class MainPage extends StatelessWidget {
     @required this.swap4,
     @required this.localeRu,
     @required this.localeEn,
-    @required this.currentUser,
-    @required this.setCurrentUser,
-    @required this.clearCurrentUser,
   });
 
   final colorizeColors = [
@@ -48,6 +47,8 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var currentUserClass = Provider.of<CurrentUserClass>(context);
+    var currentUser = currentUserClass.currentUser;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -73,11 +74,11 @@ class MainPage extends StatelessWidget {
               if (currentUser != null)
                 Flexible(
                   flex: 0,
-                  child: _greetingMessage(context),
+                  child: GreetingMessage(),
                 ),
               Flexible(
                 flex: 0,
-                child: _userNavigation(context),
+                child: _UserNavigation(),
               ),
             ],
           ),
@@ -201,55 +202,22 @@ class MainPage extends StatelessWidget {
   //   );
   // }
 
-  Widget _greetingMessage(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      child: Text(
-        S.of(context).helloMessage(currentUser.userName),
-        style: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w700,
-          fontFamily: 'Lobster',
-        ),
-      ),
-    );
-  }
-
-  Widget _userNavigation(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextButton(
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => UserList(
-                setCurrentUser: setCurrentUser,
-                clearCurrentUser: clearCurrentUser,
-              ),
-            ),
-          ),
-          child: Text(
-            currentUser != null
-                ? S.of(context).changeUser
-                : S.of(context).selectUser,
-            style: TextStyle(fontSize: 15),
-          ),
-        ),
-        if (currentUser != null)
-          TextButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => UserInformation(user: currentUser),
-              ),
-            ),
-            child: Text(
-              S.of(context).information,
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
-      ],
-    );
-  }
+  // Widget _greetingMessage(BuildContext context) {
+  //   var currentUserClass =
+  //       Provider.of<CurrentUserClass>(context, listen: false);
+  //   var currentUser = currentUserClass.currentUser;
+  //   return Container(
+  //     margin: EdgeInsets.only(top: 10),
+  //     child: Text(
+  //       S.of(context).helloMessage(currentUser.userName),
+  //       style: TextStyle(
+  //         fontSize: 30,
+  //         fontWeight: FontWeight.w700,
+  //         fontFamily: 'Lobster',
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _localeNavigation(BuildContext context) {
     return Row(
@@ -339,6 +307,64 @@ class MainPage extends StatelessWidget {
         fontStyle: FontStyle.italic,
         fontSize: 15,
         color: Colors.black,
+      ),
+    );
+  }
+}
+
+class _UserNavigation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var currentUserClass = Provider.of<CurrentUserClass>(context);
+    var currentUser = currentUserClass.currentUser;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UserList(),
+            ),
+          ),
+          child: Text(
+            currentUser != null
+                ? S.of(context).changeUser
+                : S.of(context).selectUser,
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+        if (currentUser != null)
+          TextButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => UserInformation(user: currentUser),
+              ),
+            ),
+            child: Text(
+              S.of(context).information,
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class GreetingMessage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var currentUserClass =
+        Provider.of<CurrentUserClass>(context, listen: false);
+    var currentUser = currentUserClass.currentUser;
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: Text(
+        S.of(context).helloMessage(currentUser.userName),
+        style: TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.w700,
+          fontFamily: 'Lobster',
+        ),
       ),
     );
   }

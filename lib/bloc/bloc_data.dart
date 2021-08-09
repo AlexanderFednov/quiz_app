@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:quiz_app/widgets/progressbar.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:bloc/bloc.dart';
@@ -26,6 +27,8 @@ enum MainBlocEvent {
   loadSavedScore,
 }
 
+//Aren't using now
+
 class MainBloc extends BlocBase {
   int totalScore = 0;
   int questionIndex = 0;
@@ -35,16 +38,26 @@ class MainBloc extends BlocBase {
   List progress = [];
 
   MainBloc() {
-    outEvent.listen((event) {
+    _outEvent.listen((event) {
       _handleEvent(event);
     });
   }
 
   final StreamController<MainBlocEvent> _eventController =
-      StreamController<MainBlocEvent>.broadcast();
+      StreamController<MainBlocEvent>();
+
+  final BehaviorSubject<int> _logicController = BehaviorSubject<int>();
+  final StreamController<void> _voidController =
+      StreamController<Object>.broadcast();
 
   Sink<MainBlocEvent> get inEvent => _eventController.sink;
-  Stream<MainBlocEvent> get outEvent => _eventController.stream;
+  Stream<MainBlocEvent> get _outEvent => _eventController.stream;
+
+  Sink<int> get _inLogic => _logicController.sink;
+  Stream<int> get outlogic => _logicController.stream;
+
+  Sink<void> get _inVoid => _voidController.sink;
+  Stream<void> get outVoid => _voidController.stream;
 
   void _handleEvent(MainBlocEvent event) {
     switch (event) {
@@ -84,27 +97,27 @@ class MainBloc extends BlocBase {
   }
 
   void _totalScoreIncreement() {
-    ++totalScore;
+    _inLogic.add(++totalScore);
   }
 
   void _totalScoreNullify() {
-    totalScore = 0;
+    _inLogic.add(totalScore = 0);
   }
 
   void _questionIndexIncreement() {
-    ++questionIndex;
+    _inLogic.add(++questionIndex);
   }
 
   void _questionIndexNullify() {
-    questionIndex = 0;
+    _inLogic.add(questionIndex = 0);
   }
 
   void _setSavedScore() {
-    savedScore = totalScore;
+    _inLogic.add(savedScore = totalScore);
   }
 
   void _setQuestionsLenght() {
-    questionsLenght = questionIndex;
+    _inLogic.add(questionsLenght = questionIndex);
   }
 
   Future loadSavedScore() async {
@@ -117,21 +130,29 @@ class MainBloc extends BlocBase {
   }
 
   void _progressAddTrue() {
-    progress.add(IconTrue());
+    _inVoid.add(
+      progress.add(
+        IconTrue(),
+      ),
+    );
   }
 
   void _progressAddFalse() {
-    progress.add(
-      IconFalse(),
+    _inVoid.add(
+      progress.add(
+        IconFalse(),
+      ),
     );
   }
 
   void _progressNullify() {
-    progress = [];
+    _inVoid.add(progress = []);
   }
 
   @override
   void dispose() {
     _eventController.close();
+    _logicController.close();
+    _voidController.close();
   }
 }
