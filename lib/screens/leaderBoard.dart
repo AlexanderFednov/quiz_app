@@ -66,6 +66,7 @@ class LeaderBoardState extends State<LeaderBoard>
   }
 
   StreamBuilder<List<MoorResult>> _buildList(BuildContext context) {
+    var moorDatabase = Provider.of<MyDatabase>(context);
     return StreamBuilder(
       stream: moorDatabase.watchAllResults(),
       builder: (context, AsyncSnapshot<List<MoorResult>> snapshot) {
@@ -128,6 +129,7 @@ class LeaderBoardState extends State<LeaderBoard>
   }
 
   void _onNullifyPress() {
+    var moorDatabase = Provider.of<MyDatabase>(context);
     showDialog(
       context: context,
       builder: (_) => Dialog(

@@ -4,14 +4,13 @@ import 'package:animated_button/animated_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/bloc/current_user_class.dart';
+import 'package:quiz_app/screens/learning.dart';
 import 'package:quiz_app/widgets/last_result/last_result_widget.dart';
-import 'package:quiz_app/bloc/new_logic_ultimate.dart';
 // import 'package:intl/intl.dart';
 //import 'package:json_annotation/json_annotation.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:intl/intl.dart';
 import '../generated/l10n.dart';
-import '../models/hive_user_data.dart';
 import '../screens/user_list.dart';
 import '../screens/user_Information.dart';
 import '../widgets/last_result/last_result_widget.dart';
@@ -92,7 +91,7 @@ class MainPage extends StatelessWidget {
           ),
           Column(
             children: [
-              _studioFednov(),
+              _StudioFednov(),
               // TextButton(
               //   onPressed: () => Navigator.of(context)
               //       .push(MaterialPageRoute(builder: (context) => Learning())),
@@ -154,13 +153,6 @@ class MainPage extends StatelessWidget {
                 speed: Duration(milliseconds: 200),
                 colors: colorizeColors,
               ),
-              // ScaleAnimatedText(S.of(context).title,
-              //     duration: Duration(milliseconds: 1000),
-              //     textStyle: TextStyle(
-              //       color: Colors.pink,
-              //       fontSize: 40,
-              //       fontWeight: FontWeight.bold,
-              //     ))
             ],
             isRepeatingAnimation: true,
             repeatForever: true,
@@ -298,8 +290,11 @@ class MainPage extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _studioFednov() {
+class _StudioFednov extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Text(
       'Fednov Studios 2021',
       style: TextStyle(

@@ -16,6 +16,8 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.3.0 <3.0.0"
 
+  
+
 dependencies:
   build_runner:
   intl: ^0.17.0
@@ -64,7 +66,9 @@ dev_dependencies:
   moor_generator:   
   hive_generator:
   pedantic: 
+    
   
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

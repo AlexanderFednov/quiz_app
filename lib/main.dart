@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:quiz_app/bloc/bloc_data.dart';
+
 import 'package:quiz_app/bloc/current_user_class.dart';
-import 'package:quiz_app/bloc/new_logic_ultimate.dart';
+import 'package:quiz_app/quizScreen/new_logic_ultimate.dart';
 import 'package:quiz_app/data/load_questions_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
-// import 'package:quiz_app/screens/userList.dart';
-import './quiz.dart';
+import 'package:quiz_app/screens/registration/registration_bloc.dart';
+
+import 'quizScreen/quiz.dart';
 import 'screens/main_page.dart';
-// import 'package:flutter/services.dart';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'generated/l10n.dart';
-// import 'models/question_list.dart';
 import 'models/hive_user_data.dart';
 
 import 'screens/leaderboard.dart';
@@ -45,13 +42,16 @@ class QuizApp extends StatelessWidget {
         Provider<MyDatabase>(
           create: (_) => MyDatabase(),
         ),
-        Provider<MainBloc>(
-          create: (_) => MainBloc(),
-        ),
         DisposableProvider<NewLogicUltimate>(
-          create: (_) => NewLogicUltimate(),
+          create: (context) => NewLogicUltimate(
+            moorDatabase: Provider.of<MyDatabase>(context, listen: false),
+          ),
+        ),
+        DisposableProvider<RegistrationBloc>(
+          create: (context) => RegistrationBloc(),
         ),
         ChangeNotifierProvider.value(value: CurrentUserClass()),
+        ChangeNotifierProvider.value(value: LoadQuestionsData())
       ],
       child: MaterialApp(
         localizationsDelegates: [
@@ -61,11 +61,11 @@ class QuizApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
-        home: MyApp(),
         locale: Locale('ru', 'RU'),
         theme: ThemeData(
             // platform: TargetPlatform.iOS,
             ),
+        home: MyApp(),
       ),
     );
   }
@@ -78,11 +78,9 @@ class MyApp extends StatefulWidget {
   }
 }
 
-class MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class MyAppState extends State<MyApp> {
   var questionsData = LoadQuestionsData();
   var _futureloadQuestions;
-
-  UserData currentUser;
 
   PageController cont = PageController();
 
@@ -119,43 +117,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  // Get current User
-
   MyAppState() {
     _futureloadQuestions = questionsData.loadQuestions();
-
-    S.load(Locale('ru', 'RU'));
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // _loadList();
-  //   // _loadData();
-  //   // _getCurrentUser();
-
-  //   _futureloadQuestions = questionsData.loadQuestions();
-
-  //   S.load(Locale('ru', 'RU'));
-  //   // WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     // return _selectUser();
-  //   // });
-  // }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {

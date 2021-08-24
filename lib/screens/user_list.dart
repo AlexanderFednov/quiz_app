@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/bloc/current_user_class.dart';
 //import 'package:intl/intl.dart';
 import 'package:quiz_app/screens/add_user.dart';
+import 'package:quiz_app/screens/registration/registration_widget.dart';
 import '../models/hive_user_data.dart';
 import '../screens/user_Information.dart';
 import '../generated/l10n.dart';
@@ -19,8 +20,7 @@ class UserList extends StatefulWidget {
 }
 
 class UserListState extends State<UserList> {
-
- TextEditingController cont = TextEditingController();
+  TextEditingController cont = TextEditingController();
 
   List searchResult = [];
 
@@ -87,7 +87,7 @@ class UserListState extends State<UserList> {
         tooltip: S.of(context).addNewUser,
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AddUser(),
+            builder: (context) => RegistrationWidget(),
           ),
         ),
         child: Icon(Icons.add),
@@ -281,7 +281,7 @@ class UserListState extends State<UserList> {
         element.save();
       });
       res.isCurrentUser = true;
-      //res.userId = index;
+      // res.userId = index;
 
       //currentUser.userId = index;
       res.save();
@@ -334,16 +334,7 @@ class UserListState extends State<UserList> {
   }
 }
 
-class _ShowCurrentUserWidget extends StatefulWidget {
-  // final UserData currentUser;
-
-  @override
-  State<StatefulWidget> createState() {
-    return _ShowCurrentUserWidgetState();
-  }
-}
-
-class _ShowCurrentUserWidgetState extends State<_ShowCurrentUserWidget> {
+class _ShowCurrentUserWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var currentUserClass = Provider.of<CurrentUserClass>(context);

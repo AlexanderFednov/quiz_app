@@ -67,7 +67,7 @@ class AddUserState extends State<AddUser> {
                   Row(
                     children: [
                       _addUserButton(),
-                      _cancelButton(),
+                      _CancelButton(),
                     ],
                   ),
                 ],
@@ -102,19 +102,6 @@ class AddUserState extends State<AddUser> {
     ));
   }
 
-  Widget _cancelButton() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-          FocusScope.of(context).unfocus();
-        },
-        child: Text(S.of(context).cancel),
-      ),
-    );
-  }
-
   // void _errorDialog(String errorText) {
   //   showDialog(
   //       context: context,
@@ -142,5 +129,21 @@ class AddUserState extends State<AddUser> {
   @override
   void dispose() {
     super.dispose();
+  }
+}
+
+class _CancelButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+          FocusScope.of(context).unfocus();
+        },
+        child: Text(S.of(context).cancel),
+      ),
+    );
   }
 }
