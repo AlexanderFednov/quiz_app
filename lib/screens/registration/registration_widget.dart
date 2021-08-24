@@ -5,7 +5,7 @@ import 'package:quiz_app/generated/l10n.dart';
 import 'package:quiz_app/screens/registration/registration_bloc.dart';
 
 class RegistrationWidget extends StatelessWidget {
-  //Box<UserData> contactsBox = Hive.box<UserData>('UserData1');
+  const RegistrationWidget();
 
   @override
   Widget build(BuildContext context) {
