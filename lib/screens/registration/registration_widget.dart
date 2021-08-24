@@ -63,7 +63,7 @@ class _RegistrationScreenWidgetUserNameTextField extends StatelessWidget {
             decoration: InputDecoration(
               labelText: S.of(context).userName,
               errorStyle: TextStyle(color: Colors.red),
-              errorText: errorText(context, registrationErrorText),
+              errorText: _errorText(context, registrationErrorText),
             ),
             onChanged: (text) {
               registrationBloc.onUserNameChanged(text);
@@ -75,7 +75,7 @@ class _RegistrationScreenWidgetUserNameTextField extends StatelessWidget {
         });
   }
 
-  String errorText(BuildContext context, RegistrationErrorText errorText) {
+  String _errorText(BuildContext context, RegistrationErrorText errorText) {
     switch (errorText) {
       case RegistrationErrorText.nameIsEmpty:
         return S.of(context).enterName;
