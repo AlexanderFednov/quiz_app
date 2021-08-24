@@ -87,7 +87,7 @@ class UserListState extends State<UserList> {
         tooltip: S.of(context).addNewUser,
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const RegistrationWidget(),
+            builder: (context) => const RegistrationScreenWidget(),
           ),
         ),
         child: Icon(Icons.add),
