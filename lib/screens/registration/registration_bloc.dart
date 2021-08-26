@@ -15,14 +15,15 @@ class RegistrationBloc extends DisposableOwner {
   Stream<RegistrationModel> get registrationStream =>
       _registrationSubject.stream;
 
-  RegistrationModel get registerSubjectValue => _registrationSubject.value;
+  RegistrationModel get registrationSubjectValue => _registrationSubject.value;
 
-  String get userName => registerSubjectValue.userName;
+  String get userName => registrationSubjectValue.userName;
 
-  final BehaviorSubject<RegistrationErrorText> _regostrationErrorSubject = BehaviorSubject.seeded(RegistrationErrorText.nullable);
+  final BehaviorSubject<RegistrationErrorText> _registrationErrorSubject =
+      BehaviorSubject.seeded(RegistrationErrorText.nullable);
 
   Stream<RegistrationErrorText> get registrationErrorStream =>
-      _regostrationErrorSubject.stream;
+      _registrationErrorSubject.stream;
 
   final BehaviorSubject<bool> _isRegistrationValidSubject =
       BehaviorSubject.seeded(false);
@@ -37,8 +38,8 @@ class RegistrationBloc extends DisposableOwner {
       registrationModel.copyWith(userName: text.trim()),
     );
 
-    if (userName.trim().isEmpty ||
-        userName.trim() == null ||
+    if (userName.isEmpty ||
+        userName == null ||
         contactsBox.values.any((element) => element.userName == userName)) {
       _isRegistrationValidSubject.add(false);
     } else {
@@ -50,10 +51,10 @@ class RegistrationBloc extends DisposableOwner {
     var contactsBox = Hive.box<UserData>('UserData1');
 
     if (userName.trim().isEmpty || userName.trim() == null) {
-      _regostrationErrorSubject.add(RegistrationErrorText.nameIsEmpty);
+      _registrationErrorSubject.add(RegistrationErrorText.nameIsEmpty);
     } else if (contactsBox.values
         .any((element) => element.userName == userName)) {
-      _regostrationErrorSubject.add(RegistrationErrorText.nameIsTaken);
+      _registrationErrorSubject.add(RegistrationErrorText.nameIsTaken);
     } else {
       contactsBox.add(UserData(
         userName: userName,
@@ -68,13 +69,13 @@ class RegistrationBloc extends DisposableOwner {
 
   void registrationReset() {
     _registrationSubject.add(registrationModel.copyWith(userName: ''));
-    _regostrationErrorSubject.add(RegistrationErrorText.nullable);
+    _registrationErrorSubject.add(RegistrationErrorText.nullable);
     _isRegistrationValidSubject.add(false);
   }
 
   RegistrationBloc() {
     _registrationSubject.disposeWith(this);
-    _regostrationErrorSubject.disposeWith(this);
+    _registrationErrorSubject.disposeWith(this);
     _isRegistrationValidSubject.disposeWith(this);
   }
 }
