@@ -129,7 +129,7 @@ class LeaderBoardState extends State<LeaderBoard>
   }
 
   void _onNullifyPress() {
-    var moorDatabase = Provider.of<MyDatabase>(context);
+    var moorDatabase = Provider.of<MyDatabase>(context, listen: false);
     showDialog(
       context: context,
       builder: (_) => Dialog(
