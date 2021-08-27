@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:quiz_app/bloc/current_user_class.dart';
+import 'package:quiz_app/bloc/localization_bloc.dart';
 import 'package:quiz_app/quizScreen/new_logic_ultimate.dart';
 import 'package:quiz_app/data/load_questions_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
@@ -51,7 +52,7 @@ class QuizApp extends StatelessWidget {
           create: (context) => RegistrationBloc(),
         ),
         ChangeNotifierProvider.value(value: CurrentUserClass()),
-        ChangeNotifierProvider.value(value: LoadQuestionsData())
+        ChangeNotifierProvider.value(value: LoadQuestionsData()),
       ],
       child: MaterialApp(
         localizationsDelegates: [
