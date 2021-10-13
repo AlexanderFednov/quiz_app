@@ -17,30 +17,27 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserData(
-      userName: fields[0] as String,
-      userResult: fields[1] as int,
-      userId: fields[2] as int,
-      isCurrentUser: fields[3] as bool,
-      registerDate: fields[4] as DateTime,
-      userResults: (fields[5] as List)?.cast<UserResult>(),
+      userName: fields[0] as String?,
+      userResult: fields[1] as int?,
+      isCurrentUser: fields[2] as bool?,
+      registerDate: fields[3] as DateTime?,
+      userResults: (fields[4] as List?)?.cast<UserResult>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserData obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.userName)
       ..writeByte(1)
       ..write(obj.userResult)
       ..writeByte(2)
-      ..write(obj.userId)
-      ..writeByte(3)
       ..write(obj.isCurrentUser)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.registerDate)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.userResults);
   }
 
@@ -66,10 +63,10 @@ class UserResultAdapter extends TypeAdapter<UserResult> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserResult(
-      score: fields[0] as int,
-      questionsLenght: fields[1] as int,
-      resultDate: fields[2] as DateTime,
-      categoryNumber: fields[3] as int,
+      score: fields[0] as int?,
+      questionsLenght: fields[1] as int?,
+      resultDate: fields[2] as DateTime?,
+      categoryNumber: fields[3] as int?,
     );
   }
 

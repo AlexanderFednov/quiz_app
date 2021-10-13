@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:audioplayer/audioplayer.dart';
+// import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class QuizAudioPlayer extends StatefulWidget {
@@ -16,44 +13,32 @@ class QuizAudioPlayer extends StatefulWidget {
 
 class QuizAudioPlayerState extends State<QuizAudioPlayer>
     with WidgetsBindingObserver {
-  String mp3Uri;
   bool isAudionPlaying = true;
-  AudioPlayer audioPlugin = AudioPlayer();
-  Duration position;
+  late AudioCache audioCache;
+  AudioPlayer audioPlayer = AudioPlayer();
 
   var _futureloadIsPlaying;
 
-  void loadMusic() async {
-    final data =
-        await rootBundle.load('assets/music/Shadowing - Corbyn Kites.mp3');
-    var tempDir = await getTemporaryDirectory();
-    var tempFile = File('${tempDir.path}/Shadowing - Corbyn Kites.mp3');
-    await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    mp3Uri = tempFile.uri.toString();
-    await audioPlugin.stop();
-    if (isAudionPlaying) {
-      await audioPlugin.play(mp3Uri);
+  void _playerInit() async {
+    audioCache = AudioCache(prefix: 'assets/music/', fixedPlayer: audioPlayer);
+    // audioCache.clearCache();
+    await audioCache.loop('Shadowing - Corbyn Kites.mp3', isNotification: true);
+
+    if (!isAudionPlaying) {
+      await audioPlayer.pause();
     }
-    audioPlugin.onPlayerStateChanged.listen((event) {
-      if (event == AudioPlayerState.COMPLETED) {
-        audioPlugin.play(mp3Uri);
-      }
-    });
-    audioPlugin.onAudioPositionChanged.listen((event) {
-      position = event;
-    });
   }
 
-  void soundButton() async {
+  void _soundButton() async {
     var prefs = await SharedPreferences.getInstance();
     if (isAudionPlaying) {
-      await audioPlugin.pause();
+      await audioPlayer.pause();
       setState(() {
         isAudionPlaying = false;
       });
       await prefs.setBool('isAudioPlaying', false);
     } else {
-      await audioPlugin.play(mp3Uri);
+      await audioPlayer.resume();
       setState(() {
         isAudionPlaying = true;
       });
@@ -61,11 +46,11 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
     }
   }
 
-  Future loadIsPlaying() async {
+  Future<bool> loadIsPlaying() async {
     var prefs = await SharedPreferences.getInstance();
     isAudionPlaying = (prefs.getBool('isAudioPlaying') ?? true);
 
-    return Future.value(isAudionPlaying);
+    return isAudionPlaying;
   }
 
   @override
@@ -83,7 +68,7 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
                   Icons.music_off,
                   color: Colors.black,
                 ),
-          onPressed: soundButton,
+          onPressed: _soundButton,
         );
       },
     );
@@ -93,9 +78,9 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
   void initState() {
     super.initState();
     _futureloadIsPlaying = loadIsPlaying();
-    loadMusic();
+    _playerInit();
 
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
@@ -103,19 +88,22 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
     switch (state) {
       case AppLifecycleState.inactive:
         print('Inactive');
-        audioPlugin.pause();
+        audioPlayer.pause();
         break;
       case AppLifecycleState.paused:
         print('Paused');
-        audioPlugin.pause();
+        audioPlayer.pause();
         break;
       case AppLifecycleState.resumed:
         print('Resumed');
-        audioPlugin.play(mp3Uri);
+        if (isAudionPlaying) {
+          audioPlayer.resume();
+        }
         break;
       case AppLifecycleState.detached:
         print('detached');
-        audioPlugin.stop();
+        audioPlayer.stop();
+        audioPlayer.release();
         break;
     }
   }
@@ -123,7 +111,9 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
   @override
   void dispose() {
     super.dispose();
-    audioPlugin.stop();
-    WidgetsBinding.instance.removeObserver(this);
+    audioPlayer.release();
+    audioPlayer.dispose();
+    audioCache.clearAll();
+    WidgetsBinding.instance!.removeObserver(this);
   }
 }

@@ -8,11 +8,9 @@ part of 'question_list.dart';
 
 QuestionList _$QuestionListFromJson(Map<String, dynamic> json) {
   return QuestionList(
-    (json['question'] as List)
-        ?.map((e) => e == null
-            ? null
-            : QuestionInside.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    (json['question'] as List<dynamic>?)
+        ?.map((e) => QuestionInside.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 
@@ -23,11 +21,10 @@ Map<String, dynamic> _$QuestionListToJson(QuestionList instance) =>
 
 QuestionInside _$QuestionInsideFromJson(Map<String, dynamic> json) {
   return QuestionInside(
-    json['questionText'] as String,
-    (json['answers'] as List)
-        ?.map((e) =>
-            e == null ? null : Answers.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    json['questionText'] as String?,
+    (json['answers'] as List<dynamic>?)
+        ?.map((e) => Answers.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 
@@ -39,9 +36,9 @@ Map<String, dynamic> _$QuestionInsideToJson(QuestionInside instance) =>
 
 Answers _$AnswersFromJson(Map<String, dynamic> json) {
   return Answers(
-    json['text'] as String,
-    json['result'] as bool,
-    json['code'] as String,
+    json['text'] as String?,
+    json['result'] as bool?,
+    json['code'] as String?,
   );
 }
 

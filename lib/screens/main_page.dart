@@ -3,40 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:animated_button/animated_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_app/bloc/current_user_class.dart';
+import 'package:quiz_app/current_user/current_user_bloc.dart';
+import 'package:quiz_app/localization/localization_bloc.dart';
+import 'package:quiz_app/models/hive_user_data.dart';
+import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
 import 'package:quiz_app/screens/learning.dart';
+import 'package:quiz_app/user_list/user_list_widget.dart';
+import 'package:quiz_app/user_information/user_information_bloc.dart';
+import 'package:quiz_app/user_information/user_information_widget.dart';
 import 'package:quiz_app/widgets/last_result/last_result_widget.dart';
 // import 'package:intl/intl.dart';
 //import 'package:json_annotation/json_annotation.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:intl/intl.dart';
 import '../generated/l10n.dart';
-import '../screens/user_list.dart';
 import '../screens/user_Information.dart';
 import '../widgets/last_result/last_result_widget.dart';
 // import '../screens/learning.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
 class MainPage extends StatelessWidget {
-  final Function swap1;
-  final Function swap2;
-  final Function swap3;
-  final Function swap4;
-  final Function localeRu;
-  final Function localeEn;
-  // final Function setCurrentUser;
-  // final Function clearCurrentUser;
+  const MainPage();
 
-  MainPage({
-    @required this.swap1,
-    @required this.swap2,
-    @required this.swap3,
-    @required this.swap4,
-    @required this.localeRu,
-    @required this.localeEn,
-  });
-
-  final colorizeColors = [
+  static final colorizeColors = [
     Colors.pink,
     Colors.purple,
     Colors.blue,
@@ -46,8 +35,6 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var currentUserClass = Provider.of<CurrentUserClass>(context);
-    var currentUser = currentUserClass.currentUser;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -60,38 +47,12 @@ class MainPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          const _MainPageTopWidget(),
+          const _SelectCategoryWidget(),
+          const _LocaleNavigationWidget(),
           Column(
             children: [
-              Flexible(
-                flex: 0,
-                child: _animatedTitle(context),
-              ),
-              Flexible(
-                flex: 0,
-                child: LastResultWidget(),
-              ),
-              if (currentUser != null)
-                Flexible(
-                  flex: 0,
-                  child: GreetingMessage(),
-                ),
-              Flexible(
-                flex: 0,
-                child: _UserNavigation(),
-              ),
-            ],
-          ),
-          Flexible(
-            flex: 0,
-            child: _categoryChoise(context),
-          ),
-          Flexible(
-            flex: 0,
-            child: _localeNavigation(context),
-          ),
-          Column(
-            children: [
-              _StudioFednov(),
+              const _StudioFednovSignatureWidget(),
               // TextButton(
               //   onPressed: () => Navigator.of(context)
               //       .push(MaterialPageRoute(builder: (context) => Learning())),
@@ -103,13 +64,50 @@ class MainPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
+class _MainPageTopWidget extends StatelessWidget {
+  const _MainPageTopWidget();
 
-  Widget _animatedTitle(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    var currentUserBloc = Provider.of<CurrentUserBloc>(context);
+
+    return StreamBuilder<UserData?>(
+      stream: currentUserBloc.currentuserStream,
+      builder: (context, snapshot) {
+        var currentUser = snapshot.data;
+
+        return Column(
+          children: [
+            const _AnimatedTitleWidget(),
+            LastResultWidget(),
+            if (currentUser != null)
+              Provider.value(
+                value: currentUser,
+                child: const _GreetingMessageWidget(),
+              ),
+            const _UserNavigationWidget(),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _AnimatedTitleWidget extends StatelessWidget {
+  const _AnimatedTitleWidget();
+
+  static const colorizeColors = [
+    Colors.pink,
+    Colors.purple,
+    Colors.blue,
+    Colors.yellow,
+    Colors.red,
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       // color: Colors.white,
       child: SizedBox(
@@ -177,122 +175,11 @@ class MainPage extends StatelessWidget {
     //   ),
     // ),,)
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
-  // Widget _lastResults(BuildContext context) {
-  //   return Text(
-  //     S.of(context).lastResult(savedResult, questionsLenght),
-  //     style: TextStyle(
-  //       color: Colors.black,
-  //       fontSize: 20,
-  //       fontWeight: FontWeight.bold,
-  //     ),
-  //   );
-  // }
-
-  // Widget _greetingMessage(BuildContext context) {
-  //   var currentUserClass =
-  //       Provider.of<CurrentUserClass>(context, listen: false);
-  //   var currentUser = currentUserClass.currentUser;
-  //   return Container(
-  //     margin: EdgeInsets.only(top: 10),
-  //     child: Text(
-  //       S.of(context).helloMessage(currentUser.userName),
-  //       style: TextStyle(
-  //         fontSize: 30,
-  //         fontWeight: FontWeight.w700,
-  //         fontFamily: 'Lobster',
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _localeNavigation(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AnimatedButton(
-          onPressed: localeRu,
-          width: 110,
-          height: 30,
-          color: Colors.cyan,
-          child: Text(
-            'Русский',
-            style: TextStyle(color: Colors.black, fontSize: 20),
-          ),
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        AnimatedButton(
-          onPressed: localeEn,
-          width: 110,
-          height: 30,
-          color: Colors.pink[100],
-          child: Text(
-            'English',
-            style: TextStyle(color: Colors.black, fontSize: 20),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _categoryChoise(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.pink, width: 10),
-      ),
-      child: Column(
-        children: <Widget>[
-          Text(
-            S.of(context).categotyChoice,
-            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-          ),
-          Container(
-            height: 190,
-            width: 300,
-            child: _categoriesList(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _categoriesList(BuildContext context) {
-    return ListView(
-      children: [
-        CategoryButton(
-          category: S.of(context).questionsAll,
-          swap: swap1,
-          categoryColor: Colors.yellow,
-        ),
-        CategoryButton(
-          category: S.of(context).questionsFilms,
-          swap: swap2,
-          categoryColor: Colors.redAccent,
-        ),
-        CategoryButton(
-          category: S.of(context).questionsSpace,
-          swap: swap3,
-          categoryColor: Colors.blue[800],
-        ),
-        CategoryButton(
-          category: S.of(context).questionsWeb,
-          swap: swap4,
-          categoryColor: Colors.indigoAccent,
-        ),
-      ],
-    );
-  }
 }
 
-class _StudioFednov extends StatelessWidget {
+class _StudioFednovSignatureWidget extends StatelessWidget {
+  const _StudioFednovSignatureWidget();
+
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -307,54 +194,68 @@ class _StudioFednov extends StatelessWidget {
   }
 }
 
-class _UserNavigation extends StatelessWidget {
+class _UserNavigationWidget extends StatelessWidget {
+  const _UserNavigationWidget();
+
   @override
   Widget build(BuildContext context) {
-    var currentUserClass = Provider.of<CurrentUserClass>(context);
-    var currentUser = currentUserClass.currentUser;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextButton(
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => UserList(),
-            ),
-          ),
-          child: Text(
-            currentUser != null
-                ? S.of(context).changeUser
-                : S.of(context).selectUser,
-            style: TextStyle(fontSize: 15),
-          ),
-        ),
-        if (currentUser != null)
-          TextButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => UserInformation(user: currentUser),
+    var currentUserBloc = Provider.of<CurrentUserBloc>(context);
+    var userInformationBloc = Provider.of<UserInformationBloc>(context);
+
+    return StreamBuilder<UserData?>(
+      stream: currentUserBloc.currentuserStream,
+      builder: (context, snapshot) {
+        var currentUser = snapshot.data;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserListWidget(),
+                ),
+              ),
+              child: Text(
+                currentUser != null
+                    ? S.of(context).changeUser
+                    : S.of(context).selectUser,
+                style: TextStyle(fontSize: 15),
               ),
             ),
-            child: Text(
-              S.of(context).information,
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
-      ],
+            if (currentUser != null)
+              TextButton(
+                onPressed: () {
+                  userInformationBloc.selectUser(user: currentUser);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const UserInformationWidget(),
+                    ),
+                  );
+                },
+                child: Text(
+                  S.of(context).information,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
 
-class GreetingMessage extends StatelessWidget {
+class _GreetingMessageWidget extends StatelessWidget {
+  const _GreetingMessageWidget();
+
   @override
   Widget build(BuildContext context) {
-    var currentUserClass =
-        Provider.of<CurrentUserClass>(context, listen: false);
-    var currentUser = currentUserClass.currentUser;
+    var currentUser = Provider.of<UserData>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 10),
       child: Text(
-        S.of(context).helloMessage(currentUser.userName),
+        S.of(context).helloMessage(currentUser.userName!),
         style: TextStyle(
           fontSize: 30,
           fontWeight: FontWeight.w700,
@@ -365,21 +266,21 @@ class GreetingMessage extends StatelessWidget {
   }
 }
 
-class CategoryButton extends StatelessWidget {
-  final String category;
-  final Function swap;
-  final Color categoryColor;
+class _CategoryButtonWidget extends StatelessWidget {
+  final String? category;
+  final Function? swap;
+  final Color? categoryColor;
 
-  CategoryButton({this.category, this.swap, this.categoryColor});
+  _CategoryButtonWidget({this.category, this.swap, this.categoryColor});
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 300,
       decoration: BoxDecoration(color: categoryColor),
       child: TextButton(
-        onPressed: swap,
+        onPressed: () => swap!(),
         child: Text(
-          category,
+          category!,
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
@@ -387,6 +288,105 @@ class CategoryButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SelectCategoryWidget extends StatelessWidget {
+  const _SelectCategoryWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.pink, width: 10),
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            S.of(context).categotyChoice,
+            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            height: 190,
+            width: 300,
+            child: const _CategoriesListWidget(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CategoriesListWidget extends StatelessWidget {
+  const _CategoriesListWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    var logicBloc = Provider.of<QuizLogicBloc>(context);
+
+    return ListView(
+      children: [
+        _CategoryButtonWidget(
+          category: S.of(context).questionsAll,
+          swap: () => logicBloc.setCategorynumber(1),
+          categoryColor: Colors.yellow,
+        ),
+        _CategoryButtonWidget(
+          category: S.of(context).questionsFilms,
+          swap: () => logicBloc.setCategorynumber(2),
+          categoryColor: Colors.redAccent,
+        ),
+        _CategoryButtonWidget(
+          category: S.of(context).questionsSpace,
+          swap: () => logicBloc.setCategorynumber(3),
+          categoryColor: Colors.blue[800],
+        ),
+        _CategoryButtonWidget(
+          category: S.of(context).questionsWeb,
+          swap: () => logicBloc.setCategorynumber(4),
+          categoryColor: Colors.indigoAccent,
+        ),
+      ],
+    );
+  }
+}
+
+class _LocaleNavigationWidget extends StatelessWidget {
+  const _LocaleNavigationWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    var localizationBloc = Provider.of<LocalizationBloc>(context);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedButton(
+          onPressed: () => localizationBloc.localeRu(),
+          width: 110,
+          height: 30,
+          color: Colors.cyan,
+          child: Text(
+            'Русский',
+            style: TextStyle(color: Colors.black, fontSize: 20),
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        AnimatedButton(
+          onPressed: () => localizationBloc.localeEn(),
+          width: 110,
+          height: 30,
+          color: Colors.pink[100]!,
+          child: Text(
+            'English',
+            style: TextStyle(color: Colors.black, fontSize: 20),
+          ),
+        ),
+      ],
     );
   }
 }

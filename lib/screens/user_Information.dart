@@ -4,9 +4,9 @@ import '../models/hive_user_data.dart';
 import '../generated/l10n.dart';
 
 class UserInformation extends StatefulWidget {
-  final UserData user;
+  final UserData? user;
 
-  UserInformation({@required this.user});
+  UserInformation({required this.user});
 
   @override
   State<StatefulWidget> createState() {
@@ -15,10 +15,10 @@ class UserInformation extends StatefulWidget {
 }
 
 class UserInformationState extends State<UserInformation> {
-  final UserData user;
-  List<UserResult> results;
+  final UserData? user;
+  List<UserResult>? results;
 
-  UserInformationState({@required this.user});
+  UserInformationState({required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class UserInformationState extends State<UserInformation> {
       appBar: AppBar(
         backgroundColor: Colors.amber,
         title: Text(
-          user.userName,
+          user!.userName!,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -51,7 +51,7 @@ class UserInformationState extends State<UserInformation> {
               ),
             ],
           ),
-          user.userResults.isNotEmpty && user.userResults != null
+          user!.userResults!.isNotEmpty && user!.userResults != null
               ? _allUserResultsList()
               : _userResultsListEmpty(),
           _nullifyButton(),
@@ -68,7 +68,7 @@ class UserInformationState extends State<UserInformation> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         Text(
-          '${DateFormat('yyyy-MM-dd (kk:mm)').format(user.registerDate).toString()}',
+          '${DateFormat('yyyy-MM-dd (kk:mm)').format(user!.registerDate!).toString()}',
           style: TextStyle(fontSize: 20),
         ),
       ],
@@ -83,9 +83,9 @@ class UserInformationState extends State<UserInformation> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         Text(
-          user.userResults.isEmpty
+          user!.userResults!.isEmpty
               ? '0'
-              : '${user.userResults[0].score} / ${user.userResults[0].questionsLenght}',
+              : '${user!.userResults![0].score} / ${user!.userResults![0].questionsLenght}',
           style: TextStyle(fontSize: 20),
         ),
       ],
@@ -100,9 +100,9 @@ class UserInformationState extends State<UserInformation> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         Text(
-          user.userResults.isEmpty
+          user!.userResults!.isEmpty
               ? '0 %'
-              : '${user.rightAnswersPercentAll.toStringAsFixed(2)} %',
+              : '${user!.rightAnswersPercentAll.toStringAsFixed(2)} %',
           style: TextStyle(
             fontSize: 20,
           ),
@@ -121,17 +121,17 @@ class UserInformationState extends State<UserInformation> {
         isAlwaysShown: true,
         thickness: 10,
         child: ListView.builder(
-          itemCount: user.userResults.length,
+          itemCount: user!.userResults!.length,
           itemBuilder: (context, index) {
-            results = user.userResults;
-            results.sort(
-              (b, a) => a.resultDate.compareTo(b.resultDate),
+            results = user!.userResults;
+            results!.sort(
+              (b, a) => a.resultDate!.compareTo(b.resultDate!),
             );
 
             return Card(
               child: ListTile(
                 title: Text(
-                  '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate)}',
+                  '${results![index].score} / ${results![index].questionsLenght} (${results![index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results![index].categoryNumber)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results![index].resultDate!)}',
                   style: TextStyle(fontSize: 15),
                 ),
               ),
@@ -160,7 +160,7 @@ class UserInformationState extends State<UserInformation> {
       child: Text(
         S.of(context).nullify,
         style: TextStyle(
-          color: user.userResults.isEmpty
+          color: user!.userResults!.isEmpty
               ? Colors.grey
               : Theme.of(context).primaryColor,
         ),
@@ -170,9 +170,9 @@ class UserInformationState extends State<UserInformation> {
 
   void _deleteData() async {
     setState(() {
-      user.userResults.clear();
-      user.userResult = 0;
-      user.save();
+      user!.userResults!.clear();
+      user!.userResult = 0;
+      user!.save();
       Navigator.of(context).pop();
     });
   }
@@ -185,7 +185,7 @@ class UserInformationState extends State<UserInformation> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
-              colors: [Colors.white, Colors.blue[100], Colors.red[100]],
+              colors: [Colors.white, Colors.blue[100]!, Colors.red[100]!],
             ),
           ),
           height: 200,
@@ -227,20 +227,20 @@ class UserInformationState extends State<UserInformation> {
     );
   }
 
-  String category(BuildContext context, int categoryNumber) {
+  String category(BuildContext context, int? categoryNumber) {
     switch (categoryNumber) {
       case 1:
         return S.of(context).questionsAll;
-        break;
+
       case 2:
         return S.of(context).questionsFilms;
-        break;
+
       case 3:
         return S.of(context).questionsSpace;
-        break;
+
       case 4:
         return S.of(context).questionsWeb;
-        break;
+
       default:
         return '';
     }

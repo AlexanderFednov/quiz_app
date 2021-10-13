@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-//allias
+import 'package:provider/provider.dart';
+import 'package:quiz_app/models/question_list.dart';
+import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
 
 class Answer extends StatelessWidget {
-  final Function selectHandler;
-  final String answerText;
-  final String codeAnswer;
-
-  Answer(this.selectHandler, this.answerText, this.codeAnswer);
+  const Answer();
 
   @override
   Widget build(BuildContext context) {
+    var userListBloc = Provider.of<QuizLogicBloc>(context);
+    var answers = Provider.of<Answers>(context);
+
     return Container(
       decoration: BoxDecoration(),
       //borderRadius: BorderRadius.circular(20),
@@ -18,7 +19,7 @@ class Answer extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: selectHandler,
+        onPressed: () => userListBloc.answerQuestion(answers.result!),
         style: ButtonStyle(
           backgroundColor:
               MaterialStateColor.resolveWith((states) => Colors.blueGrey),
@@ -30,16 +31,17 @@ class Answer extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Text(
-              '$codeAnswer)  ',
+              '${answers.code})  ',
               softWrap: true,
               style: TextStyle(
-                  fontSize: 25,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,),
+                fontSize: 25,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             Text(
-              answerText,
+              answers.text!,
               style: TextStyle(fontSize: 25, color: Colors.white),
             ),
           ],

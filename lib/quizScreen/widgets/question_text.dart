@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class QuestionText extends StatelessWidget {
-  final String questionText;
+  final String? questionText;
 
   QuestionText(this.questionText);
 
@@ -13,7 +13,7 @@ class QuestionText extends StatelessWidget {
           border: Border.all(color: Colors.grey),
           color: Colors.white,),
       child: Text(
-        questionText,
+        questionText!,
         softWrap: true,
         style: TextStyle(
             fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold,),

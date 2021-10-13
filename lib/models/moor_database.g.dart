@@ -16,84 +16,60 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
   final int categoryNumber;
   final DateTime resultDate;
   MoorResult(
-      {@required this.id,
-      @required this.name,
-      @required this.result,
-      @required this.questionsLenght,
-      @required this.rightResultsPercent,
-      @required this.categoryNumber,
-      @required this.resultDate});
+      {required this.id,
+      required this.name,
+      required this.result,
+      required this.questionsLenght,
+      required this.rightResultsPercent,
+      required this.categoryNumber,
+      required this.resultDate});
   factory MoorResult.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    final intType = db.typeSystem.forDartType<int>();
-    final stringType = db.typeSystem.forDartType<String>();
-    final doubleType = db.typeSystem.forDartType<double>();
-    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return MoorResult(
-      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      result: intType.mapFromDatabaseResponse(data['${effectivePrefix}result']),
-      questionsLenght: intType
-          .mapFromDatabaseResponse(data['${effectivePrefix}questions_lenght']),
-      rightResultsPercent: doubleType.mapFromDatabaseResponse(
-          data['${effectivePrefix}right_results_percent']),
-      categoryNumber: intType
-          .mapFromDatabaseResponse(data['${effectivePrefix}category_number']),
-      resultDate: dateTimeType
-          .mapFromDatabaseResponse(data['${effectivePrefix}result_date']),
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      result: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}result'])!,
+      questionsLenght: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}questions_lenght'])!,
+      rightResultsPercent: const RealType().mapFromDatabaseResponse(
+          data['${effectivePrefix}right_results_percent'])!,
+      categoryNumber: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}category_number'])!,
+      resultDate: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}result_date'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int>(id);
-    }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || result != null) {
-      map['result'] = Variable<int>(result);
-    }
-    if (!nullToAbsent || questionsLenght != null) {
-      map['questions_lenght'] = Variable<int>(questionsLenght);
-    }
-    if (!nullToAbsent || rightResultsPercent != null) {
-      map['right_results_percent'] = Variable<double>(rightResultsPercent);
-    }
-    if (!nullToAbsent || categoryNumber != null) {
-      map['category_number'] = Variable<int>(categoryNumber);
-    }
-    if (!nullToAbsent || resultDate != null) {
-      map['result_date'] = Variable<DateTime>(resultDate);
-    }
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['result'] = Variable<int>(result);
+    map['questions_lenght'] = Variable<int>(questionsLenght);
+    map['right_results_percent'] = Variable<double>(rightResultsPercent);
+    map['category_number'] = Variable<int>(categoryNumber);
+    map['result_date'] = Variable<DateTime>(resultDate);
     return map;
   }
 
   MoorResultsCompanion toCompanion(bool nullToAbsent) {
     return MoorResultsCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      result:
-          result == null && nullToAbsent ? const Value.absent() : Value(result),
-      questionsLenght: questionsLenght == null && nullToAbsent
-          ? const Value.absent()
-          : Value(questionsLenght),
-      rightResultsPercent: rightResultsPercent == null && nullToAbsent
-          ? const Value.absent()
-          : Value(rightResultsPercent),
-      categoryNumber: categoryNumber == null && nullToAbsent
-          ? const Value.absent()
-          : Value(categoryNumber),
-      resultDate: resultDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(resultDate),
+      id: Value(id),
+      name: Value(name),
+      result: Value(result),
+      questionsLenght: Value(questionsLenght),
+      rightResultsPercent: Value(rightResultsPercent),
+      categoryNumber: Value(categoryNumber),
+      resultDate: Value(resultDate),
     );
   }
 
   factory MoorResult.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return MoorResult(
       id: serializer.fromJson<int>(json['id']),
@@ -107,7 +83,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
@@ -121,13 +97,13 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
   }
 
   MoorResult copyWith(
-          {int id,
-          String name,
-          int result,
-          int questionsLenght,
-          double rightResultsPercent,
-          int categoryNumber,
-          DateTime resultDate}) =>
+          {int? id,
+          String? name,
+          int? result,
+          int? questionsLenght,
+          double? rightResultsPercent,
+          int? categoryNumber,
+          DateTime? resultDate}) =>
       MoorResult(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -163,7 +139,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
                   $mrjc(rightResultsPercent.hashCode,
                       $mrjc(categoryNumber.hashCode, resultDate.hashCode)))))));
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MoorResult &&
           other.id == this.id &&
@@ -194,12 +170,12 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
   });
   MoorResultsCompanion.insert({
     this.id = const Value.absent(),
-    @required String name,
-    @required int result,
-    @required int questionsLenght,
-    @required double rightResultsPercent,
-    @required int categoryNumber,
-    @required DateTime resultDate,
+    required String name,
+    required int result,
+    required int questionsLenght,
+    required double rightResultsPercent,
+    required int categoryNumber,
+    required DateTime resultDate,
   })  : name = Value(name),
         result = Value(result),
         questionsLenght = Value(questionsLenght),
@@ -207,13 +183,13 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
         categoryNumber = Value(categoryNumber),
         resultDate = Value(resultDate);
   static Insertable<MoorResult> custom({
-    Expression<int> id,
-    Expression<String> name,
-    Expression<int> result,
-    Expression<int> questionsLenght,
-    Expression<double> rightResultsPercent,
-    Expression<int> categoryNumber,
-    Expression<DateTime> resultDate,
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<int>? result,
+    Expression<int>? questionsLenght,
+    Expression<double>? rightResultsPercent,
+    Expression<int>? categoryNumber,
+    Expression<DateTime>? resultDate,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -228,13 +204,13 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
   }
 
   MoorResultsCompanion copyWith(
-      {Value<int> id,
-      Value<String> name,
-      Value<int> result,
-      Value<int> questionsLenght,
-      Value<double> rightResultsPercent,
-      Value<int> categoryNumber,
-      Value<DateTime> resultDate}) {
+      {Value<int>? id,
+      Value<String>? name,
+      Value<int>? result,
+      Value<int>? questionsLenght,
+      Value<double>? rightResultsPercent,
+      Value<int>? categoryNumber,
+      Value<DateTime>? resultDate}) {
     return MoorResultsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -292,96 +268,44 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
 class $MoorResultsTable extends MoorResults
     with TableInfo<$MoorResultsTable, MoorResult> {
   final GeneratedDatabase _db;
-  final String _alias;
+  final String? _alias;
   $MoorResultsTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedIntColumn _id;
-  @override
-  GeneratedIntColumn get id => _id ??= _constructId();
-  GeneratedIntColumn _constructId() {
-    return GeneratedIntColumn('id', $tableName, false,
-        hasAutoIncrement: true, declaredAsPrimaryKey: true);
-  }
-
+  // ignore: annotate_overrides
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedTextColumn _name;
-  @override
-  GeneratedTextColumn get name => _name ??= _constructName();
-  GeneratedTextColumn _constructName() {
-    return GeneratedTextColumn(
-      'name',
-      $tableName,
-      false,
-    );
-  }
-
+  // ignore: annotate_overrides
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _resultMeta = const VerificationMeta('result');
-  GeneratedIntColumn _result;
-  @override
-  GeneratedIntColumn get result => _result ??= _constructResult();
-  GeneratedIntColumn _constructResult() {
-    return GeneratedIntColumn(
-      'result',
-      $tableName,
-      false,
-    );
-  }
-
+  // ignore: annotate_overrides
+  late final GeneratedColumn<int?> result = GeneratedColumn<int?>(
+      'result', aliasedName, false,
+      typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _questionsLenghtMeta =
       const VerificationMeta('questionsLenght');
-  GeneratedIntColumn _questionsLenght;
-  @override
-  GeneratedIntColumn get questionsLenght =>
-      _questionsLenght ??= _constructQuestionsLenght();
-  GeneratedIntColumn _constructQuestionsLenght() {
-    return GeneratedIntColumn(
-      'questions_lenght',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<int?> questionsLenght = GeneratedColumn<int?>(
+      'questions_lenght', aliasedName, false,
+      typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _rightResultsPercentMeta =
       const VerificationMeta('rightResultsPercent');
-  GeneratedRealColumn _rightResultsPercent;
-  @override
-  GeneratedRealColumn get rightResultsPercent =>
-      _rightResultsPercent ??= _constructRightResultsPercent();
-  GeneratedRealColumn _constructRightResultsPercent() {
-    return GeneratedRealColumn(
-      'right_results_percent',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<double?> rightResultsPercent =
+      GeneratedColumn<double?>('right_results_percent', aliasedName, false,
+          typeName: 'REAL', requiredDuringInsert: true);
   final VerificationMeta _categoryNumberMeta =
       const VerificationMeta('categoryNumber');
-  GeneratedIntColumn _categoryNumber;
-  @override
-  GeneratedIntColumn get categoryNumber =>
-      _categoryNumber ??= _constructCategoryNumber();
-  GeneratedIntColumn _constructCategoryNumber() {
-    return GeneratedIntColumn(
-      'category_number',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<int?> categoryNumber = GeneratedColumn<int?>(
+      'category_number', aliasedName, false,
+      typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _resultDateMeta = const VerificationMeta('resultDate');
-  GeneratedDateTimeColumn _resultDate;
-  @override
-  GeneratedDateTimeColumn get resultDate =>
-      _resultDate ??= _constructResultDate();
-  GeneratedDateTimeColumn _constructResultDate() {
-    return GeneratedDateTimeColumn(
-      'result_date',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<DateTime?> resultDate = GeneratedColumn<DateTime?>(
+      'result_date', aliasedName, false,
+      typeName: 'INTEGER', requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -393,28 +317,26 @@ class $MoorResultsTable extends MoorResults
         resultDate
       ];
   @override
-  $MoorResultsTable get asDslTable => this;
+  String get aliasedName => _alias ?? 'moor_results';
   @override
-  String get $tableName => _alias ?? 'moor_results';
-  @override
-  final String actualTableName = 'moor_results';
+  String get actualTableName => 'moor_results';
   @override
   VerificationContext validateIntegrity(Insertable<MoorResult> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('result')) {
       context.handle(_resultMeta,
-          result.isAcceptableOrUnknown(data['result'], _resultMeta));
+          result.isAcceptableOrUnknown(data['result']!, _resultMeta));
     } else if (isInserting) {
       context.missing(_resultMeta);
     }
@@ -422,7 +344,7 @@ class $MoorResultsTable extends MoorResults
       context.handle(
           _questionsLenghtMeta,
           questionsLenght.isAcceptableOrUnknown(
-              data['questions_lenght'], _questionsLenghtMeta));
+              data['questions_lenght']!, _questionsLenghtMeta));
     } else if (isInserting) {
       context.missing(_questionsLenghtMeta);
     }
@@ -430,7 +352,7 @@ class $MoorResultsTable extends MoorResults
       context.handle(
           _rightResultsPercentMeta,
           rightResultsPercent.isAcceptableOrUnknown(
-              data['right_results_percent'], _rightResultsPercentMeta));
+              data['right_results_percent']!, _rightResultsPercentMeta));
     } else if (isInserting) {
       context.missing(_rightResultsPercentMeta);
     }
@@ -438,7 +360,7 @@ class $MoorResultsTable extends MoorResults
       context.handle(
           _categoryNumberMeta,
           categoryNumber.isAcceptableOrUnknown(
-              data['category_number'], _categoryNumberMeta));
+              data['category_number']!, _categoryNumberMeta));
     } else if (isInserting) {
       context.missing(_categoryNumberMeta);
     }
@@ -446,7 +368,7 @@ class $MoorResultsTable extends MoorResults
       context.handle(
           _resultDateMeta,
           resultDate.isAcceptableOrUnknown(
-              data['result_date'], _resultDateMeta));
+              data['result_date']!, _resultDateMeta));
     } else if (isInserting) {
       context.missing(_resultDateMeta);
     }
@@ -456,9 +378,9 @@ class $MoorResultsTable extends MoorResults
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  MoorResult map(Map<String, dynamic> data, {String tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return MoorResult.fromData(data, _db, prefix: effectivePrefix);
+  MoorResult map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return MoorResult.fromData(data, _db,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
@@ -469,8 +391,7 @@ class $MoorResultsTable extends MoorResults
 
 abstract class _$MyDatabase extends GeneratedDatabase {
   _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  $MoorResultsTable _moorResults;
-  $MoorResultsTable get moorResults => _moorResults ??= $MoorResultsTable(this);
+  late final $MoorResultsTable moorResults = $MoorResultsTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override

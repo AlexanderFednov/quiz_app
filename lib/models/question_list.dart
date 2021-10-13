@@ -5,7 +5,7 @@ part 'question_list.g.dart';
 
 @JsonSerializable()
 class QuestionList {
-  List<QuestionInside> question;
+  List<QuestionInside>? question;
   QuestionList(this.question);
 
   factory QuestionList.fromJson(Map<String, dynamic> json) =>
@@ -16,8 +16,8 @@ class QuestionList {
 
 @JsonSerializable()
 class QuestionInside {
-  String questionText;
-  List<Answers> answers;
+  String? questionText;
+  List<Answers>? answers;
   QuestionInside(this.questionText, this.answers);
 
   factory QuestionInside.fromJson(Map<String, dynamic> json) =>
@@ -28,9 +28,9 @@ class QuestionInside {
 
 @JsonSerializable()
 class Answers {
-  String text;
-  bool result;
-  String code;
+  String? text;
+  bool? result;
+  String? code;
 
   Answers(this.text, this.result, this.code);
 

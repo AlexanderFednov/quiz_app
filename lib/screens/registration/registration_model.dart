@@ -1,39 +1,41 @@
 import 'package:equatable/equatable.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
 
+enum RegistrationErrorText { nullable, nameIsEmpty, nameIsTaken }
+
 class RegistrationModel extends Equatable {
   final String userName;
-  final int userResult;
-  final int userId;
-  final bool isCurrentUser;
-  final DateTime registerDate;
+  final RegistrationErrorText registrationErrorText;
+  final bool isRegistrationValid;
   final List<UserResult> userResults;
 
-  RegistrationModel(
-      {this.userName = '',
-      this.userResult = 0,
-      this.userId = 0,
-      this.isCurrentUser = false,
-      this.registerDate,
-      this.userResults = const []});
+  RegistrationModel({
+    this.userName = '',
+    this.registrationErrorText = RegistrationErrorText.nullable,
+    this.isRegistrationValid = false,
+    this.userResults = const [],
+  });
 
-  RegistrationModel copyWith(
-      {String userName,
-      int userResult,
-      int userId,
-      bool isCurrentUser,
-      DateTime registerDate,
-      List<UserResult> userResults}) {
+  RegistrationModel copyWith({
+    String? userName,
+    RegistrationErrorText? registrationErrorText,
+    bool? isRegistrationValid,
+    List<UserResult>? userResults,
+  }) {
     return RegistrationModel(
-        userName: userName ?? this.userName,
-        userResult: userResult ?? this.userResult,
-        userId: userId ?? this.userId,
-        isCurrentUser: isCurrentUser ?? this.isCurrentUser,
-        registerDate: registerDate ?? this.registerDate,
-        userResults: userResults ?? this.userResults);
+      userName: userName ?? this.userName,
+      registrationErrorText:
+          registrationErrorText ?? this.registrationErrorText,
+      isRegistrationValid: isRegistrationValid ?? this.isRegistrationValid,
+      userResults: userResults ?? this.userResults,
+    );
   }
 
   @override
-  List<Object> get props =>
-      [userName, userResult, userId, isCurrentUser, registerDate, userResults];
+  List<Object?> get props => [
+        userName,
+        registrationErrorText,
+        isRegistrationValid,
+        userResults,
+      ];
 }

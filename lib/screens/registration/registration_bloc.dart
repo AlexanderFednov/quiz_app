@@ -2,80 +2,92 @@ import 'package:easy_dispose/easy_dispose.dart';
 import 'package:hive/hive.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
 import 'package:quiz_app/screens/registration/registration_model.dart';
+import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-enum RegistrationErrorText { nullable, nameIsEmpty, nameIsTaken }
-
 class RegistrationBloc extends DisposableOwner {
-  static final RegistrationModel registrationModel = RegistrationModel();
+  RegistrationBloc({this.userListBloc}) {
+    _registrationStateSubject.disposeWith(this);
+  }
 
-  final BehaviorSubject<RegistrationModel> _registrationSubject =
-      BehaviorSubject.seeded(registrationModel);
+  final UserListBloc? userListBloc;
 
-  Stream<RegistrationModel> get registrationStream =>
-      _registrationSubject.stream;
+  static final RegistrationModel _registrationModel = RegistrationModel();
 
-  RegistrationModel get registrationSubjectValue => _registrationSubject.value;
+  final BehaviorSubject<RegistrationModel> _registrationStateSubject =
+      BehaviorSubject.seeded(_registrationModel);
 
-  String get userName => registrationSubjectValue.userName;
+  RegistrationModel get registrationState => _registrationStateSubject.value;
 
-  final BehaviorSubject<RegistrationErrorText> _registrationErrorSubject =
-      BehaviorSubject.seeded(RegistrationErrorText.nullable);
+  String get userName => registrationState.userName;
 
   Stream<RegistrationErrorText> get registrationErrorStream =>
-      _registrationErrorSubject.stream;
-
-  final BehaviorSubject<bool> _isRegistrationValidSubject =
-      BehaviorSubject.seeded(false);
+      _registrationStateSubject.stream.map(
+        (registrationStateSubject) =>
+            registrationStateSubject.registrationErrorText,
+      );
 
   Stream<bool> get isRegistrationValidStream =>
-      _isRegistrationValidSubject.stream;
+      _registrationStateSubject.stream.map(
+        (registrationStateSubject) =>
+            registrationStateSubject.isRegistrationValid,
+      );
 
   void onUserNameChanged(String text) {
     var contactsBox = Hive.box<UserData>('UserData1');
 
-    _registrationSubject.add(
-      registrationModel.copyWith(userName: text.trim()),
+    _registrationStateSubject.add(
+      registrationState.copyWith(userName: text.trim()),
     );
 
     if (userName.isEmpty ||
-        userName == null ||
+        userName == '' ||
         contactsBox.values.any((element) => element.userName == userName)) {
-      _isRegistrationValidSubject.add(false);
+      _registrationStateSubject.add(
+        registrationState.copyWith(isRegistrationValid: false),
+      );
     } else {
-      _isRegistrationValidSubject.add(true);
+      _registrationStateSubject.add(
+        registrationState.copyWith(isRegistrationValid: true),
+      );
     }
   }
 
   void onRegistrationSubmit() {
     var contactsBox = Hive.box<UserData>('UserData1');
 
-    if (userName.trim().isEmpty || userName.trim() == null) {
-      _registrationErrorSubject.add(RegistrationErrorText.nameIsEmpty);
+    if (userName.trim().isEmpty || userName.trim() == '') {
+      _registrationStateSubject.add(
+        registrationState.copyWith(
+          registrationErrorText: RegistrationErrorText.nameIsEmpty,
+        ),
+      );
     } else if (contactsBox.values
         .any((element) => element.userName == userName)) {
-      _registrationErrorSubject.add(RegistrationErrorText.nameIsTaken);
+      _registrationStateSubject.add(
+        registrationState.copyWith(
+          registrationErrorText: RegistrationErrorText.nameIsTaken,
+        ),
+      );
     } else {
       contactsBox.add(UserData(
         userName: userName,
         userResult: 0,
         registerDate: DateTime.now(),
         userResults: [],
-        userId: 0,
         isCurrentUser: false,
       ));
+
+      userListBloc!.getUserList();
     }
   }
 
   void registrationReset() {
-    _registrationSubject.add(registrationModel.copyWith(userName: ''));
-    _registrationErrorSubject.add(RegistrationErrorText.nullable);
-    _isRegistrationValidSubject.add(false);
-  }
-
-  RegistrationBloc() {
-    _registrationSubject.disposeWith(this);
-    _registrationErrorSubject.disposeWith(this);
-    _isRegistrationValidSubject.disposeWith(this);
+    _registrationStateSubject.add(
+      registrationState.copyWith(
+        userName: '',
+        registrationErrorText: RegistrationErrorText.nullable,
+      ),
+    );
   }
 }

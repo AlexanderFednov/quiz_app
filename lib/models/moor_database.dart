@@ -4,13 +4,13 @@ import 'package:moor_flutter/moor_flutter.dart';
 part 'moor_database.g.dart';
 
 class MoorResults extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text()();
-  IntColumn get result => integer()();
-  IntColumn get questionsLenght => integer()();
-  RealColumn get rightResultsPercent => real()();
-  IntColumn get categoryNumber => integer()();
-  DateTimeColumn get resultDate => dateTime()();
+  IntColumn? get id => integer().autoIncrement()();
+  TextColumn? get name => text()();
+  IntColumn? get result => integer()();
+  IntColumn? get questionsLenght => integer()();
+  RealColumn? get rightResultsPercent => real()();
+  IntColumn? get categoryNumber => integer()();
+  DateTimeColumn? get resultDate => dateTime()();
 }
 
 @UseMoor(tables: [MoorResults])
@@ -30,6 +30,9 @@ class MyDatabase extends _$MyDatabase {
 
   Future insertMoorResult(MoorResult moorResult) =>
       into(moorResults).insert(moorResult);
+
+  Future insertMoorResultCompanion(MoorResultsCompanion moorResultCompanion) =>
+      into(moorResults).insert(moorResultCompanion);
 
   Future updateMoorResult(MoorResult moorResult) =>
       update(moorResults).replace(moorResult);

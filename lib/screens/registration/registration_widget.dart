@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/generated/l10n.dart';
 import 'package:quiz_app/screens/registration/registration_bloc.dart';
+import 'package:quiz_app/screens/registration/registration_model.dart';
 
 class RegistrationScreenWidget extends StatelessWidget {
   const RegistrationScreenWidget();
@@ -22,7 +23,7 @@ class RegistrationScreenWidget extends StatelessWidget {
                 Row(
                   children: [
                     const _RegistrationScreenWidgetAddUserButton(),
-                    const _RegistrationScreenWidgetCancelButton()
+                    const _RegistrationScreenWidgetCancelButton(),
                   ],
                 ),
               ],
@@ -54,36 +55,35 @@ class _RegistrationScreenWidgetUserNameTextField extends StatelessWidget {
     var registrationBloc = Provider.of<RegistrationBloc>(context);
 
     return StreamBuilder<RegistrationErrorText>(
-        stream: registrationBloc.registrationErrorStream,
-        builder: (context, snapshot) {
-          var registrationErrorText = snapshot.data;
+      stream: registrationBloc.registrationErrorStream,
+      builder: (context, snapshot) {
+        var registrationErrorText = snapshot.data;
 
-          return TextField(
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: S.of(context).userName,
-              errorStyle: TextStyle(color: Colors.red),
-              errorText: _errorText(context, registrationErrorText),
-            ),
-            onChanged: (text) {
-              registrationBloc.onUserNameChanged(text);
-            },
-            // inputFormatters: [
-            //   FilteringTextInputFormatter(' ', allow: false)
-            // ],
-          );
-        });
+        return TextField(
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: S.of(context).userName,
+            errorStyle: TextStyle(color: Colors.red),
+            errorText: _errorText(context, registrationErrorText),
+          ),
+          onChanged: (text) {
+            registrationBloc.onUserNameChanged(text);
+          },
+          // inputFormatters: [
+          //   FilteringTextInputFormatter(' ', allow: false)
+          // ],
+        );
+      },
+    );
   }
 
-  String _errorText(BuildContext context, RegistrationErrorText errorText) {
+  String? _errorText(BuildContext context, RegistrationErrorText? errorText) {
     switch (errorText) {
       case RegistrationErrorText.nameIsEmpty:
         return S.of(context).enterName;
-        break;
 
       case RegistrationErrorText.nameIsTaken:
         return S.of(context).nameIsTaken;
-        break;
 
       case RegistrationErrorText.nullable:
       default:
@@ -121,22 +121,23 @@ class _RegistrationScreenWidgetAddUserButton extends StatelessWidget {
     var registrationBloc = Provider.of<RegistrationBloc>(context);
 
     return StreamBuilder<bool>(
-        stream: registrationBloc.isRegistrationValidStream,
-        builder: (context, snapshot) {
-          var isValid = snapshot.data;
+      stream: registrationBloc.isRegistrationValidStream,
+      builder: (context, snapshot) {
+        var isValid = snapshot.data;
 
-          return ElevatedButton(
-            onPressed: () {
-              registrationBloc.onRegistrationSubmit();
+        return ElevatedButton(
+          onPressed: () {
+            registrationBloc.onRegistrationSubmit();
 
-              if (isValid) {
-                Navigator.of(context).pop();
-                FocusScope.of(context).unfocus();
-                registrationBloc.registrationReset();
-              }
-            },
-            child: Text(S.of(context).addUser),
-          );
-        });
+            if (isValid!) {
+              Navigator.of(context).pop();
+              FocusScope.of(context).unfocus();
+              registrationBloc.registrationReset();
+            }
+          },
+          child: Text(S.of(context).addUser),
+        );
+      },
+    );
   }
 }
