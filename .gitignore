@@ -41,3 +41,5 @@ lib/questionsdecode.dart
 lib/screens/learning.dart
 lib/data/load_questions_data.dart
 lib/screens/leaderBoard.dart
+lib/data/load_questions_data.dart
+lib/screens/leaderBoard.dart
