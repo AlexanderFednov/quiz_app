@@ -39,3 +39,5 @@ lib/generated_plugin_registrant.dart
 lib/oldleaderBoard.dart
 lib/questionsdecode.dart
 lib/screens/learning.dart
+lib/data/load_questions_data.dart
+lib/screens/leaderBoard.dart
