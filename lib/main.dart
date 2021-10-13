@@ -24,7 +24,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 import 'models/hive_user_data.dart';
 
-
 import './quiz_audioplayer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
@@ -83,9 +82,9 @@ class QuizApp extends StatelessWidget {
         DisposableProvider<UserInformationBloc>(
           create: (context) => UserInformationBloc(),
         ),
-        ChangeNotifierProvider.value(
-          value: LoadQuestionsData(),
-        ),
+        // ChangeNotifierProvider.value(
+        //   value: LoadQuestionsData(),
+        // ),
       ],
       child: const QuizMaterialApp(),
     );
