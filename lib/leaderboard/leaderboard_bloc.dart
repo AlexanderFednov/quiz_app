@@ -10,7 +10,7 @@ class LeaderboardBloc extends DisposableOwner {
     _leaderBoardStateSubject.disposeWith(this);
   }
 
-  MyDatabase moorDatabase;
+  final MyDatabase moorDatabase;
 
   static final LeaderboardModel _leaderBoardModel = LeaderboardModel();
 

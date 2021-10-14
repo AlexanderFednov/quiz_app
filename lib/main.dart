@@ -7,7 +7,7 @@ import 'package:quiz_app/localization/localization_bloc.dart';
 import 'package:quiz_app/questions/questions_bloc.dart';
 import 'package:quiz_app/questions/questions_model.dart';
 import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
-import 'package:quiz_app/data/load_questions_data.dart';
+
 import 'package:quiz_app/models/moor_database.dart';
 import 'package:quiz_app/quizScreen/quiz_logic_model.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
@@ -28,7 +28,6 @@ import './quiz_audioplayer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 
-import './data/load_questions_data.dart';
 import 'package:easy_dispose_provider/easy_dispose_provider.dart';
 
 void main() async {

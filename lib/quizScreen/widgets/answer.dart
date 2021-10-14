@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/models/question_list.dart';
 import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
 
-class Answer extends StatelessWidget {
-  const Answer();
+class AnswerWidget extends StatelessWidget {
+  const AnswerWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +13,6 @@ class Answer extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(),
-      //borderRadius: BorderRadius.circular(20),
-      //border: Border.all(color: Colors.black, width: 1),
-      //color: Colors.blueGrey),
       margin: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       child: ElevatedButton(
@@ -28,25 +25,39 @@ class Answer extends StatelessWidget {
             TextStyle(color: Colors.white),
           ),
         ),
-        child: Row(
-          children: <Widget>[
-            Text(
-              '${answers.code})  ',
-              softWrap: true,
-              style: TextStyle(
-                fontSize: 25,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              answers.text!,
-              style: TextStyle(fontSize: 25, color: Colors.white),
-            ),
-          ],
+        child: Provider.value(
+          value: answers,
+          child: const _AnswerSignatureWidget(),
         ),
       ),
+    );
+  }
+}
+
+class _AnswerSignatureWidget extends StatelessWidget {
+  const _AnswerSignatureWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    var answers = Provider.of<Answers>(context);
+
+    return Row(
+      children: <Widget>[
+        Text(
+          '${answers.code})  ',
+          softWrap: true,
+          style: TextStyle(
+            fontSize: 25,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          answers.text!,
+          style: TextStyle(fontSize: 25, color: Colors.white),
+        ),
+      ],
     );
   }
 }

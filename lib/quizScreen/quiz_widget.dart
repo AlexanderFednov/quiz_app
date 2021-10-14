@@ -158,7 +158,7 @@ class _AnswersListWidget extends StatelessWidget {
             ...(questions![index].answers!).map((answers) {
               return Provider.value(
                 value: answers,
-                child: const Answer(),
+                child: const AnswerWidget(),
               );
             }).toList(),
           ],

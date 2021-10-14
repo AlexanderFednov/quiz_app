@@ -17,8 +17,6 @@ class LeaderBoardWidget extends StatefulWidget {
 
 class LeaderBoardWidgetState extends State<LeaderBoardWidget>
     with TickerProviderStateMixin {
-  List<MoorResult>? moorResults;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +41,7 @@ class LeaderBoardWidgetState extends State<LeaderBoardWidget>
           ),
         ),
         vsync: this,
-        child: const _LeaderboardBody(),
+        child: const _LeaderboardBodyWidget(),
       ),
     );
   }
@@ -64,8 +62,8 @@ class LeaderBoardWidgetState extends State<LeaderBoardWidget>
   // }
 }
 
-class _LeaderboardBody extends StatelessWidget {
-  const _LeaderboardBody();
+class _LeaderboardBodyWidget extends StatelessWidget {
+  const _LeaderboardBodyWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +72,7 @@ class _LeaderboardBody extends StatelessWidget {
         children: [
           Flexible(
             child: Container(
-              child: const _LeaderboardBuildList(),
+              child: const _LeaderboardBuildListWidget(),
             ),
           ),
           const _NullifyLeaderboard(),
@@ -90,8 +88,8 @@ class _LeaderboardBody extends StatelessWidget {
   }
 }
 
-class _LeaderboardBuildList extends StatelessWidget {
-  const _LeaderboardBuildList();
+class _LeaderboardBuildListWidget extends StatelessWidget {
+  const _LeaderboardBuildListWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -114,15 +112,15 @@ class _LeaderboardBuildList extends StatelessWidget {
 
         return Provider.value(
           value: moorResults,
-          child: const _LeaderboardWinnersList(),
+          child: const _LeaderboardWinnersListWidget(),
         );
       },
     );
   }
 }
 
-class _LeaderboardWinnersList extends StatelessWidget {
-  const _LeaderboardWinnersList();
+class _LeaderboardWinnersListWidget extends StatelessWidget {
+  const _LeaderboardWinnersListWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +143,7 @@ class _LeaderboardWinnersList extends StatelessWidget {
               ),
               leading: Provider.value(
                 value: index,
-                child: const _LeaderboardListTileLeading(),
+                child: const _LeaderboardListTileLeadingWidget(),
               ),
             ),
           ),
@@ -174,8 +172,8 @@ class _LeaderboardWinnersList extends StatelessWidget {
   }
 }
 
-class _LeaderboardListTileLeading extends StatelessWidget {
-  const _LeaderboardListTileLeading();
+class _LeaderboardListTileLeadingWidget extends StatelessWidget {
+  const _LeaderboardListTileLeadingWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +196,7 @@ class _LeaderboardListTileLeading extends StatelessWidget {
                   margin: EdgeInsets.only(left: 7),
                   child: Provider.value(
                     value: index + 1,
-                    child: const _LeaderboardMedal(),
+                    child: const _LeaderboardMedalWidget(),
                   ),
                 )
               : SizedBox(),
@@ -208,8 +206,8 @@ class _LeaderboardListTileLeading extends StatelessWidget {
   }
 }
 
-class _LeaderboardMedal extends StatelessWidget {
-  const _LeaderboardMedal();
+class _LeaderboardMedalWidget extends StatelessWidget {
+  const _LeaderboardMedalWidget();
 
   @override
   Widget build(BuildContext context) {

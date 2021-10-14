@@ -100,6 +100,7 @@ class QuizLogicBloc extends DisposableOwner {
       if (currentUser != null) {
         _addHiveUserResult();
         _addMoorUserResult(currentUser);
+        leaderboardBloc.getMoorResults();
       }
 
       _logicStateSubject.add(
@@ -110,7 +111,6 @@ class QuizLogicBloc extends DisposableOwner {
       );
     }
     _nullifyLogic();
-    leaderboardBloc.getMoorResults();
   }
 
   void reset() {

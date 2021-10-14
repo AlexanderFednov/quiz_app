@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 class QuestionsBloc extends DisposableOwner {
   QuestionsBloc() {
     _questionsInit();
-    loadData();
 
     _questionsStateSubject.disposeWith(this);
   }
@@ -45,6 +44,8 @@ class QuestionsBloc extends DisposableOwner {
         questionsSpace: questionsSpace,
       ),
     );
+
+    loadData();
   }
 
   void loadData() async {

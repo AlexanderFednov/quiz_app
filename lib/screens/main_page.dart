@@ -17,7 +17,7 @@ import 'package:quiz_app/widgets/last_result/last_result_widget.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:intl/intl.dart';
 import '../generated/l10n.dart';
-import '../screens/user_Information.dart';
+
 import '../widgets/last_result/last_result_widget.dart';
 // import '../screens/learning.dart';
 // import 'package:google_fonts/google_fonts.dart';
