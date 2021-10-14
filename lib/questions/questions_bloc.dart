@@ -25,15 +25,15 @@ class QuestionsBloc extends DisposableOwner {
   QuestionsModel get questionsState => _questionsStateSubject.value;
 
   void _questionsInit() async {
-    var questionsGeneral = await loadQuestionsFromAssets(
+    var questionsGeneral = await _loadQuestionsFromAssets(
       questionsUrl: 'assets/questions/questionsAll.json',
     );
 
-    var questionsMovies = await loadQuestionsFromAssets(
+    var questionsMovies = await _loadQuestionsFromAssets(
       questionsUrl: 'assets/questions/questionsFilms.json',
     );
 
-    var questionsSpace = await loadQuestionsFromAssets(
+    var questionsSpace = await _loadQuestionsFromAssets(
       questionsUrl: 'assets/questions/questionsSpace.json',
     );
 
@@ -49,14 +49,14 @@ class QuestionsBloc extends DisposableOwner {
   }
 
   void loadData() async {
-    var questionsWeb = await getQuestionsFromServer();
+    var questionsWeb = await _getQuestionsFromServer();
 
     _questionsStateSubject.add(
       questionsState.copyWith(questionsWeb: questionsWeb),
     );
   }
 
-  Future<List<QuestionInside>> loadQuestionsFromAssets({
+  Future<List<QuestionInside>> _loadQuestionsFromAssets({
     required String questionsUrl,
   }) async {
     var jsonQuestionsList = await rootBundle.loadString(questionsUrl);
@@ -67,7 +67,7 @@ class QuestionsBloc extends DisposableOwner {
     return questionListDecoded!;
   }
 
-  Future<List<QuestionInside>> getQuestionsFromServer() async {
+  Future<List<QuestionInside>> _getQuestionsFromServer() async {
     final responce = await http.get(Uri.http('10.0.2.2:8000', '')).timeout(
           Duration(seconds: 3),
           onTimeout: (() => Response('Server Error', 404)),
