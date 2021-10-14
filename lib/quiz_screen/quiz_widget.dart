@@ -12,32 +12,6 @@ import 'widgets/result.dart';
 import '../models/question_list.dart';
 import 'package:provider/provider.dart';
 
-// class Quiz extends StatelessWidget {
-//   final List<QuestionInside>? questions;
-
-//   final String imageUrl;
-
-//   Quiz({
-//     required this.questions,
-//     required this.imageUrl,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//         // StreamProvider<LogicModel>(
-//         //   create: (_) => logicBloc.logicStream,
-//         //   initialData: logicBloc.logic,
-//         //   child:
-//         _QuizMainScreen(
-//       imageUrl: imageUrl,
-//       questions: questions,
-//     )
-//         //   ,
-//         // )
-//         ;
-//   }
-// }
 
 class QuizScreenWidget extends StatelessWidget {
   final List<QuestionInside>? questions;
