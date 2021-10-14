@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_model.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/screens/error_screen.dart';
-import 'package:quiz_app/quizScreen/widgets/progress_bar_icons.dart';
+import 'package:quiz_app/quiz_screen/widgets/progress_bar_icons.dart';
 import '../generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

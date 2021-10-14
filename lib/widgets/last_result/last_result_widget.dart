@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_model.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import '../../generated/l10n.dart';
 
 class LastResultWidget extends StatelessWidget {

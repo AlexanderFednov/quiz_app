@@ -6,17 +6,17 @@ import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
 import 'package:quiz_app/localization/localization_bloc.dart';
 import 'package:quiz_app/questions/questions_bloc.dart';
 import 'package:quiz_app/questions/questions_model.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 
 import 'package:quiz_app/models/moor_database.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_model.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
 import 'package:quiz_app/screens/registration/registration_bloc.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
 
 import 'leaderboard/leaderboard_widget.dart';
-import 'quizScreen/quiz_widget.dart';
+import 'quiz_screen/quiz_widget.dart';
 import 'screens/main_page.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';

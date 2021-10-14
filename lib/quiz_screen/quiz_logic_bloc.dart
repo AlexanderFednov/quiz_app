@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:hive/hive.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_model.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
 import 'package:quiz_app/models/question_list.dart';

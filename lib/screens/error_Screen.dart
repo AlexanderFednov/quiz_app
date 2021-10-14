@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String? imageUrl;

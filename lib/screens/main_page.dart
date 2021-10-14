@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/current_user/current_user_bloc.dart';
 import 'package:quiz_app/localization/localization_bloc.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
-import 'package:quiz_app/quizScreen/quiz_logic_bloc.dart';
+import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 import 'package:quiz_app/screens/learning.dart';
 import 'package:quiz_app/user_list/user_list_widget.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
