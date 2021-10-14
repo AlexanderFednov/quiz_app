@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/current_user/current_user_bloc.dart';
 import 'package:quiz_app/generated/l10n.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
-import 'package:quiz_app/screens/registration/registration_widget.dart';
+import 'package:quiz_app/registration/registration_widget.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_list/user_list_model.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';

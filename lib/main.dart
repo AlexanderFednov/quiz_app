@@ -11,7 +11,7 @@ import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 import 'package:quiz_app/models/moor_database.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
-import 'package:quiz_app/screens/registration/registration_bloc.dart';
+import 'package:quiz_app/registration/registration_bloc.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
 
@@ -170,7 +170,7 @@ class _MainPageView extends StatefulWidget {
 class _MainPageViewState extends State<_MainPageView> {
   _MainPageViewState();
 
-  PageController cont = PageController();
+  final PageController cont = PageController();
 
   @override
   void dispose() {

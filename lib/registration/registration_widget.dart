@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/generated/l10n.dart';
-import 'package:quiz_app/screens/registration/registration_bloc.dart';
-import 'package:quiz_app/screens/registration/registration_model.dart';
+import 'package:quiz_app/registration/registration_bloc.dart';
+import 'package:quiz_app/registration/registration_model.dart';
 
 class RegistrationScreenWidget extends StatelessWidget {
   const RegistrationScreenWidget();
