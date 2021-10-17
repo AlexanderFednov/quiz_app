@@ -17,15 +17,13 @@ class QuizLogicBloc extends DisposableOwner {
   QuizLogicBloc({required this.moorDatabase, required this.leaderboardBloc}) {
     _loadSavedScore();
 
-    _logicStateSubject.listen((logicModel) {
-      _onQuizStatusChange(logicModel.quizStatus);
+    quizStatusStream.listen((quizStatus) {
+      _onQuizStatusChange(quizStatus);
     }).disposeWith(this);
   }
 
   static final QuizLogicModel _quizLogicModel =
       QuizLogicModel(answerStatusList: []);
-
-  List<QuestionInside>? questions;
 
   final MyDatabase moorDatabase;
 
@@ -33,6 +31,8 @@ class QuizLogicBloc extends DisposableOwner {
 
   final BehaviorSubject<QuizLogicModel> _logicStateSubject =
       BehaviorSubject.seeded(_quizLogicModel);
+
+  // List<QuestionInside>? questions;
 
   QuizLogicModel get logicState => _logicStateSubject.value;
 
@@ -47,6 +47,9 @@ class QuizLogicBloc extends DisposableOwner {
       logicStream.map((logicModel) => logicModel.answerStatusList);
 
   List<AnswerStatus>? get answerStatusList => logicState.answerStatusList;
+
+  Stream<QuizStatus> get quizStatusStream =>
+      logicStream.map((logicModel) => logicModel.quizStatus).distinct();
 
   void answerQuestion(bool result) {
     if (result) {
