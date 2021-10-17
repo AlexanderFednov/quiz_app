@@ -13,7 +13,7 @@ class LastResultWidget extends StatelessWidget {
 
     return StreamBuilder<QuizLogicModel>(
       stream: logicBloc.logicStream,
-      initialData: logicBloc.logic,
+      initialData: logicBloc.logicState,
       builder: (context, snapshot) {
         var logicModel = snapshot.data;
 

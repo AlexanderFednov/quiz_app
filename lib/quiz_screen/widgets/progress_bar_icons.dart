@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class IconTrue extends StatelessWidget {
+class IconTrueWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,7 +18,7 @@ class IconTrue extends StatelessWidget {
   }
 }
 
-class IconFalse extends StatelessWidget {
+class IconFalseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -34,19 +34,19 @@ class QuizLogicBloc extends DisposableOwner {
   final BehaviorSubject<QuizLogicModel> _logicStateSubject =
       BehaviorSubject.seeded(_quizLogicModel);
 
-  QuizLogicModel get logic => _logicStateSubject.value;
+  QuizLogicModel get logicState => _logicStateSubject.value;
 
   Stream<QuizLogicModel> get logicStream => _logicStateSubject.stream;
 
   Stream<int> get logicQuestionIndexStream =>
       logicStream.map((logicModel) => logicModel.questionIndex);
 
-  int get currentQuestionIndex => logic.questionIndex;
+  int get currentQuestionIndex => logicState.questionIndex;
 
   Stream<List<AnswerStatus>?> get answerStatusListStream =>
       logicStream.map((logicModel) => logicModel.answerStatusList);
 
-  List<AnswerStatus>? get answerStatusList => logic.answerStatusList;
+  List<AnswerStatus>? get answerStatusList => logicState.answerStatusList;
 
   void answerQuestion(bool result) {
     if (result) {
@@ -61,9 +61,9 @@ class QuizLogicBloc extends DisposableOwner {
     anwerStatusListTemporary.add(AnswerStatus.right);
 
     _logicStateSubject.add(
-      logic.copyWith(
-        questionIndex: logic.questionIndex + 1,
-        totalScore: logic.totalScore + 1,
+      logicState.copyWith(
+        questionIndex: logicState.questionIndex + 1,
+        totalScore: logicState.totalScore + 1,
         answerStatusList: anwerStatusListTemporary,
       ),
     );
@@ -74,8 +74,8 @@ class QuizLogicBloc extends DisposableOwner {
     anwerStatusListTemporary.add(AnswerStatus.wrong);
 
     _logicStateSubject.add(
-      logic.copyWith(
-        questionIndex: logic.questionIndex + 1,
+      logicState.copyWith(
+        questionIndex: logicState.questionIndex + 1,
         answerStatusList: anwerStatusListTemporary,
       ),
     );
@@ -93,10 +93,10 @@ class QuizLogicBloc extends DisposableOwner {
     var prefs = await SharedPreferences.getInstance();
     var currentUser = getCurrentUser();
 
-    await prefs.setInt('questionsLenght', logic.questionIndex);
-    await prefs.setInt('saveScore', logic.totalScore);
+    await prefs.setInt('questionsLenght', logicState.questionIndex);
+    await prefs.setInt('saveScore', logicState.totalScore);
 
-    if (logic.questionIndex > 0) {
+    if (logicState.questionIndex > 0) {
       if (currentUser != null) {
         _addHiveUserResult();
         _addMoorUserResult(currentUser);
@@ -104,9 +104,9 @@ class QuizLogicBloc extends DisposableOwner {
       }
 
       _logicStateSubject.add(
-        logic.copyWith(
-          savedScore: logic.totalScore,
-          savedQuestionLenght: logic.questionIndex,
+        logicState.copyWith(
+          savedScore: logicState.totalScore,
+          savedQuestionLenght: logicState.questionIndex,
         ),
       );
     }
@@ -115,25 +115,25 @@ class QuizLogicBloc extends DisposableOwner {
 
   void reset() {
     _logicStateSubject.add(
-      logic.copyWith(quizStatus: QuizStatus.reset),
+      logicState.copyWith(quizStatus: QuizStatus.reset),
     );
   }
 
   void completed() {
     _logicStateSubject.add(
-      logic.copyWith(quizStatus: QuizStatus.completed),
+      logicState.copyWith(quizStatus: QuizStatus.completed),
     );
   }
 
   void error() {
     _logicStateSubject.add(
-      logic.copyWith(quizStatus: QuizStatus.error),
+      logicState.copyWith(quizStatus: QuizStatus.error),
     );
   }
 
   void _nullifyLogic() {
     _logicStateSubject.add(
-      logic.copyWith(
+      logicState.copyWith(
         totalScore: 0,
         questionIndex: 0,
         categoryNumber: 0,
@@ -148,14 +148,14 @@ class QuizLogicBloc extends DisposableOwner {
 
     contactBox.values.forEach((element) {
       if (element.isCurrentUser!) {
-        element.userResult = logic.totalScore;
+        element.userResult = logicState.totalScore;
         element.userResults!.insert(
           0,
           UserResult(
-            score: logic.totalScore,
-            questionsLenght: logic.questionIndex,
+            score: logicState.totalScore,
+            questionsLenght: logicState.questionIndex,
             resultDate: DateTime.now(),
-            categoryNumber: logic.categoryNumber,
+            categoryNumber: logicState.categoryNumber,
           ),
         );
         element.save();
@@ -172,13 +172,13 @@ class QuizLogicBloc extends DisposableOwner {
         rightResultsPercent: Value(100 /
             _logicStateSubject.value.questionIndex *
             _logicStateSubject.value.totalScore),
-        categoryNumber: Value(logic.categoryNumber),
+        categoryNumber: Value(logicState.categoryNumber),
         resultDate: Value(DateTime.now()),
       ),
     );
   }
 
-  void setCategorynumber(int num) {
+  void setCategoryNumber(int num) {
     _logicStateSubject.add(
       _logicStateSubject.value
           .copyWith(categoryNumber: num, quizStatus: QuizStatus.inProgress),
@@ -206,9 +206,11 @@ class QuizLogicBloc extends DisposableOwner {
     var prefs = await SharedPreferences.getInstance();
 
     _logicStateSubject
-        .add(logic.copyWith(savedScore: prefs.getInt('saveScore') ?? 0));
+        .add(logicState.copyWith(savedScore: prefs.getInt('saveScore') ?? 0));
     _logicStateSubject.add(
-      logic.copyWith(savedQuestionLenght: prefs.getInt('questionsLenght') ?? 0),
+      logicState.copyWith(
+        savedQuestionLenght: prefs.getInt('questionsLenght') ?? 0,
+      ),
     );
   }
 }

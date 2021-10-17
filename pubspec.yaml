@@ -64,6 +64,9 @@ dev_dependencies:
   moor_generator: ^4.4.1
   hive_generator: ^1.1.0
   pedantic: ^1.11.1
+  # flutter_driver:
+  #   sdk: flutter
+  # test: any
     
   
 

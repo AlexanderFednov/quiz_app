@@ -330,22 +330,22 @@ class _CategoriesListWidget extends StatelessWidget {
       children: [
         _CategoryButtonWidget(
           category: S.of(context).questionsAll,
-          swap: () => logicBloc.setCategorynumber(1),
+          swap: () => logicBloc.setCategoryNumber(1),
           categoryColor: Colors.yellow,
         ),
         _CategoryButtonWidget(
           category: S.of(context).questionsFilms,
-          swap: () => logicBloc.setCategorynumber(2),
+          swap: () => logicBloc.setCategoryNumber(2),
           categoryColor: Colors.redAccent,
         ),
         _CategoryButtonWidget(
           category: S.of(context).questionsSpace,
-          swap: () => logicBloc.setCategorynumber(3),
+          swap: () => logicBloc.setCategoryNumber(3),
           categoryColor: Colors.blue[800],
         ),
         _CategoryButtonWidget(
           category: S.of(context).questionsWeb,
-          swap: () => logicBloc.setCategorynumber(4),
+          swap: () => logicBloc.setCategoryNumber(4),
           categoryColor: Colors.indigoAccent,
         ),
       ],

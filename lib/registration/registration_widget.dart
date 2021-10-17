@@ -18,12 +18,12 @@ class RegistrationScreenWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _RegistrationScreenWidgetHeading(),
-                const _RegistrationScreenWidgetUserNameTextField(),
+                const _RegistrationScreenHeadingWidget(),
+                const _RegistrationScreenUserNameTextFieldWidget(),
                 Row(
                   children: [
-                    const _RegistrationScreenWidgetAddUserButton(),
-                    const _RegistrationScreenWidgetCancelButton(),
+                    const _RegistrationScreenAddUserButtonWidget(),
+                    const _RegistrationScreenCancelButtonWidget(),
                   ],
                 ),
               ],
@@ -35,8 +35,8 @@ class RegistrationScreenWidget extends StatelessWidget {
   }
 }
 
-class _RegistrationScreenWidgetHeading extends StatelessWidget {
-  const _RegistrationScreenWidgetHeading();
+class _RegistrationScreenHeadingWidget extends StatelessWidget {
+  const _RegistrationScreenHeadingWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +47,8 @@ class _RegistrationScreenWidgetHeading extends StatelessWidget {
   }
 }
 
-class _RegistrationScreenWidgetUserNameTextField extends StatelessWidget {
-  const _RegistrationScreenWidgetUserNameTextField();
+class _RegistrationScreenUserNameTextFieldWidget extends StatelessWidget {
+  const _RegistrationScreenUserNameTextFieldWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +92,8 @@ class _RegistrationScreenWidgetUserNameTextField extends StatelessWidget {
   }
 }
 
-class _RegistrationScreenWidgetCancelButton extends StatelessWidget {
-  const _RegistrationScreenWidgetCancelButton();
+class _RegistrationScreenCancelButtonWidget extends StatelessWidget {
+  const _RegistrationScreenCancelButtonWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +113,8 @@ class _RegistrationScreenWidgetCancelButton extends StatelessWidget {
   }
 }
 
-class _RegistrationScreenWidgetAddUserButton extends StatelessWidget {
-  const _RegistrationScreenWidgetAddUserButton();
+class _RegistrationScreenAddUserButtonWidget extends StatelessWidget {
+  const _RegistrationScreenAddUserButtonWidget();
 
   @override
   Widget build(BuildContext context) {

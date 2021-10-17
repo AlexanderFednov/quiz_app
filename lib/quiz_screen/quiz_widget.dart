@@ -12,7 +12,6 @@ import 'widgets/result.dart';
 import '../models/question_list.dart';
 import 'package:provider/provider.dart';
 
-
 class QuizScreenWidget extends StatelessWidget {
   final List<QuestionInside>? questions;
 
@@ -222,7 +221,7 @@ class _ProgressBar extends StatelessWidget {
             ...answerStatusList.map(
               (status) => Provider.value(
                 value: status,
-                child: const _AnswerStatusIcon(),
+                child: const _AnswerStatusIconWidget(),
               ),
             ),
           ],
@@ -232,13 +231,13 @@ class _ProgressBar extends StatelessWidget {
   }
 }
 
-class _AnswerStatusIcon extends StatelessWidget {
-  const _AnswerStatusIcon();
+class _AnswerStatusIconWidget extends StatelessWidget {
+  const _AnswerStatusIconWidget();
 
   @override
   Widget build(BuildContext context) {
     var status = Provider.of<AnswerStatus>(context);
 
-    return status == AnswerStatus.right ? IconTrue() : IconFalse();
+    return status == AnswerStatus.right ? IconTrueWidget() : IconFalseWidget();
   }
 }
