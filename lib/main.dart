@@ -199,14 +199,14 @@ class _MainPageViewState extends State<_MainPageView> {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
     var questionsBloc = Provider.of<QuestionsBloc>(context);
 
-    logicBloc.logicStream.listen((logicModel) {
-      switch (logicModel.quizStatus) {
+    logicBloc.quizStatusStream.listen((quizStatus) {
+      switch (quizStatus) {
         case QuizStatus.reset:
         case QuizStatus.completed:
           _toMainPage();
           break;
         case QuizStatus.inProgress:
-          _swap(logicModel.categoryNumber);
+          _swap(logicBloc.logicState.categoryNumber);
           break;
         case QuizStatus.error:
           _toMainPage();
