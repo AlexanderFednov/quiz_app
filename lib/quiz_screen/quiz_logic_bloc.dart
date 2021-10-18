@@ -6,7 +6,7 @@ import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
-import 'package:quiz_app/models/question_list.dart';
+// import 'package:quiz_app/models/question_list.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_dispose/easy_dispose.dart';
@@ -36,20 +36,20 @@ class QuizLogicBloc extends DisposableOwner {
 
   QuizLogicModel get logicState => _logicStateSubject.value;
 
-  Stream<QuizLogicModel> get logicStream => _logicStateSubject.stream;
+  Stream<QuizLogicModel> get logicStateStream => _logicStateSubject.stream;
 
   Stream<int> get questionIndexStream =>
-      logicStream.map((logicModel) => logicModel.questionIndex);
+      logicStateStream.map((logicModel) => logicModel.questionIndex);
 
   int get currentQuestionIndex => logicState.questionIndex;
 
   Stream<List<AnswerStatus>?> get answerStatusListStream =>
-      logicStream.map((logicModel) => logicModel.answerStatusList);
+      logicStateStream.map((logicModel) => logicModel.answerStatusList);
 
   List<AnswerStatus>? get answerStatusList => logicState.answerStatusList;
 
   Stream<QuizStatus> get quizStatusStream =>
-      logicStream.map((logicModel) => logicModel.quizStatus).distinct();
+      logicStateStream.map((logicModel) => logicModel.quizStatus).distinct();
 
   void answerQuestion(bool result) {
     if (result) {
