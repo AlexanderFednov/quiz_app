@@ -85,7 +85,7 @@ class QuizLogicBloc extends DisposableOwner {
   }
 
   void _onQuizStatusChange(QuizStatus quizStatus) {
-    if (quizStatus == QuizStatus.reset) {
+    if (quizStatus == QuizStatus.reset || quizStatus == QuizStatus.error) {
       _nullifyLogic();
     } else if (quizStatus == QuizStatus.completed) {
       _quizCompleted();
