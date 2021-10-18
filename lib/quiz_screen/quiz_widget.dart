@@ -27,7 +27,7 @@ class QuizScreenWidget extends StatelessWidget {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
 
     return StreamBuilder<int>(
-      stream: logicBloc.logicQuestionIndexStream,
+      stream: logicBloc.questionIndexStream,
       initialData: logicBloc.currentQuestionIndex,
       builder: (context, snapshot) {
         var index = snapshot.data!;
@@ -87,7 +87,7 @@ class _QuizQuestionWidget extends StatelessWidget {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
 
     return StreamBuilder<int>(
-      stream: logicBloc.logicQuestionIndexStream,
+      stream: logicBloc.questionIndexStream,
       initialData: logicBloc.currentQuestionIndex,
       builder: (context, snapshot) {
         var index = snapshot.data!;
@@ -121,7 +121,7 @@ class _AnswersListWidget extends StatelessWidget {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
 
     return StreamBuilder<int>(
-      stream: logicBloc.logicQuestionIndexStream,
+      stream: logicBloc.questionIndexStream,
       initialData: logicBloc.currentQuestionIndex,
       builder: (context, snapshot) {
         var index = snapshot.data!;
@@ -159,7 +159,7 @@ class _ShowQuestionNumberWidget extends StatelessWidget {
         border: Border.all(color: Colors.grey),
       ),
       child: StreamBuilder<int>(
-        stream: logicBloc.logicQuestionIndexStream,
+        stream: logicBloc.questionIndexStream,
         initialData: logicBloc.currentQuestionIndex,
         builder: (context, snapshot) {
           var index = snapshot.data!;

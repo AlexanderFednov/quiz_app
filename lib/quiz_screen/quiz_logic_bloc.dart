@@ -38,7 +38,7 @@ class QuizLogicBloc extends DisposableOwner {
 
   Stream<QuizLogicModel> get logicStream => _logicStateSubject.stream;
 
-  Stream<int> get logicQuestionIndexStream =>
+  Stream<int> get questionIndexStream =>
       logicStream.map((logicModel) => logicModel.questionIndex);
 
   int get currentQuestionIndex => logicState.questionIndex;
