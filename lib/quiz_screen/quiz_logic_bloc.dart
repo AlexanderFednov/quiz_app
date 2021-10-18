@@ -11,8 +11,6 @@ import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_dispose/easy_dispose.dart';
 
-// enum MainPageViewEvent { quizReset, quizComplete, serverError }
-
 class QuizLogicBloc extends DisposableOwner {
   QuizLogicBloc({required this.moorDatabase, required this.leaderboardBloc}) {
     _loadSavedScore();
