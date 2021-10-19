@@ -81,7 +81,7 @@ class _MainPageTopWidget extends StatelessWidget {
         return Column(
           children: [
             const _AnimatedTitleWidget(),
-            LastResultWidget(),
+            const LastResultWidget(),
             if (currentUser != null)
               Provider.value(
                 value: currentUser,

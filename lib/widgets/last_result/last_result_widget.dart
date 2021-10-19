@@ -6,6 +6,8 @@ import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import '../../generated/l10n.dart';
 
 class LastResultWidget extends StatelessWidget {
+ const LastResultWidget();
+
   @override
   Widget build(BuildContext context) {
     // var bloc = context.watch<MainBloc>();
