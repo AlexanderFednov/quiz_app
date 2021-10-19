@@ -25,7 +25,7 @@ class Result extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: _ResultBodyWidget(),
+          child: const _ResultBodyWidget(),
         ),
       ),
     );
@@ -33,6 +33,8 @@ class Result extends StatelessWidget {
 }
 
 class _ResultBodyWidget extends StatelessWidget {
+ const _ResultBodyWidget();
+
   @override
   Widget build(BuildContext context) {
     var logicBloc = Provider.of<QuizLogicBloc>(context);

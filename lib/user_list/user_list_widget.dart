@@ -72,7 +72,7 @@ class _UserListWidgetBody extends StatelessWidget {
                   flex: 1,
                   child: const _UserListViewWidget(),
                 ),
-                _NullifyUserListButtonWidget(),
+                const _NullifyUserListButtonWidget(),
               ],
             );
           },
@@ -327,7 +327,7 @@ class _UserListViewWidget extends StatelessWidget {
                 },
                 child: Provider.value(
                   value: user,
-                  child: _UserListTileWidget(),
+                  child: const _UserListTileWidget(),
                 ),
               );
             },
@@ -394,7 +394,7 @@ class _UserListTileWidget extends StatelessWidget {
       ),
       trailing: Provider.value(
         value: user,
-        child: _UserListTileTrailingWidget(),
+        child: const _UserListTileTrailingWidget(),
       ),
       leading: user.isCurrentUser!
           ? Icon(
@@ -491,6 +491,8 @@ class _OnDismissTextButtonNoWidget extends StatelessWidget {
 }
 
 class _NullifyUserListButtonWidget extends StatelessWidget {
+  const _NullifyUserListButtonWidget();
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
