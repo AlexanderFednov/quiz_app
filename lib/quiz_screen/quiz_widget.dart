@@ -238,6 +238,8 @@ class _AnswerStatusIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var status = Provider.of<AnswerStatus>(context);
 
-    return status == AnswerStatus.right ? IconTrueWidget() : IconFalseWidget();
+    return status == AnswerStatus.right
+        ? const IconTrueWidget()
+        : const IconFalseWidget();
   }
 }
