@@ -17,7 +17,9 @@ class QuizLogicBloc extends DisposableOwner {
 
     quizStatusStream.listen((quizStatus) {
       _onQuizStatusChange(quizStatus);
-    }).disposeWith(this);
+    });
+
+    _logicStateSubject.disposeWith(this);
   }
 
   static final QuizLogicModel _quizLogicModel =
