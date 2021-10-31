@@ -7,6 +7,7 @@ import 'package:quiz_app/current_user/current_user_bloc.dart';
 import 'package:quiz_app/localization/localization_bloc.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
+import 'package:quiz_app/routes/routes.dart';
 // import 'package:quiz_app/screens/learning.dart';
 import 'package:quiz_app/user_list/user_list_widget.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
@@ -211,10 +212,9 @@ class _UserNavigationWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => UserListWidget(),
-                ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                RouteGenerator.userList,
               ),
               child: Text(
                 currentUser != null
@@ -227,10 +227,9 @@ class _UserNavigationWidget extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   userInformationBloc.selectUser(user: currentUser);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const UserInformationWidget(),
-                    ),
+                  Navigator.pushNamed(
+                    context,
+                    RouteGenerator.userInformation,
                   );
                 },
                 child: Text(
@@ -330,22 +329,22 @@ class _CategoriesListWidget extends StatelessWidget {
       children: [
         _CategoryButtonWidget(
           category: S.of(context).questionsAll,
-          swap: () => logicBloc.setCategoryNumber(1),
+          swap: () => logicBloc.setCategoryNumber(Category.generalQuestions),
           categoryColor: Colors.yellow,
         ),
         _CategoryButtonWidget(
           category: S.of(context).questionsFilms,
-          swap: () => logicBloc.setCategoryNumber(2),
+          swap: () => logicBloc.setCategoryNumber(Category.moviesOfUSSSR),
           categoryColor: Colors.redAccent,
         ),
         _CategoryButtonWidget(
           category: S.of(context).questionsSpace,
-          swap: () => logicBloc.setCategoryNumber(3),
+          swap: () => logicBloc.setCategoryNumber(Category.space),
           categoryColor: Colors.blue[800],
         ),
         _CategoryButtonWidget(
           category: S.of(context).questionsWeb,
-          swap: () => logicBloc.setCategoryNumber(4),
+          swap: () => logicBloc.setCategoryNumber(Category.sector13),
           categoryColor: Colors.indigoAccent,
         ),
       ],

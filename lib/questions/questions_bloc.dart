@@ -56,7 +56,7 @@ class QuestionsBloc extends DisposableOwner {
     );
   }
 
-  Future<List<QuestionInside>> _loadQuestionsFromAssets({
+  Future<List<Question>> _loadQuestionsFromAssets({
     required String questionsUrl,
   }) async {
     var jsonQuestionsList = await rootBundle.loadString(questionsUrl);
@@ -67,7 +67,7 @@ class QuestionsBloc extends DisposableOwner {
     return questionListDecoded!;
   }
 
-  Future<List<QuestionInside>> _getQuestionsFromServer() async {
+  Future<List<Question>> _getQuestionsFromServer() async {
     final responce = await http.get(Uri.http('10.0.2.2:8000', '')).timeout(
           Duration(seconds: 3),
           onTimeout: (() => Response('Server Error', 404)),

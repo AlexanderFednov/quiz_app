@@ -5,7 +5,7 @@ part 'question_list.g.dart';
 
 @JsonSerializable()
 class QuestionList {
-  List<QuestionInside>? question;
+  List<Question>? question;
   QuestionList(this.question);
 
   factory QuestionList.fromJson(Map<String, dynamic> json) =>
@@ -15,27 +15,26 @@ class QuestionList {
 }
 
 @JsonSerializable()
-class QuestionInside {
+class Question {
   String? questionText;
-  List<Answers>? answers;
-  QuestionInside(this.questionText, this.answers);
+  List<Answer>? answers;
+  Question(this.questionText, this.answers);
 
-  factory QuestionInside.fromJson(Map<String, dynamic> json) =>
-      _$QuestionInsideFromJson(json);
+  factory Question.fromJson(Map<String, dynamic> json) =>
+      _$QuestionFromJson(json);
 
-  Map<String, dynamic> toJson() => _$QuestionInsideToJson(this);
+  Map<String, dynamic> toJson() => _$QuestionToJson(this);
 }
 
 @JsonSerializable()
-class Answers {
+class Answer {
   String? text;
   bool? result;
   String? code;
 
-  Answers(this.text, this.result, this.code);
+  Answer(this.text, this.result, this.code);
 
-  factory Answers.fromJson(Map<String, dynamic> json) =>
-      _$AnswersFromJson(json);
+  factory Answer.fromJson(Map<String, dynamic> json) => _$AnswerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AnswersToJson(this);
+  Map<String, dynamic> toJson() => _$AnswerToJson(this);
 }

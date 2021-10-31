@@ -6,7 +6,11 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 // import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 // import 'package:flutter_test/flutter_test.dart';
+// import 'package:quiz_app/registration/registration_widget.dart';
+// import 'package:quiz_app/screens/leaderboard.dart';
+// import 'package:quiz_app/user_list/user_list_widget.dart';
 
 // import 'package:quiz_app/main.dart';
 
@@ -26,5 +30,13 @@
 //     // Verify that our counter has incremented.
 //     expect(find.text('0'), findsNothing);
 //     expect(find.text('1'), findsOneWidget);
+//   });
+// }
+
+// void main() {
+//   testWidgets('QuizAppTest', (WidgetTester tester) async {
+//     await tester.pumpWidget(RegistrationScreenWidget());
+//     await tester.enterText(find.byType(TextField), 'Рубилов');
+//     await tester.tap(find.widgetWithText(ElevatedButton, 'Добавить'));
 //   });
 // }

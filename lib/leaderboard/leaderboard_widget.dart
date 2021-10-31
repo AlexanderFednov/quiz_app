@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
+import 'package:quiz_app/models/hive_user_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
 // import 'package:grafpix/pixbuttons/medal.dart';
 import 'package:animated_background/animated_background.dart';
 import '../generated/l10n.dart';
 
 class LeaderBoardWidget extends StatefulWidget {
+  const LeaderBoardWidget();
+
   @override
   State<StatefulWidget> createState() {
     return LeaderBoardWidgetState();
@@ -138,7 +141,7 @@ class _LeaderboardWinnersListWidget extends StatelessWidget {
             elevation: 5,
             child: ListTile(
               title: Text(
-                '${res.name} ${res.result}/${res.questionsLenght} (${res.rightResultsPercent.toStringAsFixed(1)}%) (${category(context, res.categoryNumber)}) - ${DateFormat('yyyy-MM-dd (kk:mm)').format(res.resultDate)}',
+                '${res.name} ${res.result}/${res.questionsLenght} (${res.rightResultsPercent.toStringAsFixed(1)}%) (${category(context, res.category)}) - ${DateFormat('yyyy-MM-dd (kk:mm)').format(res.resultDate)}',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: Provider.value(
@@ -152,18 +155,18 @@ class _LeaderboardWinnersListWidget extends StatelessWidget {
     );
   }
 
-  String category(BuildContext context, int? categoryNumber) {
-    switch (categoryNumber) {
-      case 1:
+  String category(BuildContext context, Category? category) {
+    switch (category) {
+      case Category.generalQuestions:
         return S.of(context).questionsAll;
 
-      case 2:
+      case Category.moviesOfUSSSR:
         return S.of(context).questionsFilms;
 
-      case 3:
+      case Category.sector13:
         return S.of(context).questionsSpace;
 
-      case 4:
+      case Category.space:
         return S.of(context).questionsWeb;
 
       default:

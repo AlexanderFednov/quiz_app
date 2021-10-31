@@ -6,6 +6,55 @@ part of 'hive_user_data.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
+class CategoryAdapter extends TypeAdapter<Category> {
+  @override
+  final int typeId = 2;
+
+  @override
+  Category read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return Category.generalQuestions;
+      case 1:
+        return Category.moviesOfUSSSR;
+      case 2:
+        return Category.space;
+      case 3:
+        return Category.sector13;
+      default:
+        return Category.generalQuestions;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, Category obj) {
+    switch (obj) {
+      case Category.generalQuestions:
+        writer.writeByte(0);
+        break;
+      case Category.moviesOfUSSSR:
+        writer.writeByte(1);
+        break;
+      case Category.space:
+        writer.writeByte(2);
+        break;
+      case Category.sector13:
+        writer.writeByte(3);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CategoryAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
 class UserDataAdapter extends TypeAdapter<UserData> {
   @override
   final int typeId = 0;
@@ -66,7 +115,7 @@ class UserResultAdapter extends TypeAdapter<UserResult> {
       score: fields[0] as int?,
       questionsLenght: fields[1] as int?,
       resultDate: fields[2] as DateTime?,
-      categoryNumber: fields[3] as int?,
+      category: fields[3] as Category?,
     );
   }
 
@@ -81,7 +130,7 @@ class UserResultAdapter extends TypeAdapter<UserResult> {
       ..writeByte(2)
       ..write(obj.resultDate)
       ..writeByte(3)
-      ..write(obj.categoryNumber);
+      ..write(obj.category);
   }
 
   @override

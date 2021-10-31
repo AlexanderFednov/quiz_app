@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 
 import 'package:hive/hive.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
+import 'package:quiz_app/models/question_list.dart';
+import 'package:quiz_app/questions/questions_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
 import 'package:quiz_app/models/moor_database.dart';
@@ -12,7 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_dispose/easy_dispose.dart';
 
 class QuizLogicBloc extends DisposableOwner {
-  QuizLogicBloc({required this.moorDatabase, required this.leaderboardBloc}) {
+  QuizLogicBloc({
+    required this.moorDatabase,
+    required this.leaderboardBloc,
+    required this.questionsBloc,
+  }) {
     _loadSavedScore();
 
     quizStatusStream.listen((quizStatus) {
@@ -26,67 +33,80 @@ class QuizLogicBloc extends DisposableOwner {
       QuizLogicModel(answerStatusList: []);
 
   final MyDatabase moorDatabase;
-
   final LeaderboardBloc leaderboardBloc;
+  final QuestionsBloc questionsBloc;
 
   final BehaviorSubject<QuizLogicModel> _logicStateSubject =
       BehaviorSubject.seeded(_quizLogicModel);
-
-  // List<QuestionInside>? questions;
 
   QuizLogicModel get logicState => _logicStateSubject.value;
 
   Stream<QuizLogicModel> get logicStateStream => _logicStateSubject.stream;
 
-  Stream<int> get questionIndexStream =>
-      logicStateStream.map((logicModel) => logicModel.questionIndex);
-
-  int get currentQuestionIndex => logicState.questionIndex;
-
   Stream<List<AnswerStatus>?> get answerStatusListStream =>
       logicStateStream.map((logicModel) => logicModel.answerStatusList);
 
-  List<AnswerStatus>? get answerStatusList => logicState.answerStatusList;
+  Stream<int> get questionIndexStream =>
+      logicStateStream.map((logicModel) => logicModel.questionIndex);
 
   Stream<QuizStatus> get quizStatusStream =>
       logicStateStream.map((logicModel) => logicModel.quizStatus).distinct();
 
-  void answerQuestion(bool result) {
-    if (result) {
-      _rightAnswer();
+  Stream<List<Question>> get questionsStream =>
+      logicStateStream.map((logicModel) => logicModel.questions);
+
+  Stream<Question?> get currentQuestionStream =>
+      logicStateStream.map((logicModel) => logicModel.currentQuestion);
+
+  Stream<int> get totalScoreStream =>
+      logicStateStream.map((logicModel) => logicModel.totalScore);
+
+  Stream<int> get savedScoreSctream =>
+      logicStateStream.map((logicModel) => logicModel.savedScore);
+
+  Stream<int> get savedQuestionsLenghtStream =>
+      logicStateStream.map((logicModel) => logicModel.savedQuestionLenght);
+
+  List<AnswerStatus>? get answerStatusList => logicState.answerStatusList;
+
+  int get currentQuestionIndex => logicState.questionIndex;
+
+  Question? get currentQuestion => logicState.currentQuestion;
+
+  void answerQuestion(Answer answer) {
+    var anwerStatusListTemporary = answerStatusList!;
+    anwerStatusListTemporary
+        .add(answer.result! ? AnswerStatus.right : AnswerStatus.wrong);
+
+    _logicStateSubject.add(
+      logicState.copyWith(
+        questionIndex: logicState.questionIndex + 1,
+        totalScore:
+            answer.result! ? logicState.totalScore + 1 : logicState.totalScore,
+        answerStatusList: anwerStatusListTemporary,
+      ),
+    );
+
+    if (logicState.questionIndex < logicState.questions.length) {
+      _logicStateSubject.add(
+        logicState.copyWith(
+          currentQuestion: logicState.questions[logicState.questionIndex],
+        ),
+      );
     } else {
-      _wrongAnswer();
+      _logicStateSubject.add(
+        logicState.copyWith(
+          quizStatus: QuizStatus.completed,
+        ),
+      );
     }
   }
 
-  void _rightAnswer() {
-    var anwerStatusListTemporary = answerStatusList!;
-    anwerStatusListTemporary.add(AnswerStatus.right);
-
-    _logicStateSubject.add(
-      logicState.copyWith(
-        questionIndex: logicState.questionIndex + 1,
-        totalScore: logicState.totalScore + 1,
-        answerStatusList: anwerStatusListTemporary,
-      ),
-    );
-  }
-
-  void _wrongAnswer() {
-    var anwerStatusListTemporary = answerStatusList!;
-    anwerStatusListTemporary.add(AnswerStatus.wrong);
-
-    _logicStateSubject.add(
-      logicState.copyWith(
-        questionIndex: logicState.questionIndex + 1,
-        answerStatusList: anwerStatusListTemporary,
-      ),
-    );
-  }
-
   void _onQuizStatusChange(QuizStatus quizStatus) {
-    if (quizStatus == QuizStatus.reset || quizStatus == QuizStatus.error) {
+    if (quizStatus == QuizStatus.reset) {
       _nullifyLogic();
+    } else if (quizStatus == QuizStatus.error) {
+      questionsBloc.loadData();
     } else if (quizStatus == QuizStatus.completed) {
       _quizCompleted();
     }
@@ -113,7 +133,7 @@ class QuizLogicBloc extends DisposableOwner {
         ),
       );
     }
-    _nullifyLogic();
+    // _nullifyLogic();
   }
 
   void reset() {
@@ -139,9 +159,11 @@ class QuizLogicBloc extends DisposableOwner {
       logicState.copyWith(
         totalScore: 0,
         questionIndex: 0,
-        categoryNumber: 0,
+        category: null,
         quizStatus: QuizStatus.notStarted,
         answerStatusList: [],
+        questions: [],
+        currentQuestion: null,
       ),
     );
   }
@@ -158,7 +180,7 @@ class QuizLogicBloc extends DisposableOwner {
             score: logicState.totalScore,
             questionsLenght: logicState.questionIndex,
             resultDate: DateTime.now(),
-            categoryNumber: logicState.categoryNumber,
+            category: logicState.category,
           ),
         );
         element.save();
@@ -170,22 +192,58 @@ class QuizLogicBloc extends DisposableOwner {
     moorDatabase.insertMoorResultCompanion(
       MoorResultsCompanion(
         name: Value(currentUser.userName!),
-        result: Value(_logicStateSubject.value.totalScore),
-        questionsLenght: Value(_logicStateSubject.value.questionIndex),
-        rightResultsPercent: Value(100 /
-            _logicStateSubject.value.questionIndex *
-            _logicStateSubject.value.totalScore),
-        categoryNumber: Value(logicState.categoryNumber),
+        result: Value(logicState.totalScore),
+        questionsLenght: Value(logicState.questionIndex),
+        rightResultsPercent:
+            Value(100 / logicState.questionIndex * logicState.totalScore),
+        category: Value(logicState.category!),
         resultDate: Value(DateTime.now()),
       ),
     );
   }
 
-  void setCategoryNumber(int num) {
+  void setCategoryNumber(Category category) {
     _logicStateSubject.add(
-      _logicStateSubject.value
-          .copyWith(categoryNumber: num, quizStatus: QuizStatus.inProgress),
+      logicState.copyWith(
+        category: category,
+        quizStatus: QuizStatus.inProgress,
+      ),
     );
+
+    _logicStateSubject.add(
+      logicState.copyWith(
+        questions: _calculateCategoryQuestionsList(category),
+      ),
+    );
+
+    if (logicState.questions.isNotEmpty) {
+      _logicStateSubject.add(
+        logicState.copyWith(
+          currentQuestion: logicState.questions[logicState.questionIndex],
+        ),
+      );
+    } else {
+      _logicStateSubject.add(
+        logicState.copyWith(
+          quizStatus: QuizStatus.error,
+        ),
+      );
+    }
+  }
+
+  List<Question>? _calculateCategoryQuestionsList(Category category) {
+    switch (category) {
+      case Category.generalQuestions:
+        return questionsBloc.questionsState.questionsGeneral;
+      case Category.moviesOfUSSSR:
+        return questionsBloc.questionsState.questionsMovies;
+      case Category.space:
+        return questionsBloc.questionsState.questionsSpace;
+      case Category.sector13:
+        return questionsBloc.questionsState.questionsWeb;
+      default:
+        return null;
+    }
   }
 
   UserData? getCurrentUser() {

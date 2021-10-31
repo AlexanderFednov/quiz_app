@@ -6,6 +6,7 @@ import 'package:quiz_app/current_user/current_user_bloc.dart';
 import 'package:quiz_app/generated/l10n.dart';
 import 'package:quiz_app/models/hive_user_data.dart';
 import 'package:quiz_app/registration/registration_widget.dart';
+import 'package:quiz_app/routes/routes.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_list/user_list_model.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
@@ -25,10 +26,9 @@ class UserListWidget extends StatelessWidget {
       body: const _UserListWidgetBody(),
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).addNewUser,
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const RegistrationScreenWidget(),
-          ),
+        onPressed: () => Navigator.pushNamed(
+          context,
+          RouteGenerator.registrationScreen,
         ),
         child: Icon(Icons.add),
       ),
@@ -436,10 +436,9 @@ class _UserListTileTrailingWidget extends StatelessWidget {
             ),
             onPressed: () {
               userInformationBloc.selectUser(user: user);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const UserInformationWidget(),
-                ),
+              Navigator.pushNamed(
+                context,
+                RouteGenerator.userInformation,
               );
             },
           ),

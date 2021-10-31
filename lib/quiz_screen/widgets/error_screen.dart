@@ -55,7 +55,7 @@ class ErrorScreen extends StatelessWidget {
               Flexible(
                 flex: 0,
                 child: TextButton(
-                  onPressed: () => logicBloc.error(),
+                  onPressed: () => logicBloc.reset(),
                   child: Text(
                     buttonText!,
                     softWrap: true,

@@ -53,17 +53,26 @@ class UserListBloc extends DisposableOwner {
   }
 
   void selectCurrentUser(UserData user) {
-    var usersListFromDB = Hive.box<UserData>('UserData1').values;
+    // var usersListFromDB = Hive.box<UserData>('UserData1').values;
 
-    usersListFromDB.forEach((element) {
-      if (element != user) {
-        element.isCurrentUser = false;
-        element.save();
-      } else {
-        element.isCurrentUser = true;
-        element.save();
-      }
-    });
+    // usersListFromDB.forEach((element) {
+    //   if (element != user) {
+    //     element.isCurrentUser = false;
+    //     element.save();
+    //   } else {
+    //     element.isCurrentUser = true;
+    //     element.save();
+    //   }
+    // },
+    // );
+
+    if (currentUserBloc!.currentUser != null) {
+      currentUserBloc!.currentUser!.isCurrentUser = false;
+      currentUserBloc!.currentUser!.save();
+    }
+
+    user.isCurrentUser = true;
+    user.save();
 
     getUserList();
     currentUserBloc!.getCurrentUser();

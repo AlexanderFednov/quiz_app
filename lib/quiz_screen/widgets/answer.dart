@@ -9,14 +9,14 @@ class AnswerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var userListBloc = Provider.of<QuizLogicBloc>(context);
-    var answers = Provider.of<Answers>(context);
+    var answer = Provider.of<Answer>(context);
 
     return Container(
       decoration: BoxDecoration(),
       margin: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => userListBloc.answerQuestion(answers.result!),
+        onPressed: () => userListBloc.answerQuestion(answer),
         style: ButtonStyle(
           backgroundColor:
               MaterialStateColor.resolveWith((states) => Colors.blueGrey),
@@ -26,7 +26,7 @@ class AnswerWidget extends StatelessWidget {
           ),
         ),
         child: Provider.value(
-          value: answers,
+          value: answer,
           child: const _AnswerSignatureWidget(),
         ),
       ),
@@ -39,7 +39,7 @@ class _AnswerSignatureWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var answers = Provider.of<Answers>(context);
+    var answers = Provider.of<Answer>(context);
 
     return Row(
       children: <Widget>[

@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:quiz_app/models/question_list.dart';
 
 class QuestionsModel extends Equatable {
-  final List<QuestionInside> questionsGeneral;
-  final List<QuestionInside> questionsMovies;
-  final List<QuestionInside> questionsSpace;
-  final List<QuestionInside> questionsWeb;
+  final List<Question> questionsGeneral;
+  final List<Question> questionsMovies;
+  final List<Question> questionsSpace;
+  final List<Question> questionsWeb;
 
   QuestionsModel({
     this.questionsGeneral = const [],
@@ -15,10 +15,10 @@ class QuestionsModel extends Equatable {
   });
 
   QuestionsModel copyWith({
-    List<QuestionInside>? questionsGeneral,
-    List<QuestionInside>? questionsMovies,
-    List<QuestionInside>? questionsSpace,
-    List<QuestionInside>? questionsWeb,
+    List<Question>? questionsGeneral,
+    List<Question>? questionsMovies,
+    List<Question>? questionsSpace,
+    List<Question>? questionsWeb,
   }) {
     return QuestionsModel(
       questionsGeneral: questionsGeneral ?? this.questionsGeneral,

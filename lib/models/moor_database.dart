@@ -1,5 +1,8 @@
+
 import 'package:moor/moor.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+
+import 'hive_user_data.dart';
 
 part 'moor_database.g.dart';
 
@@ -9,7 +12,7 @@ class MoorResults extends Table {
   IntColumn? get result => integer()();
   IntColumn? get questionsLenght => integer()();
   RealColumn? get rightResultsPercent => real()();
-  IntColumn? get categoryNumber => integer()();
+  IntColumn? get category => intEnum<Category>()();
   DateTimeColumn? get resultDate => dateTime()();
 }
 

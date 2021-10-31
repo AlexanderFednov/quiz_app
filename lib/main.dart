@@ -5,17 +5,18 @@ import 'package:quiz_app/current_user/current_user_bloc.dart';
 import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
 import 'package:quiz_app/localization/localization_bloc.dart';
 import 'package:quiz_app/questions/questions_bloc.dart';
-import 'package:quiz_app/questions/questions_model.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 
 import 'package:quiz_app/models/moor_database.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
+import 'package:quiz_app/quiz_screen/widgets/error_screen.dart';
+import 'package:quiz_app/quiz_screen/widgets/result.dart';
 import 'package:quiz_app/registration/registration_bloc.dart';
+import 'package:quiz_app/routes/routes.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
 
-import 'leaderboard/leaderboard_widget.dart';
 import 'quiz_screen/quiz_widget.dart';
 import 'screens/main_page.dart';
 
@@ -34,6 +35,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserResultAdapter());
   Hive.registerAdapter(UserDataAdapter());
+  Hive.registerAdapter(CategoryAdapter());
   await Hive.openBox<UserData>('UserData1');
   runApp(QuizApp());
 }
@@ -51,11 +53,15 @@ class QuizApp extends StatelessWidget {
             moorDatabase: Provider.of<MyDatabase>(context, listen: false),
           ),
         ),
+        DisposableProvider<QuestionsBloc>(
+          create: (context) => QuestionsBloc(),
+        ),
         DisposableProvider<QuizLogicBloc>(
           create: (context) => QuizLogicBloc(
             moorDatabase: Provider.of<MyDatabase>(context, listen: false),
             leaderboardBloc:
                 Provider.of<LeaderboardBloc>(context, listen: false),
+            questionsBloc: Provider.of<QuestionsBloc>(context, listen: false),
           ),
         ),
         DisposableProvider<CurrentUserBloc>(
@@ -72,9 +78,7 @@ class QuizApp extends StatelessWidget {
             userListBloc: Provider.of<UserListBloc>(context, listen: false),
           ),
         ),
-        DisposableProvider<QuestionsBloc>(
-          create: (context) => QuestionsBloc(),
-        ),
+
         DisposableProvider<LocalizationBloc>(
           create: (context) => LocalizationBloc(),
         ),
@@ -115,6 +119,8 @@ class QuizMaterialApp extends StatelessWidget {
           theme: ThemeData(
               // platform: TargetPlatform.iOS,
               ),
+          onGenerateRoute: RouteGenerator.generateRoute,
+          initialRoute: '/',
           home: const QuizAppScaffold(),
         );
       },
@@ -145,112 +151,66 @@ class QuizAppScaffold extends StatelessWidget {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return LeaderBoardWidget();
-              }));
+              Navigator.pushNamed(context, RouteGenerator.leaderboard);
             },
           ),
           QuizAudioPlayer(),
         ],
       ),
-      body: const _MainPageView(),
+      body: const QuizAppScaffoldBodyWidget(),
     );
   }
 }
 
-class _MainPageView extends StatefulWidget {
-  const _MainPageView();
+class QuizAppScaffoldBodyWidget extends StatelessWidget {
+  const QuizAppScaffoldBodyWidget();
 
-  @override
-  State<StatefulWidget> createState() {
-    return _MainPageViewState();
-  }
-}
-
-class _MainPageViewState extends State<_MainPageView> {
-  _MainPageViewState();
-
-  final PageController cont = PageController();
-
-  @override
-  void dispose() {
-    cont.dispose();
-    super.dispose();
-  }
-
-  void _swap(int number) {
-    cont.animateToPage(
-      number,
-      duration: (Duration(seconds: 1)),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _toMainPage() {
-    cont.animateToPage(
-      0,
-      duration: (Duration(seconds: 1)),
-      curve: Curves.easeInOut,
-    );
+  String? _calculateImageUrlForQuizScreen(Category category) {
+    switch (category) {
+      case Category.generalQuestions:
+        return 'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg';
+      case Category.moviesOfUSSSR:
+        return 'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg';
+      case Category.space:
+        return 'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg';
+      case Category.sector13:
+        return 'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png';
+      default:
+        null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
-    var questionsBloc = Provider.of<QuestionsBloc>(context);
 
-    logicBloc.quizStatusStream.listen((quizStatus) {
-      switch (quizStatus) {
-        case QuizStatus.reset:
-        case QuizStatus.completed:
-          _toMainPage();
-          break;
-        case QuizStatus.inProgress:
-          _swap(logicBloc.logicState.categoryNumber);
-          break;
-        case QuizStatus.error:
-          _toMainPage();
-          questionsBloc.loadData();
-          break;
-        case QuizStatus.notStarted:
-        default:
-          null;
-      }
-    });
-
-    return StreamBuilder<QuestionsModel>(
-      stream: questionsBloc.questionsStream,
-      initialData: questionsBloc.questionsState,
+    return StreamBuilder<QuizStatus>(
+      stream: logicBloc.quizStatusStream,
       builder: (context, snapshot) {
-        var questions = snapshot.data;
+        var quizStatus = snapshot.data;
 
-        return PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: cont,
-          children: <Widget>[
-            const MainPage(),
-            QuizScreenWidget(
-              questions: questions!.questionsGeneral,
-              imageUrl:
-                  'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg',
-            ),
-            QuizScreenWidget(
-              questions: questions.questionsMovies,
-              imageUrl:
-                  'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg',
-            ),
-            QuizScreenWidget(
-              questions: questions.questionsSpace,
-              imageUrl:
-                  'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg',
-            ),
-            QuizScreenWidget(
-              questions: questions.questionsWeb,
-              imageUrl:
-                  'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png',
-            ),
-          ],
-        );
+        switch (quizStatus) {
+          case QuizStatus.notStarted:
+            return const MainPage();
+          case QuizStatus.inProgress:
+            return QuizQuestionWidget(
+              imageUrl: _calculateImageUrlForQuizScreen(
+                logicBloc.logicState.category!,
+              )!,
+            );
+          case QuizStatus.completed:
+            return const Result();
+          case QuizStatus.error:
+            return ErrorScreen(
+              errorText: S.of(context).httpServerError,
+              buttonText: S.of(context).toMainPage,
+              imageUrl: _calculateImageUrlForQuizScreen(
+                logicBloc.logicState.category!,
+              ),
+            );
+          default:
+            return Container();
+        }
       },
     );
   }

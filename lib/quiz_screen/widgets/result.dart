@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/models/question_list.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import '../../generated/l10n.dart';
@@ -33,40 +34,48 @@ class Result extends StatelessWidget {
 }
 
 class _ResultBodyWidget extends StatelessWidget {
- const _ResultBodyWidget();
+  const _ResultBodyWidget();
 
   @override
   Widget build(BuildContext context) {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
 
-    return StreamBuilder<QuizLogicModel>(
-      stream: logicBloc.logicStateStream,
-      initialData: logicBloc.logicState,
+    return StreamBuilder<int>(
+      stream: logicBloc.totalScoreStream,
+      initialData: logicBloc.logicState.totalScore,
       builder: (context, snapshot) {
-        var logicModel = snapshot.data;
+        var totalScore = snapshot.data;
 
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text(
-                S.of(context).result(
-                      logicModel!.totalScore,
-                      logicModel.questionIndex,
-                    ),
-                style: TextStyle(fontSize: 30, color: Colors.black),
-              ),
-            ),
-            TextButton(
-              onPressed: () => logicBloc.completed(),
-              child: Text(
-                S.of(context).toMainPage,
-                style: TextStyle(fontSize: 30, color: Colors.black),
-              ),
-            ),
-          ],
+        return StreamBuilder<List<Question>>(
+          stream: logicBloc.questionsStream,
+          initialData: [],
+          builder: (context, snapshot) {
+            var questionsLenght = snapshot.data!.length;
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    S.of(context).result(
+                          totalScore!,
+                          questionsLenght,
+                        ),
+                    style: TextStyle(fontSize: 30, color: Colors.black),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => logicBloc.reset(),
+                  child: Text(
+                    S.of(context).toMainPage,
+                    style: TextStyle(fontSize: 30, color: Colors.black),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

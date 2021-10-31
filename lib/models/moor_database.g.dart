@@ -13,7 +13,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
   final int result;
   final int questionsLenght;
   final double rightResultsPercent;
-  final int categoryNumber;
+  final Category category;
   final DateTime resultDate;
   MoorResult(
       {required this.id,
@@ -21,7 +21,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
       required this.result,
       required this.questionsLenght,
       required this.rightResultsPercent,
-      required this.categoryNumber,
+      required this.category,
       required this.resultDate});
   factory MoorResult.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
@@ -37,8 +37,8 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
           .mapFromDatabaseResponse(data['${effectivePrefix}questions_lenght'])!,
       rightResultsPercent: const RealType().mapFromDatabaseResponse(
           data['${effectivePrefix}right_results_percent'])!,
-      categoryNumber: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}category_number'])!,
+      category: $MoorResultsTable.$converter0.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}category']))!,
       resultDate: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}result_date'])!,
     );
@@ -51,7 +51,10 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
     map['result'] = Variable<int>(result);
     map['questions_lenght'] = Variable<int>(questionsLenght);
     map['right_results_percent'] = Variable<double>(rightResultsPercent);
-    map['category_number'] = Variable<int>(categoryNumber);
+    {
+      final converter = $MoorResultsTable.$converter0;
+      map['category'] = Variable<int>(converter.mapToSql(category)!);
+    }
     map['result_date'] = Variable<DateTime>(resultDate);
     return map;
   }
@@ -63,7 +66,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
       result: Value(result),
       questionsLenght: Value(questionsLenght),
       rightResultsPercent: Value(rightResultsPercent),
-      categoryNumber: Value(categoryNumber),
+      category: Value(category),
       resultDate: Value(resultDate),
     );
   }
@@ -78,7 +81,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
       questionsLenght: serializer.fromJson<int>(json['questionsLenght']),
       rightResultsPercent:
           serializer.fromJson<double>(json['rightResultsPercent']),
-      categoryNumber: serializer.fromJson<int>(json['categoryNumber']),
+      category: serializer.fromJson<Category>(json['category']),
       resultDate: serializer.fromJson<DateTime>(json['resultDate']),
     );
   }
@@ -91,7 +94,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
       'result': serializer.toJson<int>(result),
       'questionsLenght': serializer.toJson<int>(questionsLenght),
       'rightResultsPercent': serializer.toJson<double>(rightResultsPercent),
-      'categoryNumber': serializer.toJson<int>(categoryNumber),
+      'category': serializer.toJson<Category>(category),
       'resultDate': serializer.toJson<DateTime>(resultDate),
     };
   }
@@ -102,7 +105,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
           int? result,
           int? questionsLenght,
           double? rightResultsPercent,
-          int? categoryNumber,
+          Category? category,
           DateTime? resultDate}) =>
       MoorResult(
         id: id ?? this.id,
@@ -110,7 +113,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
         result: result ?? this.result,
         questionsLenght: questionsLenght ?? this.questionsLenght,
         rightResultsPercent: rightResultsPercent ?? this.rightResultsPercent,
-        categoryNumber: categoryNumber ?? this.categoryNumber,
+        category: category ?? this.category,
         resultDate: resultDate ?? this.resultDate,
       );
   @override
@@ -121,7 +124,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
           ..write('result: $result, ')
           ..write('questionsLenght: $questionsLenght, ')
           ..write('rightResultsPercent: $rightResultsPercent, ')
-          ..write('categoryNumber: $categoryNumber, ')
+          ..write('category: $category, ')
           ..write('resultDate: $resultDate')
           ..write(')'))
         .toString();
@@ -137,7 +140,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
               $mrjc(
                   questionsLenght.hashCode,
                   $mrjc(rightResultsPercent.hashCode,
-                      $mrjc(categoryNumber.hashCode, resultDate.hashCode)))))));
+                      $mrjc(category.hashCode, resultDate.hashCode)))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -147,7 +150,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
           other.result == this.result &&
           other.questionsLenght == this.questionsLenght &&
           other.rightResultsPercent == this.rightResultsPercent &&
-          other.categoryNumber == this.categoryNumber &&
+          other.category == this.category &&
           other.resultDate == this.resultDate);
 }
 
@@ -157,7 +160,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
   final Value<int> result;
   final Value<int> questionsLenght;
   final Value<double> rightResultsPercent;
-  final Value<int> categoryNumber;
+  final Value<Category> category;
   final Value<DateTime> resultDate;
   const MoorResultsCompanion({
     this.id = const Value.absent(),
@@ -165,7 +168,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
     this.result = const Value.absent(),
     this.questionsLenght = const Value.absent(),
     this.rightResultsPercent = const Value.absent(),
-    this.categoryNumber = const Value.absent(),
+    this.category = const Value.absent(),
     this.resultDate = const Value.absent(),
   });
   MoorResultsCompanion.insert({
@@ -174,13 +177,13 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
     required int result,
     required int questionsLenght,
     required double rightResultsPercent,
-    required int categoryNumber,
+    required Category category,
     required DateTime resultDate,
   })  : name = Value(name),
         result = Value(result),
         questionsLenght = Value(questionsLenght),
         rightResultsPercent = Value(rightResultsPercent),
-        categoryNumber = Value(categoryNumber),
+        category = Value(category),
         resultDate = Value(resultDate);
   static Insertable<MoorResult> custom({
     Expression<int>? id,
@@ -188,7 +191,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
     Expression<int>? result,
     Expression<int>? questionsLenght,
     Expression<double>? rightResultsPercent,
-    Expression<int>? categoryNumber,
+    Expression<Category>? category,
     Expression<DateTime>? resultDate,
   }) {
     return RawValuesInsertable({
@@ -198,7 +201,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
       if (questionsLenght != null) 'questions_lenght': questionsLenght,
       if (rightResultsPercent != null)
         'right_results_percent': rightResultsPercent,
-      if (categoryNumber != null) 'category_number': categoryNumber,
+      if (category != null) 'category': category,
       if (resultDate != null) 'result_date': resultDate,
     });
   }
@@ -209,7 +212,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
       Value<int>? result,
       Value<int>? questionsLenght,
       Value<double>? rightResultsPercent,
-      Value<int>? categoryNumber,
+      Value<Category>? category,
       Value<DateTime>? resultDate}) {
     return MoorResultsCompanion(
       id: id ?? this.id,
@@ -217,7 +220,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
       result: result ?? this.result,
       questionsLenght: questionsLenght ?? this.questionsLenght,
       rightResultsPercent: rightResultsPercent ?? this.rightResultsPercent,
-      categoryNumber: categoryNumber ?? this.categoryNumber,
+      category: category ?? this.category,
       resultDate: resultDate ?? this.resultDate,
     );
   }
@@ -241,8 +244,9 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
       map['right_results_percent'] =
           Variable<double>(rightResultsPercent.value);
     }
-    if (categoryNumber.present) {
-      map['category_number'] = Variable<int>(categoryNumber.value);
+    if (category.present) {
+      final converter = $MoorResultsTable.$converter0;
+      map['category'] = Variable<int>(converter.mapToSql(category.value)!);
     }
     if (resultDate.present) {
       map['result_date'] = Variable<DateTime>(resultDate.value);
@@ -258,7 +262,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
           ..write('result: $result, ')
           ..write('questionsLenght: $questionsLenght, ')
           ..write('rightResultsPercent: $rightResultsPercent, ')
-          ..write('categoryNumber: $categoryNumber, ')
+          ..write('category: $category, ')
           ..write('resultDate: $resultDate')
           ..write(')'))
         .toString();
@@ -271,19 +275,16 @@ class $MoorResultsTable extends MoorResults
   final String? _alias;
   $MoorResultsTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  // ignore: annotate_overrides
   late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
       'id', aliasedName, false,
       typeName: 'INTEGER',
       requiredDuringInsert: false,
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  // ignore: annotate_overrides
   late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
       'name', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _resultMeta = const VerificationMeta('result');
-  // ignore: annotate_overrides
   late final GeneratedColumn<int?> result = GeneratedColumn<int?>(
       'result', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
@@ -297,11 +298,11 @@ class $MoorResultsTable extends MoorResults
   late final GeneratedColumn<double?> rightResultsPercent =
       GeneratedColumn<double?>('right_results_percent', aliasedName, false,
           typeName: 'REAL', requiredDuringInsert: true);
-  final VerificationMeta _categoryNumberMeta =
-      const VerificationMeta('categoryNumber');
-  late final GeneratedColumn<int?> categoryNumber = GeneratedColumn<int?>(
-      'category_number', aliasedName, false,
-      typeName: 'INTEGER', requiredDuringInsert: true);
+  final VerificationMeta _categoryMeta = const VerificationMeta('category');
+  late final GeneratedColumnWithTypeConverter<Category, int?> category =
+      GeneratedColumn<int?>('category', aliasedName, false,
+              typeName: 'INTEGER', requiredDuringInsert: true)
+          .withConverter<Category>($MoorResultsTable.$converter0);
   final VerificationMeta _resultDateMeta = const VerificationMeta('resultDate');
   late final GeneratedColumn<DateTime?> resultDate = GeneratedColumn<DateTime?>(
       'result_date', aliasedName, false,
@@ -313,7 +314,7 @@ class $MoorResultsTable extends MoorResults
         result,
         questionsLenght,
         rightResultsPercent,
-        categoryNumber,
+        category,
         resultDate
       ];
   @override
@@ -356,14 +357,7 @@ class $MoorResultsTable extends MoorResults
     } else if (isInserting) {
       context.missing(_rightResultsPercentMeta);
     }
-    if (data.containsKey('category_number')) {
-      context.handle(
-          _categoryNumberMeta,
-          categoryNumber.isAcceptableOrUnknown(
-              data['category_number']!, _categoryNumberMeta));
-    } else if (isInserting) {
-      context.missing(_categoryNumberMeta);
-    }
+    context.handle(_categoryMeta, const VerificationResult.success());
     if (data.containsKey('result_date')) {
       context.handle(
           _resultDateMeta,
@@ -387,6 +381,9 @@ class $MoorResultsTable extends MoorResults
   $MoorResultsTable createAlias(String alias) {
     return $MoorResultsTable(_db, alias);
   }
+
+  static TypeConverter<Category, int> $converter0 =
+      const EnumIndexConverter<Category>(Category.values);
 }
 
 abstract class _$MyDatabase extends GeneratedDatabase {

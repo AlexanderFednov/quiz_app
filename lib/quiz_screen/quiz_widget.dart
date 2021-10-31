@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
-import 'package:quiz_app/screens/error_screen.dart';
+import 'package:quiz_app/quiz_screen/widgets/error_screen.dart';
 import 'package:quiz_app/quiz_screen/widgets/progress_bar_icons.dart';
 import '../generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,52 +12,77 @@ import 'widgets/result.dart';
 import '../models/question_list.dart';
 import 'package:provider/provider.dart';
 
-class QuizScreenWidget extends StatelessWidget {
-  final List<QuestionInside>? questions;
+// class QuizScreenWidget extends StatelessWidget {
+//   final String imageUrl;
 
-  final String imageUrl;
+//   QuizScreenWidget({
+//     required this.imageUrl,
+//   });
 
-  QuizScreenWidget({
-    required this.questions,
+//   @override
+//   Widget build(BuildContext context) {
+//     var logicBloc = Provider.of<QuizLogicBloc>(context);
+
+//     return StreamBuilder<List<Question?>>(
+//       stream: logicBloc.questionsStream,
+//       builder: (context, snapshot) {
+//         if (snapshot.data != null) {
+//           var questionsLenght = snapshot.data!.length;
+
+//           return StreamBuilder<int>(
+//             stream: logicBloc.questionIndexStream,
+//             initialData: logicBloc.currentQuestionIndex,
+//             builder: (context, snapshot) {
+//               var index = snapshot.data!;
+
+//               return index < questionsLenght
+//                   ? _QuizQuestionWidget(
+//                       imageUrl: imageUrl,
+//                     )
+//                   : index > 0
+//                       ? const Result()
+//                       : ErrorScreen(
+//                           errorText: S.of(context).httpServerError,
+//                           buttonText: S.of(context).toMainPage,
+//                           imageUrl: imageUrl,
+//                         );
+//             },
+//           );
+//         } else {
+//           return Container();
+//         }
+//       },
+//     );
+//   }
+// }
+
+// class _RunQuizWidget extends StatelessWidget {
+//   final String imageUrl;
+
+//   _RunQuizWidget({
+//     required this.imageUrl,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         image: DecorationImage(
+//           image: CachedNetworkImageProvider(imageUrl),
+//           fit: BoxFit.cover,
+//         ),
+//       ),
+//       child: const _QuizQuestionWidget(),
+//     );
+//   }
+// }
+
+class QuizQuestionWidget extends StatelessWidget {
+  QuizQuestionWidget({
     required this.imageUrl,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    var logicBloc = Provider.of<QuizLogicBloc>(context);
-
-    return StreamBuilder<int>(
-      stream: logicBloc.questionIndexStream,
-      initialData: logicBloc.currentQuestionIndex,
-      builder: (context, snapshot) {
-        var index = snapshot.data!;
-
-        return index < questions!.length
-            ? _RunQuiz(
-                questions: questions,
-                imageUrl: imageUrl,
-              )
-            : index > 0
-                ? const Result()
-                : ErrorScreen(
-                    errorText: S.of(context).httpServerError,
-                    buttonText: S.of(context).toMainPage,
-                    imageUrl: imageUrl,
-                  );
-      },
-    );
-  }
-}
-
-class _RunQuiz extends StatelessWidget {
-  final List<QuestionInside>? questions;
-
   final String imageUrl;
-
-  _RunQuiz({
-    required this.questions,
-    required this.imageUrl,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -68,83 +93,53 @@ class _RunQuiz extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: _QuizQuestionWidget(
-        questions: questions,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const QuestionTextWidget(),
+          const _AnswersListWidget(),
+          const _ResetButtonWidget(),
+          const _ShowQuestionNumberWidget(),
+          const _ProgressBar(),
+        ],
       ),
     );
   }
 }
 
-class _QuizQuestionWidget extends StatelessWidget {
-  _QuizQuestionWidget({
-    required this.questions,
-  });
-
-  final List<QuestionInside>? questions;
-
-  @override
-  Widget build(BuildContext context) {
-    var logicBloc = Provider.of<QuizLogicBloc>(context);
-
-    return StreamBuilder<int>(
-      stream: logicBloc.questionIndexStream,
-      initialData: logicBloc.currentQuestionIndex,
-      builder: (context, snapshot) {
-        var index = snapshot.data!;
-
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            QuestionText(questions![index].questionText),
-            _AnswersListWidget(
-              questions: questions,
-            ),
-            const _ResetButtonWidget(),
-            _ShowQuestionNumberWidget(
-              questions: questions,
-            ),
-            const _ProgressBar(),
-          ],
-        );
-      },
-    );
-  }
-}
-
 class _AnswersListWidget extends StatelessWidget {
-  _AnswersListWidget({required this.questions});
-
-  final List<QuestionInside>? questions;
+  const _AnswersListWidget();
 
   @override
   Widget build(BuildContext context) {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
 
-    return StreamBuilder<int>(
-      stream: logicBloc.questionIndexStream,
-      initialData: logicBloc.currentQuestionIndex,
+    return StreamBuilder<Question?>(
+      stream: logicBloc.currentQuestionStream,
       builder: (context, snapshot) {
-        var index = snapshot.data!;
+        if (snapshot.data != null) {
+          var currentQuestion = snapshot.data!;
 
-        return Column(
-          children: [
-            ...(questions![index].answers!).map((answers) {
-              return Provider.value(
-                value: answers,
-                child: const AnswerWidget(),
-              );
-            }).toList(),
-          ],
-        );
+          return Column(
+            children: [
+              ...(currentQuestion.answers!).map((answer) {
+                return Provider.value(
+                  value: answer,
+                  child: const AnswerWidget(),
+                );
+              }).toList(),
+            ],
+          );
+        } else {
+          return Container();
+        }
       },
     );
   }
 }
 
 class _ShowQuestionNumberWidget extends StatelessWidget {
-  final List<QuestionInside>? questions;
-
-  _ShowQuestionNumberWidget({required this.questions});
+  const _ShowQuestionNumberWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -162,15 +157,26 @@ class _ShowQuestionNumberWidget extends StatelessWidget {
         stream: logicBloc.questionIndexStream,
         initialData: logicBloc.currentQuestionIndex,
         builder: (context, snapshot) {
-          var index = snapshot.data!;
+          var questionNumber = snapshot.data!;
 
-          return Text(
-            '${index + 1} / ${questions!.length}',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          return StreamBuilder<List<Question>>(
+            stream: logicBloc.questionsStream,
+            builder: (context, snapshot) {
+              if (snapshot.data != null) {
+                var questionsListLenght = snapshot.data!.length;
+
+                return Text(
+                  '${questionNumber + 1} / $questionsListLenght',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            },
           );
         },
       ),

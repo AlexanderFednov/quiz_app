@@ -171,7 +171,7 @@ class _AllUserResultsCardWidget extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(
-              '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].categoryNumber!)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate!)}',
+              '${results[index].score} / ${results[index].questionsLenght} (${results[index].rightAnswersPercent.toStringAsFixed(1)}%)(${category(context, results[index].category!)}) / ${DateFormat('yyyy-MM-dd (kk:mm)').format(results[index].resultDate!)}',
               style: TextStyle(fontSize: 15),
             ),
           ),
@@ -180,18 +180,18 @@ class _AllUserResultsCardWidget extends StatelessWidget {
     );
   }
 
-  String category(BuildContext context, int categoryNumber) {
-    switch (categoryNumber) {
-      case 1:
+  String category(BuildContext context, Category category) {
+    switch (category) {
+      case Category.generalQuestions:
         return S.of(context).questionsAll;
 
-      case 2:
+      case Category.moviesOfUSSSR:
         return S.of(context).questionsFilms;
 
-      case 3:
+      case Category.space:
         return S.of(context).questionsSpace;
 
-      case 4:
+      case Category.sector13:
         return S.of(context).questionsWeb;
 
       default:

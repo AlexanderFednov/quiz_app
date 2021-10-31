@@ -38,21 +38,21 @@ class CurrentUserBloc extends DisposableOwner {
     }
   }
 
-  void setCurrentUser() {
-    var contactsBox = Hive.box<UserData>('UserData1');
+  // void setCurrentUser() {
+  //   var contactsBox = Hive.box<UserData>('UserData1');
 
-    if (contactsBox.isNotEmpty) {
-      contactsBox.values.forEach((element) {
-        if (element.isCurrentUser!) {
-          _currentUserStateSubject.add(
-            currentUserState.copyWith(
-              currentUser: element,
-            ),
-          );
-        }
-      });
-    }
-  }
+  //   if (contactsBox.isNotEmpty) {
+  //     contactsBox.values.forEach((element) {
+  //       if (element.isCurrentUser!) {
+  //         _currentUserStateSubject.add(
+  //           currentUserState.copyWith(
+  //             currentUser: element,
+  //           ),
+  //         );
+  //       }
+  //     });
+  //   }
+  // }
 
   void clearCurrentUser() {
     _currentUserStateSubject.add(

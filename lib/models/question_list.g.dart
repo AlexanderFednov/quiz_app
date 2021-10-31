@@ -9,7 +9,7 @@ part of 'question_list.dart';
 QuestionList _$QuestionListFromJson(Map<String, dynamic> json) {
   return QuestionList(
     (json['question'] as List<dynamic>?)
-        ?.map((e) => QuestionInside.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => Question.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }
@@ -19,30 +19,29 @@ Map<String, dynamic> _$QuestionListToJson(QuestionList instance) =>
       'question': instance.question,
     };
 
-QuestionInside _$QuestionInsideFromJson(Map<String, dynamic> json) {
-  return QuestionInside(
+Question _$QuestionFromJson(Map<String, dynamic> json) {
+  return Question(
     json['questionText'] as String?,
     (json['answers'] as List<dynamic>?)
-        ?.map((e) => Answers.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => Answer.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }
 
-Map<String, dynamic> _$QuestionInsideToJson(QuestionInside instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$QuestionToJson(Question instance) => <String, dynamic>{
       'questionText': instance.questionText,
       'answers': instance.answers,
     };
 
-Answers _$AnswersFromJson(Map<String, dynamic> json) {
-  return Answers(
+Answer _$AnswerFromJson(Map<String, dynamic> json) {
+  return Answer(
     json['text'] as String?,
     json['result'] as bool?,
     json['code'] as String?,
   );
 }
 
-Map<String, dynamic> _$AnswersToJson(Answers instance) => <String, dynamic>{
+Map<String, dynamic> _$AnswerToJson(Answer instance) => <String, dynamic>{
       'text': instance.text,
       'result': instance.result,
       'code': instance.code,

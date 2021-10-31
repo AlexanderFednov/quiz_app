@@ -47,22 +47,22 @@ class UserResult extends HiveObject {
   @HiveField(2)
   DateTime? resultDate;
   @HiveField(3)
-  int? categoryNumber;
+  Category? category;
 
   double get rightAnswersPercent => 100 / questionsLenght! * score!;
 
-  String get category {
-    switch (categoryNumber) {
-      case 1:
+  String get textOfCategory {
+    switch (category) {
+      case Category.generalQuestions:
         return 'General questions';
 
-      case 2:
+      case Category.moviesOfUSSSR:
         return 'Movies of the USSR';
 
-      case 3:
+      case Category.space:
         return 'Space';
 
-      case 4:
+      case Category.sector13:
         return 'Sector 13';
 
       default:
@@ -74,6 +74,18 @@ class UserResult extends HiveObject {
     this.score = 0,
     this.questionsLenght = 0,
     this.resultDate,
-    this.categoryNumber,
+    this.category,
   });
+}
+
+@HiveType(typeId: 2)
+enum Category {
+  @HiveField(0)
+  generalQuestions,
+  @HiveField(1)
+  moviesOfUSSSR,
+  @HiveField(2)
+  space,
+  @HiveField(3)
+  sector13,
 }
