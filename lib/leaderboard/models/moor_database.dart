@@ -2,7 +2,7 @@
 import 'package:moor/moor.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
-import 'hive_user_data.dart';
+import '../../registration/models/hive_user_data.dart';
 
 part 'moor_database.g.dart';
 

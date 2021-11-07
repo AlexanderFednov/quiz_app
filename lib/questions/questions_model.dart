@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:quiz_app/models/question_list.dart';
+import 'package:quiz_app/questions/models/question_list.dart';
 
 class QuestionsModel extends Equatable {
   final List<Question> questionsGeneral;

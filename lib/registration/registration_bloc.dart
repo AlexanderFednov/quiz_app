@@ -1,6 +1,6 @@
 import 'package:easy_dispose/easy_dispose.dart';
 import 'package:hive/hive.dart';
-import 'package:quiz_app/models/hive_user_data.dart';
+import 'package:quiz_app/registration/models/hive_user_data.dart';
 import 'package:quiz_app/registration/registration_model.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -27,11 +27,12 @@ class RegistrationBloc extends DisposableOwner {
             registrationStateSubject.registrationErrorText,
       );
 
-  Stream<bool> get isRegistrationValidStream =>
-      _registrationStateSubject.stream.map(
+  Stream<bool> get isRegistrationValidStream => _registrationStateSubject.stream
+      .map(
         (registrationStateSubject) =>
             registrationStateSubject.isRegistrationValid,
-      );
+      )
+      .distinct();
 
   void onUserNameChanged(String text) {
     var contactsBox = Hive.box<UserData>('UserData1');

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
-import '../models/hive_user_data.dart';
+import '../registration/models/hive_user_data.dart';
 import '../generated/l10n.dart';
 
 class UserInformationWidget extends StatelessWidget {

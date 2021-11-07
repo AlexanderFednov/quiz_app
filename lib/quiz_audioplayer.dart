@@ -13,7 +13,7 @@ class QuizAudioPlayer extends StatefulWidget {
 
 class QuizAudioPlayerState extends State<QuizAudioPlayer>
     with WidgetsBindingObserver {
-  bool isAudionPlaying = true;
+  bool isAudioPlaying = true;
   late AudioCache audioCache;
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -24,23 +24,23 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
     // audioCache.clearCache();
     await audioCache.loop('Shadowing - Corbyn Kites.mp3', isNotification: true);
 
-    if (!isAudionPlaying) {
+    if (!isAudioPlaying) {
       await audioPlayer.pause();
     }
   }
 
   void _soundButton() async {
     var prefs = await SharedPreferences.getInstance();
-    if (isAudionPlaying) {
+    if (isAudioPlaying) {
       await audioPlayer.pause();
       setState(() {
-        isAudionPlaying = false;
+        isAudioPlaying = false;
       });
       await prefs.setBool('isAudioPlaying', false);
     } else {
       await audioPlayer.resume();
       setState(() {
-        isAudionPlaying = true;
+        isAudioPlaying = true;
       });
       await prefs.setBool('isAudioPlaying', true);
     }
@@ -48,9 +48,9 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
 
   Future<bool> loadIsPlaying() async {
     var prefs = await SharedPreferences.getInstance();
-    isAudionPlaying = (prefs.getBool('isAudioPlaying') ?? true);
+    isAudioPlaying = (prefs.getBool('isAudioPlaying') ?? true);
 
-    return isAudionPlaying;
+    return isAudioPlaying;
   }
 
   @override
@@ -59,7 +59,7 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
       future: _futureloadIsPlaying,
       builder: (context, snapshot) {
         return IconButton(
-          icon: isAudionPlaying
+          icon: isAudioPlaying
               ? Icon(
                   Icons.music_note,
                   color: Colors.black,
@@ -96,7 +96,7 @@ class QuizAudioPlayerState extends State<QuizAudioPlayer>
         break;
       case AppLifecycleState.resumed:
         print('Resumed');
-        if (isAudionPlaying) {
+        if (isAudioPlaying) {
           audioPlayer.resume();
         }
         break;

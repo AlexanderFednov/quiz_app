@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:quiz_app/audio_player/audio_player_bloc.dart';
+import 'package:quiz_app/audio_player/audio_player_widget.dart';
+
 import 'package:quiz_app/current_user/current_user_bloc.dart';
 import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
 import 'package:quiz_app/localization/localization_bloc.dart';
 import 'package:quiz_app/questions/questions_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 
-import 'package:quiz_app/models/moor_database.dart';
+import 'package:quiz_app/leaderboard/models/moor_database.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/quiz_audioplayer.dart';
-import 'package:quiz_app/quiz_screen/widgets/error_screen.dart';
+import 'package:quiz_app/error/error_screen.dart';
 import 'package:quiz_app/quiz_screen/widgets/result.dart';
 import 'package:quiz_app/registration/registration_bloc.dart';
 import 'package:quiz_app/routes/routes.dart';
@@ -18,12 +21,12 @@ import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
 
 import 'quiz_screen/quiz_widget.dart';
-import 'screens/main_page.dart';
+import 'main_page/main_page_widget.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'generated/l10n.dart';
-import 'models/hive_user_data.dart';
+import 'registration/models/hive_user_data.dart';
 
 import './quiz_audioplayer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -84,6 +87,9 @@ class QuizApp extends StatelessWidget {
         ),
         DisposableProvider<UserInformationBloc>(
           create: (context) => UserInformationBloc(),
+        ),
+        DisposableProvider<AudioPlayerBloc>(
+          create: (context) => AudioPlayerBloc(),
         ),
         // ChangeNotifierProvider.value(
         //   value: LoadQuestionsData(),
@@ -154,7 +160,7 @@ class QuizAppScaffold extends StatelessWidget {
               Navigator.pushNamed(context, RouteGenerator.leaderboard);
             },
           ),
-          QuizAudioPlayer(),
+          QuizAudioPlayerWidget(),
         ],
       ),
       body: const QuizAppScaffoldBodyWidget(),
@@ -164,21 +170,6 @@ class QuizAppScaffold extends StatelessWidget {
 
 class QuizAppScaffoldBodyWidget extends StatelessWidget {
   const QuizAppScaffoldBodyWidget();
-
-  String? _calculateImageUrlForQuizScreen(Category category) {
-    switch (category) {
-      case Category.generalQuestions:
-        return 'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg';
-      case Category.moviesOfUSSSR:
-        return 'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg';
-      case Category.space:
-        return 'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg';
-      case Category.sector13:
-        return 'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png';
-      default:
-        null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +182,9 @@ class QuizAppScaffoldBodyWidget extends StatelessWidget {
 
         switch (quizStatus) {
           case QuizStatus.notStarted:
-            return const MainPage();
+            return const MainPageWidget();
           case QuizStatus.inProgress:
-            return QuizQuestionWidget(
+            return QuizScreenWidget(
               imageUrl: _calculateImageUrlForQuizScreen(
                 logicBloc.logicState.category!,
               )!,
@@ -213,5 +204,20 @@ class QuizAppScaffoldBodyWidget extends StatelessWidget {
         }
       },
     );
+  }
+
+  String? _calculateImageUrlForQuizScreen(Category category) {
+    switch (category) {
+      case Category.generalQuestions:
+        return 'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg';
+      case Category.moviesOfUSSSR:
+        return 'https://ic.pics.livejournal.com/dubikvit/65747770/4248710/4248710_original.jpg';
+      case Category.space:
+        return 'https://cubiq.ru/wp-content/uploads/2020/02/Space-780x437.jpg';
+      case Category.sector13:
+        return 'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png';
+      default:
+        null;
+    }
   }
 }

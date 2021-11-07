@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_app/models/question_list.dart';
+import 'package:quiz_app/questions/models/question_list.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 
 class AnswerWidget extends StatelessWidget {

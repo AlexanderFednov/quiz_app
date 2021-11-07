@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:quiz_app/models/hive_user_data.dart';
-import 'package:quiz_app/models/question_list.dart';
+import 'package:quiz_app/registration/models/hive_user_data.dart';
+import 'package:quiz_app/questions/models/question_list.dart';
 
 enum AnswerStatus { right, wrong }
 

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:easy_dispose/easy_dispose.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:quiz_app/models/question_list.dart';
+import 'package:quiz_app/questions/models/question_list.dart';
 import 'package:quiz_app/questions/questions_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;

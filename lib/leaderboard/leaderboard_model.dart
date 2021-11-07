@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:quiz_app/models/moor_database.dart';
+import 'package:quiz_app/leaderboard/models/moor_database.dart';
 
 class LeaderboardModel extends Equatable {
  final List<MoorResult>? moorResults;

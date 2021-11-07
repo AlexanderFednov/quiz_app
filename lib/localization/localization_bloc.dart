@@ -33,7 +33,7 @@ class LocalizationBloc extends DisposableOwner {
 
     var prefs = await SharedPreferences.getInstance();
 
-    await prefs.setInt('localeIndex', 0);
+    await prefs.setString('locale', 'ru');
   }
 
   void localeEn() async {
@@ -45,16 +45,16 @@ class LocalizationBloc extends DisposableOwner {
 
     var prefs = await SharedPreferences.getInstance();
 
-    await prefs.setInt('localeIndex', 1);
+    await prefs.setString('locale', 'en');
   }
 
   void _loadLocale() async {
     var prefs = await SharedPreferences.getInstance();
 
-    final localeIndex = prefs.getInt('localeIndex');
+    final localeIndex = prefs.getString('locale');
 
     switch (localeIndex) {
-      case 0:
+      case 'ru':
         _localizationStateSubject.add(
           localizationState.copyWith(
             currentLocale: Locale('ru', 'RU'),
@@ -62,7 +62,7 @@ class LocalizationBloc extends DisposableOwner {
         );
         break;
 
-      case 1:
+      case 'en':
         _localizationStateSubject.add(
           localizationState.copyWith(
             currentLocale: Locale('en', 'EN'),

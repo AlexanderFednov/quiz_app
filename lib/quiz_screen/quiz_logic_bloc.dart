@@ -4,11 +4,11 @@ import 'dart:developer' as dev;
 import 'package:hive/hive.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:quiz_app/leaderboard/leaderboard_bloc.dart';
-import 'package:quiz_app/models/question_list.dart';
+import 'package:quiz_app/questions/models/question_list.dart';
 import 'package:quiz_app/questions/questions_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
-import 'package:quiz_app/models/hive_user_data.dart';
-import 'package:quiz_app/models/moor_database.dart';
+import 'package:quiz_app/registration/models/hive_user_data.dart';
+import 'package:quiz_app/leaderboard/models/moor_database.dart';
 // import 'package:quiz_app/models/question_list.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,12 +29,12 @@ class QuizLogicBloc extends DisposableOwner {
     _logicStateSubject.disposeWith(this);
   }
 
-  static final QuizLogicModel _quizLogicModel =
-      QuizLogicModel(answerStatusList: []);
-
   final MyDatabase moorDatabase;
   final LeaderboardBloc leaderboardBloc;
   final QuestionsBloc questionsBloc;
+
+  static final QuizLogicModel _quizLogicModel =
+      QuizLogicModel(answerStatusList: []);
 
   final BehaviorSubject<QuizLogicModel> _logicStateSubject =
       BehaviorSubject.seeded(_quizLogicModel);

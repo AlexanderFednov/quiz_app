@@ -1,5 +1,5 @@
 import 'package:easy_dispose/easy_dispose.dart';
-import 'package:quiz_app/models/hive_user_data.dart';
+import 'package:quiz_app/registration/models/hive_user_data.dart';
 import 'package:quiz_app/user_information/user_information_model.dart';
 import 'package:rxdart/subjects.dart';
 

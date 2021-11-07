@@ -1,6 +1,6 @@
 import 'package:easy_dispose/easy_dispose.dart';
 import 'package:quiz_app/leaderboard/leaderboard_model.dart';
-import 'package:quiz_app/models/moor_database.dart';
+import 'package:quiz_app/leaderboard/models/moor_database.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LeaderboardBloc extends DisposableOwner {

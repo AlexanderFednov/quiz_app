@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
-import 'package:quiz_app/quiz_screen/widgets/error_screen.dart';
+import 'package:quiz_app/error/error_screen.dart';
 import 'package:quiz_app/quiz_screen/widgets/progress_bar_icons.dart';
 import '../generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,76 +9,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'widgets/answer.dart';
 import 'widgets/question_text.dart';
 import 'widgets/result.dart';
-import '../models/question_list.dart';
+import '../questions/models/question_list.dart';
 import 'package:provider/provider.dart';
 
-// class QuizScreenWidget extends StatelessWidget {
-//   final String imageUrl;
 
-//   QuizScreenWidget({
-//     required this.imageUrl,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     var logicBloc = Provider.of<QuizLogicBloc>(context);
-
-//     return StreamBuilder<List<Question?>>(
-//       stream: logicBloc.questionsStream,
-//       builder: (context, snapshot) {
-//         if (snapshot.data != null) {
-//           var questionsLenght = snapshot.data!.length;
-
-//           return StreamBuilder<int>(
-//             stream: logicBloc.questionIndexStream,
-//             initialData: logicBloc.currentQuestionIndex,
-//             builder: (context, snapshot) {
-//               var index = snapshot.data!;
-
-//               return index < questionsLenght
-//                   ? _QuizQuestionWidget(
-//                       imageUrl: imageUrl,
-//                     )
-//                   : index > 0
-//                       ? const Result()
-//                       : ErrorScreen(
-//                           errorText: S.of(context).httpServerError,
-//                           buttonText: S.of(context).toMainPage,
-//                           imageUrl: imageUrl,
-//                         );
-//             },
-//           );
-//         } else {
-//           return Container();
-//         }
-//       },
-//     );
-//   }
-// }
-
-// class _RunQuizWidget extends StatelessWidget {
-//   final String imageUrl;
-
-//   _RunQuizWidget({
-//     required this.imageUrl,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         image: DecorationImage(
-//           image: CachedNetworkImageProvider(imageUrl),
-//           fit: BoxFit.cover,
-//         ),
-//       ),
-//       child: const _QuizQuestionWidget(),
-//     );
-//   }
-// }
-
-class QuizQuestionWidget extends StatelessWidget {
-  QuizQuestionWidget({
+class QuizScreenWidget extends StatelessWidget {
+  QuizScreenWidget({
     required this.imageUrl,
   });
 
