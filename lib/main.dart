@@ -160,7 +160,7 @@ class QuizAppScaffold extends StatelessWidget {
               Navigator.pushNamed(context, RouteGenerator.leaderboard);
             },
           ),
-          QuizAudioPlayerWidget(),
+          QuizAudioPlayer(),
         ],
       ),
       body: const QuizAppScaffoldBodyWidget(),
