@@ -8,20 +8,13 @@ import 'package:quiz_app/localization/localization_bloc.dart';
 import 'package:quiz_app/registration/models/hive_user_data.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 import 'package:quiz_app/routes/routes.dart';
-// import 'package:quiz_app/screens/learning.dart';
-import 'package:quiz_app/user_list/user_list_widget.dart';
+
 import 'package:quiz_app/user_information/user_information_bloc.dart';
-import 'package:quiz_app/user_information/user_information_widget.dart';
 import 'package:quiz_app/main_page/widgets/last_result_widget.dart';
-// import 'package:intl/intl.dart';
-//import 'package:json_annotation/json_annotation.dart';
-//import 'package:flutter_localizations/flutter_localizations.dart';
-//import 'package:intl/intl.dart';
+
 import '../generated/l10n.dart';
 
 import 'widgets/last_result_widget.dart';
-// import '../screens/learning.dart';
-// import 'package:google_fonts/google_fonts.dart';
 
 class MainPageWidget extends StatelessWidget {
   const MainPageWidget();
