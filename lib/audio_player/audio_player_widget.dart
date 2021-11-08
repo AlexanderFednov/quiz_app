@@ -46,16 +46,12 @@ class QuizAudioPlayerWidgetState extends State<QuizAudioPlayerWidget>
     var audioPlayerBloc = Provider.of<AudioPlayerBloc>(context);
 
     audioPlayerBloc.isSoundEnabledStream.listen((event) {
-      print(event);
-
       if (audioPlayerBloc.audioPlayerState.audioPlayerStatus ==
           AudioPlayerStatus.notInitialized) {
         _playerInit(event!, audioPlayerBloc.audioPlayerInitialized);
       } else {
         _soundButton(event!);
       }
-
-      print(audioPlayerBloc.audioPlayerState.audioPlayerStatus);
     });
 
     return StreamBuilder<bool?>(
@@ -83,7 +79,6 @@ class QuizAudioPlayerWidgetState extends State<QuizAudioPlayerWidget>
   @override
   void initState() {
     super.initState();
-    
 
     WidgetsBinding.instance!.addObserver(this);
   }

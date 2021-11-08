@@ -187,12 +187,12 @@ class QuizAppScaffoldBodyWidget extends StatelessWidget {
             return QuizScreenWidget(
               imageUrl: _calculateImageUrlForQuizScreen(
                 logicBloc.logicState.category!,
-              )!,
+              ),
             );
           case QuizStatus.completed:
             return const Result();
           case QuizStatus.error:
-            return ErrorScreen(
+            return ErrorScreenWidget(
               errorText: S.of(context).httpServerError,
               buttonText: S.of(context).toMainPage,
               imageUrl: _calculateImageUrlForQuizScreen(
@@ -206,7 +206,7 @@ class QuizAppScaffoldBodyWidget extends StatelessWidget {
     );
   }
 
-  String? _calculateImageUrlForQuizScreen(Category category) {
+  String _calculateImageUrlForQuizScreen(Category category) {
     switch (category) {
       case Category.generalQuestions:
         return 'https://pryamoj-efir.ru/wp-content/uploads/2017/08/Andrej-Malahov-vedushhij-Pryamoj-efir.jpg';
@@ -217,7 +217,7 @@ class QuizAppScaffoldBodyWidget extends StatelessWidget {
       case Category.sector13:
         return 'https://cdngol.nekkimobile.ru/images/original/materials/sections/69670/69670.png';
       default:
-        null;
+        throw 'Invalid category';
     }
   }
 }
