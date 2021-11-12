@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as dev;
 
 import 'package:hive/hive.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -24,7 +23,7 @@ class QuizLogicBloc extends DisposableOwner {
 
     quizStatusStream.listen((quizStatus) {
       _onQuizStatusChange(quizStatus);
-    });
+    }).disposeWith(this);
 
     _logicStateSubject.disposeWith(this);
   }

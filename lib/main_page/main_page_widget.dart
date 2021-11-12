@@ -356,7 +356,7 @@ class _LocaleNavigationWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         AnimatedButton(
-          onPressed: () => localizationBloc.localeRu(),
+          onPressed: () => localizationBloc.setLocaleRu(),
           width: 110,
           height: 30,
           color: Colors.cyan,
@@ -369,7 +369,7 @@ class _LocaleNavigationWidget extends StatelessWidget {
           width: 10,
         ),
         AnimatedButton(
-          onPressed: () => localizationBloc.localeEn(),
+          onPressed: () => localizationBloc.setLocaleEn(),
           width: 110,
           height: 30,
           color: Colors.pink[100]!,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/questions/models/question_list.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
-import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import '../../generated/l10n.dart';
 import 'package:provider/provider.dart';
 

@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalizationBloc extends DisposableOwner {
   LocalizationBloc() {
-    _loadLocale();
+    _loadSavedLocale();
 
     _localizationStateSubject.disposeWith(this);
   }
@@ -24,7 +24,7 @@ class LocalizationBloc extends DisposableOwner {
 
   Locale get currentLocale => _localizationStateSubject.value.currentLocale;
 
-  void localeRu() async {
+  void setLocaleRu() async {
     _localizationStateSubject.add(
       localizationState.copyWith(
         currentLocale: Locale('ru', 'RU'),
@@ -36,7 +36,7 @@ class LocalizationBloc extends DisposableOwner {
     await prefs.setString('locale', 'ru');
   }
 
-  void localeEn() async {
+  void setLocaleEn() async {
     _localizationStateSubject.add(
       localizationState.copyWith(
         currentLocale: Locale('en', 'EN'),
@@ -48,7 +48,7 @@ class LocalizationBloc extends DisposableOwner {
     await prefs.setString('locale', 'en');
   }
 
-  void _loadLocale() async {
+  void _loadSavedLocale() async {
     var prefs = await SharedPreferences.getInstance();
 
     final localeIndex = prefs.getString('locale');
