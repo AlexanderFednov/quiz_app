@@ -26,11 +26,6 @@ class AudioPlayerBloc {
       .map((audioPlayerModel) => audioPlayerModel.isSoundEnabled)
       .distinct();
 
-  Stream<AudioPlayerStatus> get audioPlayerStatusStream =>
-      _audioPlayerStateSubject.stream
-          .map((audioPlayerModel) => audioPlayerModel.audioPlayerStatus)
-          .distinct();
-
   void _audioPlayerInit() async {
     _audioCache =
         AudioCache(prefix: 'assets/music/', fixedPlayer: _audioPlayer);
