@@ -141,7 +141,7 @@ class S {
   }
 
   /// `Your score - {score} of {questions}`
-  String result(Object score, Object questions) {
+  String result(int score, int questions) {
     return Intl.message(
       'Your score - $score of $questions',
       name: 'result',
@@ -151,7 +151,7 @@ class S {
   }
 
   /// `{savedScore, plural, zero{Last result - {savedScore} points of {questionsLenght}} one{Last result - {savedScore} point of {questionsLenght}} two{Last result - {savedScore} points of {questionsLenght}} few{Last result - {savedScore} points of {questionsLenght}} many{Last result - {savedScore} points of {questionsLenght}} other{Last result - {savedScore} points of {questionsLenght}}}`
-  String lastResult(num savedScore, Object questionsLenght) {
+  String lastResult(int savedScore, int questionsLenght) {
     return Intl.plural(
       savedScore,
       zero: 'Last result - $savedScore points of $questionsLenght',
@@ -187,7 +187,7 @@ class S {
   }
 
   /// `Hello, {user}!`
-  String helloMessage(Object user) {
+  String helloMessage(String user) {
     return Intl.message(
       'Hello, $user!',
       name: 'helloMessage',

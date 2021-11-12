@@ -34,7 +34,9 @@ class ErrorScreenWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: _ErrorScreenBodyWidget(
-              errorText: errorText, buttonText: buttonText),
+            errorText: errorText,
+            buttonText: buttonText,
+          ),
         ),
       ),
     );

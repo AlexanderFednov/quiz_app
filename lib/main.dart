@@ -12,7 +12,6 @@ import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 
 import 'package:quiz_app/leaderboard/models/moor_database.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
-import 'package:quiz_app/quiz_audioplayer.dart';
 import 'package:quiz_app/error/error_screen.dart';
 import 'package:quiz_app/quiz_screen/widgets/result.dart';
 import 'package:quiz_app/registration/registration_bloc.dart';
@@ -20,6 +19,8 @@ import 'package:quiz_app/routes/routes.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
 
+import 'audio_player/audio_player_bloc.dart';
+import 'audio_player/audio_player_widget.dart';
 import 'quiz_screen/quiz_widget.dart';
 import 'main_page/main_page_widget.dart';
 
@@ -28,11 +29,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 import 'registration/models/hive_user_data.dart';
 
-import './quiz_audioplayer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 
 import 'package:easy_dispose_provider/easy_dispose_provider.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   await Hive.initFlutter();
@@ -88,8 +90,9 @@ class QuizApp extends StatelessWidget {
         DisposableProvider<UserInformationBloc>(
           create: (context) => UserInformationBloc(),
         ),
-        DisposableProvider<AudioPlayerBloc>(
+        Provider<AudioPlayerBloc>(
           create: (context) => AudioPlayerBloc(),
+          dispose: (context, audioPlayerBloc) => audioPlayerBloc.dispose(),
         ),
         // ChangeNotifierProvider.value(
         //   value: LoadQuestionsData(),
@@ -125,6 +128,7 @@ class QuizMaterialApp extends StatelessWidget {
           theme: ThemeData(
               // platform: TargetPlatform.iOS,
               ),
+          navigatorKey: navigatorKey,
           onGenerateRoute: RouteGenerator.generateRoute,
           initialRoute: '/',
           home: const QuizAppScaffold(),

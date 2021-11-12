@@ -1,59 +1,30 @@
 // import 'package:audioplayer/audioplayer.dart';
-import 'package:audioplayers/audioplayers.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/audio_player/audio_player_bloc.dart';
-import 'package:quiz_app/audio_player/audio_player_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:quiz_app/main.dart';
 
 class QuizAudioPlayerWidget extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return QuizAudioPlayerWidgetState();
-  }
+  State<StatefulWidget> createState() => QuizAudioPlayerWidgetState(
+        audioPlayerBloc: Provider.of<AudioPlayerBloc>(
+          navigatorKey.currentContext!,
+          listen: false,
+        ),
+      );
 }
 
 class QuizAudioPlayerWidgetState extends State<QuizAudioPlayerWidget>
     with WidgetsBindingObserver {
-  late AudioCache audioCache;
-  AudioPlayer audioPlayer = AudioPlayer();
+  QuizAudioPlayerWidgetState({required this.audioPlayerBloc});
 
-  void _playerInit(
-    bool isSoundEnabled,
-    Function playerInitialized,
-  ) async {
-    audioCache = AudioCache(prefix: 'assets/music/', fixedPlayer: audioPlayer);
-    await audioCache.loop('Shadowing - Corbyn Kites.mp3', isNotification: true);
-
-    if (!isSoundEnabled) {
-      await audioPlayer.pause();
-    }
-
-    playerInitialized();
-  }
-
-  void _soundButton(bool isSoundEnabled) async {
-    if (isSoundEnabled) {
-      await audioPlayer.resume();
-    } else {
-      await audioPlayer.pause();
-    }
-  }
+  final AudioPlayerBloc audioPlayerBloc;
 
   @override
   Widget build(BuildContext context) {
-    var audioPlayerBloc = Provider.of<AudioPlayerBloc>(context);
-
-    audioPlayerBloc.isSoundEnabledStream.listen((event) {
-      if (audioPlayerBloc.audioPlayerState.audioPlayerStatus ==
-          AudioPlayerStatus.notInitialized) {
-        _playerInit(event!, audioPlayerBloc.audioPlayerInitialized);
-      } else {
-        _soundButton(event!);
-      }
-    });
-
     return StreamBuilder<bool?>(
       stream: audioPlayerBloc.isSoundEnabledStream,
       initialData: true,
@@ -77,46 +48,40 @@ class QuizAudioPlayerWidgetState extends State<QuizAudioPlayerWidget>
   }
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    super.dispose();
 
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    var prefs = await SharedPreferences.getInstance();
-    var isAudioPlaying = (prefs.getBool('isAudioPlaying') ?? true);
-
     switch (state) {
       case AppLifecycleState.inactive:
         print('Inactive');
-        await audioPlayer.pause();
+        audioPlayerBloc.pause();
         break;
       case AppLifecycleState.paused:
         print('Paused');
-        await audioPlayer.pause();
+        audioPlayerBloc.pause();
         break;
       case AppLifecycleState.resumed:
         print('Resumed');
-        if (isAudioPlaying) {
-          await audioPlayer.resume();
+        if (audioPlayerBloc.isSoundEnabled) {
+          audioPlayerBloc.resume();
         }
         break;
       case AppLifecycleState.detached:
         print('detached');
-        await audioPlayer.stop();
-        await audioPlayer.release();
+        audioPlayerBloc.stop();
         break;
     }
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    audioPlayer.release();
-    audioPlayer.dispose();
-    audioCache.clearAll();
-    WidgetsBinding.instance!.removeObserver(this);
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance!.addObserver(this);
   }
 }
