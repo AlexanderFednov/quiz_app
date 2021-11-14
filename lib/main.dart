@@ -19,15 +19,13 @@ import 'package:quiz_app/routes/routes.dart';
 import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
 
-import 'audio_player/audio_player_bloc.dart';
-import 'audio_player/audio_player_widget.dart';
-import 'quiz_screen/quiz_widget.dart';
-import 'main_page/main_page_widget.dart';
+import 'package:quiz_app/quiz_screen/quiz_widget.dart';
+import 'package:quiz_app/main_page/main_page_widget.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'generated/l10n.dart';
-import 'registration/models/hive_user_data.dart';
+import 'package:quiz_app/generated/l10n.dart';
+import 'package:quiz_app/registration/models/hive_user_data.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
@@ -36,7 +34,8 @@ import 'package:easy_dispose_provider/easy_dispose_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() async {
+ // ignore: avoid_void_async
+ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserResultAdapter());
   Hive.registerAdapter(UserDataAdapter());

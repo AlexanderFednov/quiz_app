@@ -26,7 +26,7 @@ class AudioPlayerBloc {
       .map((audioPlayerModel) => audioPlayerModel.isSoundEnabled)
       .distinct();
 
-  void _audioPlayerInit() async {
+ Future <void> _audioPlayerInit() async {
     _audioCache =
         AudioCache(prefix: 'assets/music/', fixedPlayer: _audioPlayer);
 
@@ -46,11 +46,11 @@ class AudioPlayerBloc {
     );
 
     if (!isSoundEnabled) {
-      pause();
+      await pause();
     }
   }
 
-  void _loadSavedIsSoundEnabled() async {
+  Future <void> _loadSavedIsSoundEnabled() async {
     var prefs = await SharedPreferences.getInstance();
 
     var savedIsAudioPlaying = (prefs.getBool('isAudioPlaying') ?? true);
@@ -60,7 +60,7 @@ class AudioPlayerBloc {
     );
   }
 
-  void setIsSoundEnabled() async {
+ Future <void> setIsSoundEnabled() async {
     var prefs = await SharedPreferences.getInstance();
 
     if (isSoundEnabled) {
@@ -70,7 +70,7 @@ class AudioPlayerBloc {
 
       await prefs.setBool('isAudioPlaying', false);
 
-      pause();
+     await pause();
     } else {
       _audioPlayerStateSubject.add(
         audioPlayerState.copyWith(isSoundEnabled: true),
@@ -78,11 +78,11 @@ class AudioPlayerBloc {
 
       await prefs.setBool('isAudioPlaying', true);
 
-      resume();
+     await resume();
     }
   }
 
-  void resume() async {
+  Future <void> resume() async {
     await _audioPlayer.resume();
 
     _audioPlayerStateSubject.add(
@@ -90,7 +90,7 @@ class AudioPlayerBloc {
     );
   }
 
-  void pause() async {
+  Future <void> pause() async {
     await _audioPlayer.pause();
 
     _audioPlayerStateSubject.add(
@@ -98,7 +98,7 @@ class AudioPlayerBloc {
     );
   }
 
-  void stop() async {
+  Future <void> stop() async {
     await _audioPlayer.stop();
     await _audioPlayer.release();
 
@@ -107,7 +107,7 @@ class AudioPlayerBloc {
     );
   }
 
-  void dispose() async {
+  Future <void> dispose() async {
     await _audioPlayerStateSubject.close();
     await _audioPlayer.release();
     await _audioPlayer.dispose();

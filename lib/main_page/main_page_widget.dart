@@ -12,9 +12,7 @@ import 'package:quiz_app/routes/routes.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
 import 'package:quiz_app/main_page/widgets/last_result_widget.dart';
 
-import '../generated/l10n.dart';
-
-import 'widgets/last_result_widget.dart';
+import 'package:quiz_app/generated/l10n.dart';
 
 class MainPageWidget extends StatelessWidget {
   const MainPageWidget();
@@ -102,53 +100,50 @@ class _AnimatedTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.white,
-      child: SizedBox(
-        height: 45,
-        child: DefaultTextStyle(
-          style: const TextStyle(
-            color: Colors.pink,
-            fontSize: 40,
-            fontWeight: FontWeight.bold,
-            // fontFamily: 'OrelegaOne',
-            // decoration: TextDecoration.underline,
-          ),
-          child: AnimatedTextKit(
-            animatedTexts: [
-              TypewriterAnimatedText(
-                S.of(context).title,
-                textStyle: TextStyle(
-                  color: Colors.pink,
-                  // fontFamily: 'OrelegaOne',
-                ),
-                speed: Duration(milliseconds: 200),
+    return SizedBox(
+      height: 45,
+      child: DefaultTextStyle(
+        style: const TextStyle(
+          color: Colors.pink,
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+          // fontFamily: 'OrelegaOne',
+          // decoration: TextDecoration.underline,
+        ),
+        child: AnimatedTextKit(
+          animatedTexts: [
+            TypewriterAnimatedText(
+              S.of(context).title,
+              textStyle: TextStyle(
+                color: Colors.pink,
+                // fontFamily: 'OrelegaOne',
               ),
-              ColorizeAnimatedText(
-                S.of(context).title,
-                textStyle: TextStyle(
-                  color: Colors.pink,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-                speed: Duration(milliseconds: 200),
-                colors: colorizeColors,
+              speed: Duration(milliseconds: 200),
+            ),
+            ColorizeAnimatedText(
+              S.of(context).title,
+              textStyle: TextStyle(
+                color: Colors.pink,
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
               ),
-              ColorizeAnimatedText(
-                S.of(context).title,
-                textStyle: TextStyle(
-                  color: Colors.pink,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.end,
-                speed: Duration(milliseconds: 200),
-                colors: colorizeColors,
+              speed: Duration(milliseconds: 200),
+              colors: colorizeColors,
+            ),
+            ColorizeAnimatedText(
+              S.of(context).title,
+              textStyle: TextStyle(
+                color: Colors.pink,
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-            isRepeatingAnimation: true,
-            repeatForever: true,
-          ),
+              textAlign: TextAlign.end,
+              speed: Duration(milliseconds: 200),
+              colors: colorizeColors,
+            ),
+          ],
+          isRepeatingAnimation: true,
+          repeatForever: true,
         ),
       ),
     );

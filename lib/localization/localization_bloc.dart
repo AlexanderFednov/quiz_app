@@ -24,7 +24,7 @@ class LocalizationBloc extends DisposableOwner {
 
   Locale get currentLocale => _localizationStateSubject.value.currentLocale;
 
-  void setLocaleRu() async {
+  Future<void> setLocaleRu() async {
     _localizationStateSubject.add(
       localizationState.copyWith(
         currentLocale: Locale('ru', 'RU'),
@@ -36,7 +36,7 @@ class LocalizationBloc extends DisposableOwner {
     await prefs.setString('locale', 'ru');
   }
 
-  void setLocaleEn() async {
+  Future<void> setLocaleEn() async {
     _localizationStateSubject.add(
       localizationState.copyWith(
         currentLocale: Locale('en', 'EN'),
@@ -48,7 +48,7 @@ class LocalizationBloc extends DisposableOwner {
     await prefs.setString('locale', 'en');
   }
 
-  void _loadSavedLocale() async {
+  Future<void> _loadSavedLocale() async {
     var prefs = await SharedPreferences.getInstance();
 
     final localeIndex = prefs.getString('locale');
@@ -71,7 +71,7 @@ class LocalizationBloc extends DisposableOwner {
         break;
 
       default:
-        null;
+        throw 'Unknown locale';
     }
   }
 }

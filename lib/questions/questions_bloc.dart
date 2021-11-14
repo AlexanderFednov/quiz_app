@@ -24,7 +24,7 @@ class QuestionsBloc extends DisposableOwner {
 
   QuestionsModel get questionsState => _questionsStateSubject.value;
 
-  void _questionsInit() async {
+  Future <void> _questionsInit() async {
     var questionsGeneral = await _loadQuestionsFromAssets(
       questionsUrl: 'assets/questions/questionsAll.json',
     );
@@ -45,10 +45,10 @@ class QuestionsBloc extends DisposableOwner {
       ),
     );
 
-    loadData();
+   await loadData();
   }
 
-  void loadData() async {
+  Future <void> loadData() async {
     var questionsWeb = await _getQuestionsFromServer();
 
     _questionsStateSubject.add(

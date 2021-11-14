@@ -78,7 +78,7 @@ class UserListBloc extends DisposableOwner {
     currentUserBloc!.getCurrentUser();
   }
 
-  void onSearchChange(String text) async {
+  Future <void> onSearchChange(String text) async {
     var databaseBox = Hive.box<UserData>('UserData1');
 
     _usersListStateSubject.add(
@@ -138,7 +138,7 @@ class UserListBloc extends DisposableOwner {
     );
   }
 
-  void nullifyUserList() async {
+  Future <void> nullifyUserList() async {
     var contactsBox = Hive.box<UserData>('UserData1');
 
     await contactsBox.clear();

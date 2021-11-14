@@ -55,25 +55,25 @@ class QuizAudioPlayerWidgetState extends State<QuizAudioPlayerWidget>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
+ Future <void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.inactive:
         print('Inactive');
-        audioPlayerBloc.pause();
+       await audioPlayerBloc.pause();
         break;
       case AppLifecycleState.paused:
         print('Paused');
-        audioPlayerBloc.pause();
+       await audioPlayerBloc.pause();
         break;
       case AppLifecycleState.resumed:
         print('Resumed');
         if (audioPlayerBloc.isSoundEnabled) {
-          audioPlayerBloc.resume();
+        await  audioPlayerBloc.resume();
         }
         break;
       case AppLifecycleState.detached:
         print('detached');
-        audioPlayerBloc.stop();
+       await audioPlayerBloc.stop();
         break;
     }
   }

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_bloc.dart';
 import 'package:quiz_app/quiz_screen/quiz_logic_model.dart';
 import 'package:quiz_app/quiz_screen/widgets/progress_bar_icons.dart';
-import '../generated/l10n.dart';
+import 'package:quiz_app/generated/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'widgets/answer.dart';
-import 'widgets/question_text.dart';
-import '../questions/models/question_list.dart';
+import 'package:quiz_app/quiz_screen/widgets/answer.dart';
+import 'package:quiz_app/quiz_screen/widgets/question_text.dart';
+import 'package:quiz_app/questions/models/question_list.dart';
 import 'package:provider/provider.dart';
 
 

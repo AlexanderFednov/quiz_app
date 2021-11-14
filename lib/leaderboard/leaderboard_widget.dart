@@ -7,7 +7,7 @@ import 'package:quiz_app/registration/models/hive_user_data.dart';
 import 'package:quiz_app/leaderboard/models/moor_database.dart';
 // import 'package:grafpix/pixbuttons/medal.dart';
 import 'package:animated_background/animated_background.dart';
-import '../generated/l10n.dart';
+import 'package:quiz_app/generated/l10n.dart';
 
 class LeaderBoardWidget extends StatefulWidget {
   const LeaderBoardWidget();
@@ -74,9 +74,7 @@ class _LeaderboardBodyWidget extends StatelessWidget {
       child: Column(
         children: [
           Flexible(
-            child: Container(
-              child: const _LeaderboardBuildListWidget(),
-            ),
+            child: const _LeaderboardBuildListWidget(),
           ),
           const _NullifyLeaderboard(),
           // TextButton(
@@ -194,15 +192,16 @@ class _LeaderboardListTileLeadingWidget extends StatelessWidget {
               fontSize: 15,
             ),
           ),
-          index < 3
-              ? Container(
-                  margin: EdgeInsets.only(left: 7),
-                  child: Provider.value(
-                    value: index + 1,
-                    child: const _LeaderboardMedalWidget(),
-                  ),
-                )
-              : SizedBox(),
+          if (index < 3)
+            Container(
+              margin: EdgeInsets.only(left: 7),
+              child: Provider.value(
+                value: index + 1,
+                child: const _LeaderboardMedalWidget(),
+              ),
+            )
+          else
+            SizedBox(),
         ],
       ),
     );

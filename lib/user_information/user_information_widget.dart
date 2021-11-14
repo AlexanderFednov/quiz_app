@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/user_information/user_information_bloc.dart';
-import '../registration/models/hive_user_data.dart';
-import '../generated/l10n.dart';
+import 'package:quiz_app/registration/models/hive_user_data.dart';
+import 'package:quiz_app/generated/l10n.dart';
 
 class UserInformationWidget extends StatelessWidget {
   const UserInformationWidget();

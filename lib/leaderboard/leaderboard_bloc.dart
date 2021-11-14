@@ -23,7 +23,7 @@ class LeaderboardBloc extends DisposableOwner {
       _leaderBoardStateSubject.stream
           .map((leaderboardModel) => leaderboardModel.moorResults);
 
-  void getMoorResults() async {
+  Future<void> getMoorResults() async {
     var moorResultsFromDB = await moorDatabase.getAllMoorResults();
 
     moorResultsFromDB.sort(

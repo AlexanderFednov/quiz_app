@@ -111,7 +111,7 @@ class QuizLogicBloc extends DisposableOwner {
     }
   }
 
-  void _quizCompleted() async {
+  Future<void> _quizCompleted() async {
     var prefs = await SharedPreferences.getInstance();
     var currentUser = getCurrentUser();
 
@@ -122,7 +122,7 @@ class QuizLogicBloc extends DisposableOwner {
       if (currentUser != null) {
         _addHiveUserResult();
         _addMoorUserResult(currentUser);
-        leaderboardBloc.getMoorResults();
+        await leaderboardBloc.getMoorResults();
       }
 
       _logicStateSubject.add(
@@ -262,7 +262,7 @@ class QuizLogicBloc extends DisposableOwner {
     return currentUser;
   }
 
-  void _loadSavedScore() async {
+  Future<void> _loadSavedScore() async {
     var prefs = await SharedPreferences.getInstance();
 
     _logicStateSubject
