@@ -10,7 +10,6 @@ import 'package:quiz_app/quiz_screen/widgets/question_text.dart';
 import 'package:quiz_app/questions/models/question_list.dart';
 import 'package:provider/provider.dart';
 
-
 class QuizScreenWidget extends StatelessWidget {
   QuizScreenWidget({
     required this.imageUrl,
@@ -93,11 +92,11 @@ class _ShowQuestionNumberWidget extends StatelessWidget {
         builder: (context, snapshot) {
           var questionNumber = snapshot.data!;
 
-          return StreamBuilder<List<Question>>(
-            stream: logicBloc.questionsStream,
+          return StreamBuilder<int>(
+            stream: logicBloc.questionsLenghtStream,
             builder: (context, snapshot) {
               if (snapshot.data != null) {
-                var questionsListLenght = snapshot.data!.length;
+                var questionsListLenght = snapshot.data!;
 
                 return Text(
                   '${questionNumber + 1} / $questionsListLenght',

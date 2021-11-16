@@ -60,7 +60,7 @@ class QuizLogicBloc extends DisposableOwner {
   Stream<int> get totalScoreStream =>
       logicStateStream.map((logicModel) => logicModel.totalScore);
 
-  Stream<int> get savedScoreSctream =>
+  Stream<int> get savedScoreStream =>
       logicStateStream.map((logicModel) => logicModel.savedScore);
 
   Stream<int> get savedQuestionsLenghtStream =>
@@ -71,6 +71,9 @@ class QuizLogicBloc extends DisposableOwner {
   int get currentQuestionIndex => logicState.questionIndex;
 
   Question? get currentQuestion => logicState.currentQuestion;
+
+  Stream<int> get questionsLenghtStream =>
+      logicStateStream.map((logicModel) => logicModel.questions.length);
 
   void answerQuestion(Answer answer) {
     var anwerStatusListTemporary = answerStatusList!;
@@ -132,7 +135,6 @@ class QuizLogicBloc extends DisposableOwner {
         ),
       );
     }
-    // _nullifyLogic();
   }
 
   void reset() {

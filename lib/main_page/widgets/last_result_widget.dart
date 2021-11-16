@@ -12,7 +12,7 @@ class LastResultWidget extends StatelessWidget {
     var logicBloc = Provider.of<QuizLogicBloc>(context);
 
     return StreamBuilder<int>(
-      stream: logicBloc.savedScoreSctream,
+      stream: logicBloc.savedScoreStream,
       initialData: logicBloc.logicState.savedScore,
       builder: (context, snapshot) {
         var savedScore = snapshot.data;
