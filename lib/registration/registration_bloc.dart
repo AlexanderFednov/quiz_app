@@ -6,11 +6,13 @@ import 'package:quiz_app/user_list/user_list_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RegistrationBloc extends DisposableOwner {
-  RegistrationBloc({this.userListBloc}) {
+  RegistrationBloc({required this.userListBloc, required this.hiveBox}) {
     _registrationStateSubject.disposeWith(this);
   }
 
-  final UserListBloc? userListBloc;
+  final UserListBloc userListBloc;
+
+  final Box<UserData> hiveBox;
 
   static final RegistrationModel _registrationModel = RegistrationModel();
 
@@ -35,15 +37,15 @@ class RegistrationBloc extends DisposableOwner {
       .distinct();
 
   void onUserNameChanged(String text) {
-    var contactsBox = Hive.box<UserData>('UserData1');
+    // var contactsBox = Hive.box<UserData>('UserData1');
 
     _registrationStateSubject.add(
       registrationState.copyWith(userName: text.trim()),
     );
 
-    if (userName.isEmpty ||
+    if (userName.trim().isEmpty ||
         userName == '' ||
-        contactsBox.values.any((element) => element.userName == userName)) {
+        hiveBox.values.any((element) => element.userName == userName)) {
       _registrationStateSubject.add(
         registrationState.copyWith(isRegistrationValid: false),
       );
@@ -55,7 +57,7 @@ class RegistrationBloc extends DisposableOwner {
   }
 
   void onRegistrationSubmit() {
-    var contactsBox = Hive.box<UserData>('UserData1');
+    // var contactsBox = Hive.box<UserData>('UserData1');
 
     if (userName.trim().isEmpty || userName.trim() == '') {
       _registrationStateSubject.add(
@@ -63,15 +65,14 @@ class RegistrationBloc extends DisposableOwner {
           registrationErrorText: RegistrationErrorText.nameIsEmpty,
         ),
       );
-    } else if (contactsBox.values
-        .any((element) => element.userName == userName)) {
+    } else if (hiveBox.values.any((element) => element.userName == userName)) {
       _registrationStateSubject.add(
         registrationState.copyWith(
           registrationErrorText: RegistrationErrorText.nameIsTaken,
         ),
       );
     } else {
-      contactsBox.add(UserData(
+      hiveBox.add(UserData(
         userName: userName,
         userResult: 0,
         registerDate: DateTime.now(),
@@ -79,7 +80,7 @@ class RegistrationBloc extends DisposableOwner {
         isCurrentUser: false,
       ));
 
-      userListBloc!.getUserList();
+      userListBloc.getUserList();
     }
   }
 

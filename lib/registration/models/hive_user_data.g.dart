@@ -66,10 +66,10 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserData(
-      userName: fields[0] as String?,
-      userResult: fields[1] as int?,
-      isCurrentUser: fields[2] as bool?,
-      registerDate: fields[3] as DateTime?,
+      userName: fields[0] as String,
+      userResult: fields[1] as int,
+      isCurrentUser: fields[2] as bool,
+      registerDate: fields[3] as DateTime,
       userResults: (fields[4] as List?)?.cast<UserResult>(),
     );
   }

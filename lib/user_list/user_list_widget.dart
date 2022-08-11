@@ -62,16 +62,16 @@ class _UserListWidgetBody extends StatelessWidget {
                     child: const _ShowCurrentUserWidget(),
                   ),
                 const _SearchBarWidget(),
-                if (searchResultList!.isNotEmpty)
+                if (searchResultList != null && searchResultList.isNotEmpty)
                   Flexible(
                     flex: 1,
                     child: const _SearchResultListWidget(),
                   ),
-                Flexible(
+                Expanded(
                   flex: 1,
                   child: const _UserListViewWidget(),
                 ),
-                const _NullifyUserListButtonWidget(),
+                const _ClearUserListButtonWidget(),
               ],
             );
           },
@@ -105,7 +105,7 @@ class _ShowCurrentUserWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                currentUser.userName!,
+                currentUser.userName,
                 style: TextStyle(fontSize: 30),
               ),
               Text(
@@ -174,6 +174,7 @@ class _SearchBarWidgetState extends State<_SearchBarWidget> {
     });
 
     return Container(
+      height: 80,
       color: _focus.hasFocus ? Theme.of(context).primaryColor : Colors.grey,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -265,7 +266,7 @@ class _SearchResultListTile extends StatelessWidget {
 
     return ListTile(
       title: Text(
-        foundUser.userName!,
+        foundUser.userName,
         style: TextStyle(fontSize: 20),
       ),
       leading: IconButton(
@@ -387,14 +388,14 @@ class _UserListTileWidget extends StatelessWidget {
 
     return ListTile(
       title: Text(
-        user.userName!,
+        user.userName,
         style: TextStyle(fontSize: 20),
       ),
       trailing: Provider.value(
         value: user,
         child: const _UserListTileTrailingWidget(),
       ),
-      leading: user.isCurrentUser!
+      leading: user.isCurrentUser
           ? Icon(
               Icons.check_box,
               color: Colors.green,
@@ -487,8 +488,8 @@ class _OnDismissTextButtonNoWidget extends StatelessWidget {
   }
 }
 
-class _NullifyUserListButtonWidget extends StatelessWidget {
-  const _NullifyUserListButtonWidget();
+class _ClearUserListButtonWidget extends StatelessWidget {
+  const _ClearUserListButtonWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -504,25 +505,34 @@ class _NullifyUserListButtonWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => Dialog(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              colors: [Colors.white, Colors.blue[100]!, Colors.red[100]!],
-            ),
-          ),
-          height: 200,
-          child: Center(
-            child: const _NullifyUserListDialogCollumnWidget(),
-          ),
-        ),
+        child: _ClearUserListDialog(),
       ),
     );
   }
 }
 
-class _NullifyUserListDialogCollumnWidget extends StatelessWidget {
-  const _NullifyUserListDialogCollumnWidget();
+class _ClearUserListDialog extends StatelessWidget {
+  const _ClearUserListDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          colors: [Colors.white, Colors.blue[100]!, Colors.red[100]!],
+        ),
+      ),
+      height: 200,
+      child: Center(
+        child: const _ClearUserListDialogCollumnWidget(),
+      ),
+    );
+  }
+}
+
+class _ClearUserListDialogCollumnWidget extends StatelessWidget {
+  const _ClearUserListDialogCollumnWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -538,8 +548,8 @@ class _NullifyUserListDialogCollumnWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const _NullifyUserListDialogButtonYesWidget(),
-              const _NullifyUserListDialogButtonNoWidget(),
+              const _ClearUserListDialogButtonYesWidget(),
+              const _ClearUserListDialogButtonNoWidget(),
             ],
           ),
         ),
@@ -548,8 +558,8 @@ class _NullifyUserListDialogCollumnWidget extends StatelessWidget {
   }
 }
 
-class _NullifyUserListDialogButtonYesWidget extends StatelessWidget {
-  const _NullifyUserListDialogButtonYesWidget();
+class _ClearUserListDialogButtonYesWidget extends StatelessWidget {
+  const _ClearUserListDialogButtonYesWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -558,7 +568,7 @@ class _NullifyUserListDialogButtonYesWidget extends StatelessWidget {
     return TextButton(
       onPressed: () {
         _cancelDialog(context);
-        userListBloc.nullifyUserList();
+        userListBloc.clearUserList();
       },
       child: Text(
         S.of(context).yes,
@@ -572,8 +582,8 @@ class _NullifyUserListDialogButtonYesWidget extends StatelessWidget {
   }
 }
 
-class _NullifyUserListDialogButtonNoWidget extends StatelessWidget {
-  const _NullifyUserListDialogButtonNoWidget();
+class _ClearUserListDialogButtonNoWidget extends StatelessWidget {
+  const _ClearUserListDialogButtonNoWidget();
 
   @override
   Widget build(BuildContext context) {

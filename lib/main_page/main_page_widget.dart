@@ -17,7 +17,7 @@ import 'package:quiz_app/generated/l10n.dart';
 class MainPageWidget extends StatelessWidget {
   const MainPageWidget();
 
-  static final colorizeColors = [
+  static const colorizeColors = [
     Colors.pink,
     Colors.purple,
     Colors.blue,
@@ -35,6 +35,8 @@ class MainPageWidget extends StatelessWidget {
           ),
           fit: BoxFit.cover,
         ),
+        // image: AssetImage('assets/images/main_page.jpg'),
+        // fit: BoxFit.cover),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -242,7 +244,7 @@ class _GreetingMessageWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 10),
       child: Text(
-        S.of(context).helloMessage(currentUser.userName!),
+        S.of(context).helloMessage(currentUser.userName),
         style: TextStyle(
           fontSize: 30,
           fontWeight: FontWeight.w700,
@@ -290,6 +292,7 @@ class _SelectCategoryWidget extends StatelessWidget {
         border: Border.all(color: Colors.pink, width: 10),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
             S.of(context).categotyChoice,

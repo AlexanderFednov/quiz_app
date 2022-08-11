@@ -291,7 +291,7 @@ class _OnNullifyDialogBodyWidget extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    leaderboardBloc.nullifyLeaderboard();
+                    leaderboardBloc.clearLeaderboard();
                     Navigator.of(context).pop();
                   },
                   child: Text(

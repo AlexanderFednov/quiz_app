@@ -6,15 +6,17 @@ import 'package:quiz_app/user_list/user_list_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class UserListBloc extends DisposableOwner {
-  UserListBloc({this.currentUserBloc}) {
+  UserListBloc({required this.currentUserBloc, required this.hiveBox}) {
     getUserList();
 
     _usersListStateSubject.disposeWith(this);
   }
 
-  static final UserListModel userListModel = UserListModel();
+  final CurrentUserBloc currentUserBloc;
 
-  final CurrentUserBloc? currentUserBloc;
+  final Box<UserData> hiveBox;
+
+  static final UserListModel userListModel = UserListModel();
 
   final BehaviorSubject<UserListModel> _usersListStateSubject =
       BehaviorSubject.seeded(userListModel);
@@ -34,9 +36,11 @@ class UserListBloc extends DisposableOwner {
       .map((usersListState) => usersListState.userListStatus);
 
   void getUserList() {
-    var userListFromDB = Hive.box<UserData>('UserData1').values.toList();
+    var userListFromDB = hiveBox.values.toList();
 
-    userListFromDB.sort((a, b) => a.userName!.compareTo(b.userName!));
+    userListFromDB.sort(
+      (a, b) => a.userName.compareTo(b.userName),
+    );
 
     _usersListStateSubject.add(
       userListState.copyWith(userList: userListFromDB),
@@ -44,8 +48,8 @@ class UserListBloc extends DisposableOwner {
   }
 
   void deleteUser(UserData user) {
-    if (currentUserBloc!.currentUser == user) {
-      currentUserBloc!.clearCurrentUser();
+    if (currentUserBloc.currentUser == user) {
+      currentUserBloc.clearCurrentUser();
     }
 
     user.delete();
@@ -66,20 +70,20 @@ class UserListBloc extends DisposableOwner {
     // },
     // );
 
-    if (currentUserBloc!.currentUser != null) {
-      currentUserBloc!.currentUser!.isCurrentUser = false;
-      currentUserBloc!.currentUser!.save();
+    if (currentUserBloc.currentUser != null) {
+      currentUserBloc.currentUser!.isCurrentUser = false;
+      currentUserBloc.currentUser!.save();
     }
 
     user.isCurrentUser = true;
     user.save();
 
     getUserList();
-    currentUserBloc!.getCurrentUser();
+    currentUserBloc.getCurrentUser();
   }
 
-  Future <void> onSearchChange(String text) async {
-    var databaseBox = Hive.box<UserData>('UserData1');
+  Future<void> onSearchChange(String text) async {
+    // var databaseBox = Hive.box<UserData>('UserData1');
 
     _usersListStateSubject.add(
       userListState.copyWith(
@@ -102,8 +106,8 @@ class UserListBloc extends DisposableOwner {
     if (text.trim().isNotEmpty) {
       var searchResultListTemporary = userListState.searchResultList;
 
-      databaseBox.values.forEach((user) {
-        if (user.userName!.toLowerCase().contains(
+      hiveBox.values.forEach((user) {
+        if (user.userName.toLowerCase().contains(
               text.toLowerCase().trim(),
             )) {
           searchResultListTemporary!.add(user);
@@ -111,7 +115,7 @@ class UserListBloc extends DisposableOwner {
       });
 
       searchResultListTemporary!
-          .sort((a, b) => a.userName!.compareTo(b.userName!));
+          .sort((a, b) => a.userName.compareTo(b.userName));
 
       _usersListStateSubject.add(
         userListState.copyWith(
@@ -138,11 +142,11 @@ class UserListBloc extends DisposableOwner {
     );
   }
 
-  Future <void> nullifyUserList() async {
-    var contactsBox = Hive.box<UserData>('UserData1');
+  Future<void> clearUserList() async {
+    // var contactsBox = Hive.box<UserData>('UserData1');
 
-    await contactsBox.clear();
-    currentUserBloc!.clearCurrentUser();
+    await hiveBox.clear();
+    currentUserBloc.clearCurrentUser();
     getUserList();
   }
 }

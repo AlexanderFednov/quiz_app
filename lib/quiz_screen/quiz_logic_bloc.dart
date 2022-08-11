@@ -106,7 +106,7 @@ class QuizLogicBloc extends DisposableOwner {
 
   void _onQuizStatusChange(QuizStatus quizStatus) {
     if (quizStatus == QuizStatus.reset) {
-      _nullifyLogic();
+      _resetQuizState();
     } else if (quizStatus == QuizStatus.error) {
       questionsBloc.loadData();
     } else if (quizStatus == QuizStatus.completed) {
@@ -155,7 +155,7 @@ class QuizLogicBloc extends DisposableOwner {
     );
   }
 
-  void _nullifyLogic() {
+  void _resetQuizState() {
     _logicStateSubject.add(
       logicState.copyWith(
         totalScore: 0,
@@ -173,7 +173,7 @@ class QuizLogicBloc extends DisposableOwner {
     var contactBox = Hive.box<UserData>('UserData1');
 
     contactBox.values.forEach((element) {
-      if (element.isCurrentUser!) {
+      if (element.isCurrentUser) {
         element.userResult = logicState.totalScore;
         element.userResults!.insert(
           0,
@@ -192,7 +192,7 @@ class QuizLogicBloc extends DisposableOwner {
   void _addMoorUserResult(UserData currentUser) {
     moorDatabase.insertMoorResultCompanion(
       MoorResultsCompanion(
-        name: Value(currentUser.userName!),
+        name: Value(currentUser.userName),
         result: Value(logicState.totalScore),
         questionsLenght: Value(logicState.questionIndex),
         rightResultsPercent:
@@ -253,7 +253,7 @@ class QuizLogicBloc extends DisposableOwner {
     var contactsBox = Hive.box<UserData>('UserData1');
     if (contactsBox.isNotEmpty) {
       contactsBox.values.forEach((element) {
-        if (element.isCurrentUser!) {
+        if (element.isCurrentUser) {
           currentUser = element;
         }
       });

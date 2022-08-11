@@ -51,7 +51,7 @@ class LocalizationBloc extends DisposableOwner {
   Future<void> _loadSavedLocale() async {
     var prefs = await SharedPreferences.getInstance();
 
-    final localeIndex = prefs.getString('locale');
+    final localeIndex = prefs.getString('locale') ?? 'ru';
 
     switch (localeIndex) {
       case 'ru':

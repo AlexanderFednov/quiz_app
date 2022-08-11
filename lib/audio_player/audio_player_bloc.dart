@@ -18,15 +18,15 @@ class AudioPlayerBloc {
   final BehaviorSubject<AudioPlayerModel> _audioPlayerStateSubject =
       BehaviorSubject.seeded(_audioPlayerModel);
 
-  bool get isSoundEnabled => _audioPlayerStateSubject.value.isSoundEnabled!;
-
   AudioPlayerModel get audioPlayerState => _audioPlayerStateSubject.value;
+
+  bool get isSoundEnabled => audioPlayerState.isSoundEnabled!;
 
   Stream<bool?> get isSoundEnabledStream => _audioPlayerStateSubject.stream
       .map((audioPlayerModel) => audioPlayerModel.isSoundEnabled)
       .distinct();
 
- Future <void> _audioPlayerInit() async {
+  Future<void> _audioPlayerInit() async {
     _audioCache =
         AudioCache(prefix: 'assets/music/', fixedPlayer: _audioPlayer);
 
@@ -50,17 +50,17 @@ class AudioPlayerBloc {
     }
   }
 
-  Future <void> _loadSavedIsSoundEnabled() async {
+  Future<void> _loadSavedIsSoundEnabled() async {
     var prefs = await SharedPreferences.getInstance();
 
-    var savedIsAudioPlaying = (prefs.getBool('isAudioPlaying') ?? true);
+    var savedIsAudioPlaying = (prefs.getBool('isAudioPlaying') ?? false);
 
     _audioPlayerStateSubject.add(
       audioPlayerState.copyWith(isSoundEnabled: savedIsAudioPlaying),
     );
   }
 
- Future <void> setIsSoundEnabled() async {
+  Future<void> setIsSoundEnabled() async {
     var prefs = await SharedPreferences.getInstance();
 
     if (isSoundEnabled) {
@@ -70,7 +70,7 @@ class AudioPlayerBloc {
 
       await prefs.setBool('isAudioPlaying', false);
 
-     await pause();
+      await pause();
     } else {
       _audioPlayerStateSubject.add(
         audioPlayerState.copyWith(isSoundEnabled: true),
@@ -78,11 +78,11 @@ class AudioPlayerBloc {
 
       await prefs.setBool('isAudioPlaying', true);
 
-     await resume();
+      await resume();
     }
   }
 
-  Future <void> resume() async {
+  Future<void> resume() async {
     await _audioPlayer.resume();
 
     _audioPlayerStateSubject.add(
@@ -90,7 +90,7 @@ class AudioPlayerBloc {
     );
   }
 
-  Future <void> pause() async {
+  Future<void> pause() async {
     await _audioPlayer.pause();
 
     _audioPlayerStateSubject.add(
@@ -98,7 +98,7 @@ class AudioPlayerBloc {
     );
   }
 
-  Future <void> stop() async {
+  Future<void> stop() async {
     await _audioPlayer.stop();
     await _audioPlayer.release();
 
@@ -107,7 +107,7 @@ class AudioPlayerBloc {
     );
   }
 
-  Future <void> dispose() async {
+  Future<void> dispose() async {
     await _audioPlayerStateSubject.close();
     await _audioPlayer.release();
     await _audioPlayer.dispose();

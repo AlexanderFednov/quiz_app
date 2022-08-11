@@ -20,7 +20,7 @@ class UserInformationWidget extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.amber,
           title: Text(
-            userInformationBloc.selectedUser!.userName!,
+            userInformationBloc.selectedUser!.userName,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -79,7 +79,7 @@ class _RegistrationDateWidget extends StatelessWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         Text(
-          '${DateFormat('yyyy-MM-dd (kk:mm)').format(user.registerDate!).toString()}',
+          '${DateFormat('yyyy-MM-dd (kk:mm)').format(user.registerDate).toString()}',
           style: TextStyle(fontSize: 20),
         ),
       ],

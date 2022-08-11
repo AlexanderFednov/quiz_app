@@ -34,23 +34,38 @@ import 'package:easy_dispose_provider/easy_dispose_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
- // ignore: avoid_void_async
- void main() async {
+Future<void> main() async {
   await Hive.initFlutter();
-  Hive.registerAdapter(UserResultAdapter());
-  Hive.registerAdapter(UserDataAdapter());
-  Hive.registerAdapter(CategoryAdapter());
+  if (!Hive.isAdapterRegistered(1)) {
+    Hive.registerAdapter(UserResultAdapter());
+  }
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(UserDataAdapter());
+  }
+  if (!Hive.isAdapterRegistered(2)) {
+    Hive.registerAdapter(CategoryAdapter());
+  }
   await Hive.openBox<UserData>('UserData1');
-  runApp(QuizApp());
+  final hiveBox = Hive.box<UserData>('UserData1');
+  runApp(QuizApp(
+    hiveBox: hiveBox,
+  ));
 }
 
 class QuizApp extends StatelessWidget {
+  QuizApp({required this.hiveBox});
+
+  final Box<UserData> hiveBox;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<MyDatabase>(
           create: (_) => MyDatabase(),
+          dispose: (context, myDatabase) {
+            myDatabase.close();
+          },
         ),
         DisposableProvider<LeaderboardBloc>(
           create: (context) => LeaderboardBloc(
@@ -69,17 +84,21 @@ class QuizApp extends StatelessWidget {
           ),
         ),
         DisposableProvider<CurrentUserBloc>(
-          create: (context) => CurrentUserBloc(),
+          create: (context) => CurrentUserBloc(
+            hiveBox: hiveBox,
+          ),
         ),
         DisposableProvider<UserListBloc>(
           create: (context) => UserListBloc(
             currentUserBloc:
                 Provider.of<CurrentUserBloc>(context, listen: false),
+            hiveBox: hiveBox,
           ),
         ),
         DisposableProvider<RegistrationBloc>(
           create: (context) => RegistrationBloc(
             userListBloc: Provider.of<UserListBloc>(context, listen: false),
+            hiveBox: hiveBox,
           ),
         ),
 
@@ -155,6 +174,7 @@ class QuizAppScaffold extends StatelessWidget {
         backgroundColor: Colors.amber,
         actions: [
           IconButton(
+            key: ValueKey('leaderboard_button'),
             icon: Icon(
               Icons.emoji_events,
               color: Colors.black,

@@ -1,6 +1,6 @@
 // import 'package:audioplayer/audioplayer.dart';
 
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/audio_player/audio_player_bloc.dart';
@@ -32,6 +32,7 @@ class QuizAudioPlayerWidgetState extends State<QuizAudioPlayerWidget>
         var isSoundEnabled = snapshot.data;
 
         return IconButton(
+          key: ValueKey('audioplayer_button'),
           icon: isSoundEnabled!
               ? Icon(
                   Icons.music_note,
@@ -55,25 +56,25 @@ class QuizAudioPlayerWidgetState extends State<QuizAudioPlayerWidget>
   }
 
   @override
- Future <void> didChangeAppLifecycleState(AppLifecycleState state) async {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.inactive:
         print('Inactive');
-       await audioPlayerBloc.pause();
+        await audioPlayerBloc.pause();
         break;
       case AppLifecycleState.paused:
         print('Paused');
-       await audioPlayerBloc.pause();
+        await audioPlayerBloc.pause();
         break;
       case AppLifecycleState.resumed:
         print('Resumed');
         if (audioPlayerBloc.isSoundEnabled) {
-        await  audioPlayerBloc.resume();
+          await audioPlayerBloc.resume();
         }
         break;
       case AppLifecycleState.detached:
         print('detached');
-       await audioPlayerBloc.stop();
+        await audioPlayerBloc.stop();
         break;
     }
   }

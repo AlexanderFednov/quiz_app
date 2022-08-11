@@ -5,11 +5,13 @@ import 'package:quiz_app/registration/models/hive_user_data.dart';
 import 'package:rxdart/subjects.dart';
 
 class CurrentUserBloc extends DisposableOwner {
-  CurrentUserBloc() {
+  CurrentUserBloc({required this.hiveBox}) {
     getCurrentUser();
 
     _currentUserStateSubject.disposeWith(this);
   }
+
+  final Box<UserData> hiveBox;
 
   static final CurrentUserModel _currentUserModel = CurrentUserModel();
 
@@ -24,10 +26,10 @@ class CurrentUserBloc extends DisposableOwner {
   UserData? get currentUser => currentUserState.currentUser;
 
   void getCurrentUser() {
-    var contactsBox = Hive.box<UserData>('UserData1');
-    if (contactsBox.isNotEmpty) {
-      contactsBox.values.forEach((element) {
-        if (element.isCurrentUser!) {
+    // var contactsBox = Hive.box<UserData>('UserData1');
+    if (hiveBox.isNotEmpty) {
+      hiveBox.values.forEach((element) {
+        if (element.isCurrentUser) {
           _currentUserStateSubject.add(
             currentUserState.copyWith(
               currentUser: element,

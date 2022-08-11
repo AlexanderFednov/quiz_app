@@ -35,7 +35,7 @@ class LeaderboardBloc extends DisposableOwner {
     );
   }
 
-  void nullifyLeaderboard() {
+  void clearLeaderboard() {
     moorDatabase.clearMyDatabase();
 
     getMoorResults();

@@ -7,13 +7,13 @@ part 'hive_user_data.g.dart';
 @HiveType(typeId: 0)
 class UserData extends HiveObject {
   @HiveField(0)
-  String? userName;
+  String userName;
   @HiveField(1)
-  int? userResult;
+  int userResult;
   @HiveField(2)
-  bool? isCurrentUser;
+  bool isCurrentUser;
   @HiveField(3)
-  DateTime? registerDate;
+  DateTime registerDate;
   @HiveField(4)
   List<UserResult>? userResults = [];
 
@@ -33,7 +33,7 @@ class UserData extends HiveObject {
     this.userName = '',
     this.userResult = 0,
     this.isCurrentUser = false,
-    this.registerDate,
+    required this.registerDate,
     this.userResults,
   });
 }

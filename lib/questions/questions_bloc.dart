@@ -24,7 +24,7 @@ class QuestionsBloc extends DisposableOwner {
 
   QuestionsModel get questionsState => _questionsStateSubject.value;
 
-  Future <void> _questionsInit() async {
+  Future<void> _questionsInit() async {
     var questionsGeneral = await _loadQuestionsFromAssets(
       questionsUrl: 'assets/questions/questionsAll.json',
     );
@@ -45,10 +45,10 @@ class QuestionsBloc extends DisposableOwner {
       ),
     );
 
-   await loadData();
+    await loadData();
   }
 
-  Future <void> loadData() async {
+  Future<void> loadData() async {
     var questionsWeb = await _getQuestionsFromServer();
 
     _questionsStateSubject.add(
@@ -59,12 +59,12 @@ class QuestionsBloc extends DisposableOwner {
   Future<List<Question>> _loadQuestionsFromAssets({
     required String questionsUrl,
   }) async {
-    var jsonQuestionsList = await rootBundle.loadString(questionsUrl);
-    Map<String, dynamic> decoded = jsonDecode(jsonQuestionsList);
+    var jsonQuestionList = await rootBundle.loadString(questionsUrl);
+    Map<String, dynamic> decodedQuestionList = jsonDecode(jsonQuestionList);
 
-    var questionListDecoded = QuestionList.fromJson(decoded).question;
+    var questionList = QuestionList.fromJson(decodedQuestionList).question;
 
-    return questionListDecoded!;
+    return questionList!;
   }
 
   Future<List<Question>> _getQuestionsFromServer() async {

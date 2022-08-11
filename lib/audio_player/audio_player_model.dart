@@ -7,7 +7,7 @@ class AudioPlayerModel extends Equatable {
   final AudioPlayerStatus audioPlayerStatus;
 
   AudioPlayerModel({
-    this.isSoundEnabled = true,
+    this.isSoundEnabled = false,
     this.audioPlayerStatus = AudioPlayerStatus.notInitialized,
   });
 
