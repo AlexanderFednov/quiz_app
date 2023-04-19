@@ -3,10 +3,10 @@
 part of 'moor_database.dart';
 
 // **************************************************************************
-// MoorGenerator
+// DriftDatabaseGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
+// ignore_for_file: type=lint
 class MoorResult extends DataClass implements Insertable<MoorResult> {
   final int id;
   final String name;
@@ -15,7 +15,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
   final double rightResultsPercent;
   final Category category;
   final DateTime resultDate;
-  MoorResult(
+  const MoorResult(
       {required this.id,
       required this.name,
       required this.result,
@@ -23,26 +23,6 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
       required this.rightResultsPercent,
       required this.category,
       required this.resultDate});
-  factory MoorResult.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return MoorResult(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      result: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}result'])!,
-      questionsLenght: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}questions_lenght'])!,
-      rightResultsPercent: const RealType().mapFromDatabaseResponse(
-          data['${effectivePrefix}right_results_percent'])!,
-      category: $MoorResultsTable.$converter0.mapToDart(const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}category']))!,
-      resultDate: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}result_date'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -53,7 +33,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
     map['right_results_percent'] = Variable<double>(rightResultsPercent);
     {
       final converter = $MoorResultsTable.$converter0;
-      map['category'] = Variable<int>(converter.mapToSql(category)!);
+      map['category'] = Variable<int>(converter.toSql(category));
     }
     map['result_date'] = Variable<DateTime>(resultDate);
     return map;
@@ -73,7 +53,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
 
   factory MoorResult.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return MoorResult(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
@@ -87,7 +67,7 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
@@ -131,16 +111,8 @@ class MoorResult extends DataClass implements Insertable<MoorResult> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      id.hashCode,
-      $mrjc(
-          name.hashCode,
-          $mrjc(
-              result.hashCode,
-              $mrjc(
-                  questionsLenght.hashCode,
-                  $mrjc(rightResultsPercent.hashCode,
-                      $mrjc(category.hashCode, resultDate.hashCode)))))));
+  int get hashCode => Object.hash(id, name, result, questionsLenght,
+      rightResultsPercent, category, resultDate);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -191,7 +163,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
     Expression<int>? result,
     Expression<int>? questionsLenght,
     Expression<double>? rightResultsPercent,
-    Expression<Category>? category,
+    Expression<int>? category,
     Expression<DateTime>? resultDate,
   }) {
     return RawValuesInsertable({
@@ -246,7 +218,7 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
     }
     if (category.present) {
       final converter = $MoorResultsTable.$converter0;
-      map['category'] = Variable<int>(converter.mapToSql(category.value)!);
+      map['category'] = Variable<int>(converter.toSql(category.value));
     }
     if (resultDate.present) {
       map['result_date'] = Variable<DateTime>(resultDate.value);
@@ -271,42 +243,50 @@ class MoorResultsCompanion extends UpdateCompanion<MoorResult> {
 
 class $MoorResultsTable extends MoorResults
     with TableInfo<$MoorResultsTable, MoorResult> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MoorResultsTable(this._db, [this._alias]);
+  $MoorResultsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      typeName: 'INTEGER',
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _resultMeta = const VerificationMeta('result');
-  late final GeneratedColumn<int?> result = GeneratedColumn<int?>(
+  @override
+  late final GeneratedColumn<int> result = GeneratedColumn<int>(
       'result', aliasedName, false,
-      typeName: 'INTEGER', requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _questionsLenghtMeta =
       const VerificationMeta('questionsLenght');
-  late final GeneratedColumn<int?> questionsLenght = GeneratedColumn<int?>(
+  @override
+  late final GeneratedColumn<int> questionsLenght = GeneratedColumn<int>(
       'questions_lenght', aliasedName, false,
-      typeName: 'INTEGER', requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _rightResultsPercentMeta =
       const VerificationMeta('rightResultsPercent');
-  late final GeneratedColumn<double?> rightResultsPercent =
-      GeneratedColumn<double?>('right_results_percent', aliasedName, false,
-          typeName: 'REAL', requiredDuringInsert: true);
+  @override
+  late final GeneratedColumn<double> rightResultsPercent =
+      GeneratedColumn<double>('right_results_percent', aliasedName, false,
+          type: DriftSqlType.double, requiredDuringInsert: true);
   final VerificationMeta _categoryMeta = const VerificationMeta('category');
-  late final GeneratedColumnWithTypeConverter<Category, int?> category =
-      GeneratedColumn<int?>('category', aliasedName, false,
-              typeName: 'INTEGER', requiredDuringInsert: true)
+  @override
+  late final GeneratedColumnWithTypeConverter<Category, int> category =
+      GeneratedColumn<int>('category', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<Category>($MoorResultsTable.$converter0);
   final VerificationMeta _resultDateMeta = const VerificationMeta('resultDate');
-  late final GeneratedColumn<DateTime?> resultDate = GeneratedColumn<DateTime?>(
+  @override
+  late final GeneratedColumn<DateTime> resultDate = GeneratedColumn<DateTime>(
       'result_date', aliasedName, false,
-      typeName: 'INTEGER', requiredDuringInsert: true);
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -373,13 +353,30 @@ class $MoorResultsTable extends MoorResults
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   MoorResult map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return MoorResult.fromData(data, _db,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MoorResult(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      result: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}result'])!,
+      questionsLenght: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}questions_lenght'])!,
+      rightResultsPercent: attachedDatabase.options.types.read(
+          DriftSqlType.double,
+          data['${effectivePrefix}right_results_percent'])!,
+      category: $MoorResultsTable.$converter0.fromSql(attachedDatabase
+          .options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}category'])!),
+      resultDate: attachedDatabase.options.types
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}result_date'])!,
+    );
   }
 
   @override
   $MoorResultsTable createAlias(String alias) {
-    return $MoorResultsTable(_db, alias);
+    return $MoorResultsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<Category, int> $converter0 =
@@ -387,10 +384,11 @@ class $MoorResultsTable extends MoorResults
 }
 
 abstract class _$MyDatabase extends GeneratedDatabase {
-  _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
+  _$MyDatabase(QueryExecutor e) : super(e);
   late final $MoorResultsTable moorResults = $MoorResultsTable(this);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, dynamic>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [moorResults];
 }
